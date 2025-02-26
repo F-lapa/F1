@@ -735,7 +735,6 @@
                     const hattrickCheckbox = row.querySelector(".hattrick-checkbox");
 
                     const savedData = JSON.parse(localStorage.getItem(`${season}-${raceKey}`)) || {};
-                    console.log(`Carregando ${season}-${raceKey}:`, savedData);
 
                     // Atribuir valores aos campos
                     positionInput.value = savedData.position || "";
@@ -755,7 +754,6 @@
                 hattrick: hattrick || false
             };
             localStorage.setItem(`${season}-${raceKey}`, JSON.stringify(data));
-            console.log(`Salvando ${season}-${raceKey}:`, data);
         }
 
         // Função para atualizar as estatísticas da temporada ativa
@@ -942,10 +940,9 @@
 
         // Inicializar a página após o DOM estar carregado
         document.addEventListener("DOMContentLoaded", () => {
-            console.log("DOM carregado, iniciando loadData");
-            loadData();
-            console.log("loadData concluído, iniciando updateStats");
-            updateStats("2023");
+            loadData(); // Carrega os dados do localStorage primeiro
+            const activeSeason = document.querySelector(".season-buttons button.active").id.split("-")[1]; // Pega a temporada ativa (padrão 2023)
+            updateStats(activeSeason); // Atualiza as estatísticas com base na temporada ativa
         });
     </script>
 </body>
