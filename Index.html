@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fernando Lapa - Temporadas 2023 e 2024</title>
+    <style>
+        /* Estilos Globais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        header {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        header h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        main {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #6a11cb;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        .stats {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-box {
+            background: #6a11cb;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1 1 calc(33.33% - 40px);
+            min-width: 150px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        .stat-box h3 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+        .stat-box p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        .season-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .season-buttons button {
+            padding: 12px 25px;
+            background: #6a11cb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .season-buttons button.active {
+            background: #2575fc;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .season-buttons button:hover:not(.active) {
+            background: #4a00e0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background: #6a11cb;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f2f2f2;
+            cursor: pointer;
+        }
+        input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="checkbox"] {
+            transform: scale(1.2);
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: #6a11cb;
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        footer h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+        footer .stats {
+            gap: 15px;
+        }
+        footer .stat-box {
+            background: white;
+            color: #6a11cb;
+            border: 1px solid #6a11cb;
+        }
+        footer .stat-box:hover {
+            background: #e6e6ff;
+        }
+        .hidden {
+            display: none;
+        }
+
+        /* Estilo do Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+        .modal-content h3 {
+            color: #6a11cb;
+            margin-bottom: 20px;
+        }
+        .modal-content .summary {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .modal-content .summary div {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #6a11cb;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .close-modal:hover {
+            background: #4a00e0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header>
+        <h1>Fernando Lapa</h1>
+        <p>Piloto Brasileiro de Fórmula 1</p>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main>
+        <h2>Estatísticas Gerais da Temporada Ativa</h2>
+        <div class="stats">
+            <div class="stat-box">
+                <h3 id="total-races">0</h3>
+                <p>Corridas</p>
+            </div>
+            <div class="stat-box">
+                <h3 id="total-wins">0</h3>
+                <p>Vitórias</p>
+            </div>
+            <div class="stat-box">
+                <h3 id="total-podiums">0</h3>
+                <p>Pódios</p>
+            </div>
+            <div class="stat-box">
+                <h3 id="total-poles">0</h3>
+                <p>Pole Positions</p>
+            </div>
+            <div class="stat-box">
+                <h3 id="total-fastest-laps">0</h3>
+                <p>Melhores Voltas</p>
+            </div>
+            <div class="stat-box">
+                <h3 id="total-hattricks">0</h3>
+                <p>Hat-Tricks</p>
+            </div>
+        </div>
+
+        <!-- Botões de Alternância de Temporada -->
+        <div class="season-buttons">
+            <button id="btn-2023" class="active">2023</button>
+            <button id="btn-2024">2024</button>
+        </div>
+
+        <!-- Tabela de Corridas da Temporada 2023 -->
+        <div id="season-2023">
+            <h2>Corridas de 2023</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Corrida 🏁</th>
+                        <th>Posição</th>
+                        <th>Pole Position</th>
+                        <th>Melhor Volta</th>
+                        <th>Hat-Trick</th>
+                    </tr>
+                </thead>
+                <tbody id="race-table-2023">
+                    <tr data-race="Bahrein">
+                        <td><span class="race-name">🇧🇭 Bahrein</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Arábia Saudita">
+                        <td><span class="race-name">🇸🇦 Arábia Saudita</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Austrália">
+                        <td><span class="race-name">🇦🇺 Austrália</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Azerbaijão">
+                        <td><span class="race-name">🇦🇿 Azerbaijão</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Miami">
+                        <td><span class="race-name">🇺🇸 Miami</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                                                <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Mônaco">
+                        <td><span class="race-name">🇲🇨 Mônaco</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Espanha">
+                        <td><span class="race-name">🇪🇸 Espanha</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Canadá">
+                        <td><span class="race-name">🇨🇦 Canadá</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Áustria">
+                        <td><span class="race-name">🇦🇹 Áustria</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Grã-Bretanha">
+                        <td><span class="race-name">🇬🇧 Grã-Bretanha</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Hungria">
+                        <td><span class="race-name">🇭🇺 Hungria</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Bélgica">
+                        <td><span class="race-name">🇧🇪 Bélgica</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Países Baixos">
+                        <td><span class="race-name">🇳🇱 Países Baixos</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Itália">
+                        <td><span class="race-name">🇮🇹 Itália</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Singapura">
+                        <td><span class="race-name">🇸🇬 Singapura</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Japão">
+                        <td><span class="race-name">🇯🇵 Japão</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Catar">
+                        <td><span class="race-name">🇶🇦 Catar</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Estados Unidos">
+                        <td><span class="race-name">🇺🇸 Estados Unidos</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="México">
+                        <td><span class="race-name">🇲🇽 México</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Brasil">
+                        <td><span class="race-name">🇧🇷 Brasil</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Las Vegas">
+                        <td><span class="race-name">🇺🇸 Las Vegas</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Abu Dhabi">
+                        <td><span class="race-name">🇦🇪 Abu Dhabi</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tabela de Corridas da Temporada 2024 -->
+        <div id="season-2024" class="hidden">
+            <h2>Corridas de 2024</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Corrida 🏁</th>
+                        <th>Posição</th>
+                        <th>Pole Position</th>
+                        <th>Melhor Volta</th>
+                        <th>Hat-Trick</th>
+                    </tr>
+                </thead>
+                <tbody id="race-table-2024">
+                    <tr data-race="Bahrein">
+                        <td><span class="race-name">🇧🇭 Bahrein</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Arábia Saudita">
+                        <td><span class="race-name">🇸🇦 Arábia Saudita</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Austrália">
+                        <td><span class="race-name">🇦🇺 Austrália</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Azerbaijão">
+                        <td><span class="race-name">🇦🇿 Azerbaijão</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Miami">
+                        <td><span class="race-name">🇺🇸 Miami</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Mônaco">
+                        <td><span class="race-name">🇲🇨 Mônaco</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Espanha">
+                        <td><span class="race-name">🇪🇸 Espanha</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Canadá">
+                        <td><span class="race-name">🇨🇦 Canadá</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Áustria">
+                        <td><span class="race-name">🇦🇹 Áustria</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Grã-Bretanha">
+                        <td><span class="race-name">🇬🇧 Grã-Bretanha</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Hungria">
+                        <td><span class="race-name">🇭🇺 Hungria</span></td>
+                                                <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Bélgica">
+                        <td><span class="race-name">🇧🇪 Bélgica</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Países Baixos">
+                        <td><span class="race-name">🇳🇱 Países Baixos</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Itália">
+                        <td><span class="race-name">🇮🇹 Itália</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Singapura">
+                        <td><span class="race-name">🇸🇬 Singapura</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Japão">
+                        <td><span class="race-name">🇯🇵 Japão</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Catar">
+                        <td><span class="race-name">🇶🇦 Catar</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Estados Unidos">
+                        <td><span class="race-name">🇺🇸 Estados Unidos</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="México">
+                        <td><span class="race-name">🇲🇽 México</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Brasil">
+                        <td><span class="race-name">🇧🇷 Brasil</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Las Vegas">
+                        <td><span class="race-name">🇺🇸 Las Vegas</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                    <tr data-race="Abu Dhabi">
+                        <td><span class="race-name">🇦🇪 Abu Dhabi</span></td>
+                        <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
+                        <td><input type="checkbox" class="pole-checkbox"></td>
+                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="hattrick-checkbox"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer>
+        <h2>Estatísticas Gerais de Todas as Temporadas</h2>
+        <div class="stats">
+            <div class="stat-box">
+                <h3 id="overall-total-races">0</h3>
+                <p>Corridas</p>
+            </div>
+            <div class="stat-box">
+                <h3 id="overall-total-wins">0</h3>
+                <p>Vitórias</p>
+            </div>
+            <div class="stat-box">
+                <h3 id="overall-total-podiums">0</h3>
+                <p>Pódios</p>
+            </div>
+            <div class="stat-box">
+                <h3 id="overall-total-poles">0</h3>
+                <p>Pole Positions</p>
+            </div>
+            <div class="stat-box">
+                <h3 id="overall-total-fastest-laps">0</h3>
+                <p>Melhores Voltas</p>
+            </div>
+            <div class="stat-box">
+                <h3 id="overall-total-hattricks">0</h3>
+                <p>Hat-Tricks</p>
+            </div>
+        </div>
+        <p>&copy; 2023-2024 Fernando Lapa - Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- Modal -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <h3 id="modal-title">Estatísticas Consolidadas</h3>
+            <div class="summary">
+                <div><strong>Vitórias:</strong> <span id="modal-wins">0</span></div>
+                <div><strong>Pódios:</strong> <span id="modal-podiums">0</span></div>
+                <div><strong>Pole Positions:</strong> <span id="modal-poles">0</span></div>
+                <div><strong>Melhores Voltas:</strong> <span id="modal-fastest-laps">0</span></div>
+                <div><strong>Hat-Tricks:</strong> <span id="modal-hattricks">0</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Função para carregar dados do localStorage
+        function loadData() {
+            const seasons = ["2023", "2024"];
+            seasons.forEach(season => {
+                const table = document.getElementById(`race-table-${season}`);
+                const rows = table.querySelectorAll("tr");
+
+                rows.forEach(row => {
+                    const raceKey = row.getAttribute("data-race");
+                    const positionInput = row.querySelector(".position-input");
+                    const poleCheckbox = row.querySelector(".pole-checkbox");
+                    const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
+                    const hattrickCheckbox = row.querySelector(".hattrick-checkbox");
+
+                    const savedData = JSON.parse(localStorage.getItem(`${season}-${raceKey}`)) || {};
+                    positionInput.value = savedData.position || "";
+                    poleCheckbox.checked = savedData.pole || false;
+                    fastestLapCheckbox.checked = savedData.fastestLap || false;
+                    hattrickCheckbox.checked = savedData.hattrick || false;
+                });
+            });
+        }
+
+        // Função para salvar dados no localStorage
+        function saveData(season, raceKey, position, pole, fastestLap, hattrick) {
+            const data = { position, pole, fastestLap, hattrick };
+            localStorage.setItem(`${season}-${raceKey}`, JSON.stringify(data));
+        }
+
+        // Função para atualizar as estatísticas da temporada ativa
+        function updateStats(season) {
+            const rows = document.querySelectorAll(`#race-table-${season} tr`);
+            let totalRaces = 0;
+            let totalWins = 0;
+            let totalPodiums = 0;
+            let totalPoles = 0;
+            let totalFastestLaps = 0;
+            let totalHattricks = 0;
+
+            rows.forEach(row => {
+                const positionInput = row.querySelector(".position-input");
+                const poleCheckbox = row.querySelector(".pole-checkbox");
+                const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
+                const hattrickCheckbox = row.querySelector(".hattrick-checkbox");
+
+                const position = parseInt(positionInput.value);
+
+                // Contabilizar corridas válidas
+                if (!isNaN(position)) {
+                    totalRaces++;
+                }
+
+                // Contabilizar vitórias (posição 1)
+                if (position === 1) {
+                    totalWins++;
+                }
+
+                // Contabilizar pódios (posições 1 a 3)
+                if (position >= 1 && position <= 3) {
+                    totalPodiums++;
+                }
+
+                // Contabilizar pole positions
+                if (poleCheckbox.checked) {
+                    totalPoles++;
+                }
+
+                // Contabilizar melhores voltas
+                if (fastestLapCheckbox.checked) {
+                    totalFastestLaps++;
+                }
+
+                // Contabilizar hat-tricks
+                if (hattrickCheckbox.checked) {
+                    totalHattricks++;
+                }
+            });
+
+            // Atualizar os valores nas estatísticas gerais da temporada ativa
+            document.getElementById("total-races").textContent = totalRaces;
+            document.getElementById("total-wins").textContent = totalWins;
+            document.getElementById("total-podiums").textContent = totalPodiums;
+            document.getElementById("total-poles").textContent = totalPoles;
+            document.getElementById("total-fastest-laps").textContent = totalFastestLaps;
+            document.getElementById("total-hattricks").textContent = totalHattricks;
+
+            // Atualizar estatísticas gerais de todas as temporadas
+            updateOverallStats();
+        }
+
+        // Função para atualizar as estatísticas gerais de todas as temporadas
+        function updateOverallStats() {
+            const seasons = ["2023", "2024"];
+            let overallTotalRaces = 0;
+            let overallTotalWins = 0;
+            let overallTotalPodiums = 0;
+            let overallTotalPoles = 0;
+            let overallTotalFastestLaps = 0;
+            let overallTotalHattricks = 0;
+
+            seasons.forEach(season => {
+                const rows = document.querySelectorAll(`#race-table-${season} tr`);
+
+                rows.forEach(row => {
+                    const positionInput = row.querySelector(".position-input");
+                    const poleCheckbox = row.querySelector(".pole-checkbox");
+                    const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
+                    const hattrickCheckbox = row.querySelector(".hattrick-checkbox");
+
+                    const position = parseInt(positionInput.value);
+
+                    // Contabilizar corridas válidas
+                                        if (!isNaN(position)) {
+                        overallTotalRaces++;
+                    }
+
+                    // Contabilizar vitórias (posição 1)
+                    if (position === 1) {
+                        overallTotalWins++;
+                    }
+
+                    // Contabilizar pódios (posições 1 a 3)
+                    if (position >= 1 && position <= 3) {
+                        overallTotalPodiums++;
+                    }
+
+                    // Contabilizar pole positions
+                    if (poleCheckbox.checked) {
+                        overallTotalPoles++;
+                    }
+
+                    // Contabilizar melhores voltas
+                    if (fastestLapCheckbox.checked) {
+                        overallTotalFastestLaps++;
+                    }
+
+                    // Contabilizar hat-tricks
+                    if (hattrickCheckbox.checked) {
+                        overallTotalHattricks++;
+                    }
+                });
+            });
+
+            // Atualizar os valores nas estatísticas gerais de todas as temporadas
+            document.getElementById("overall-total-races").textContent = overallTotalRaces;
+            document.getElementById("overall-total-wins").textContent = overallTotalWins;
+            document.getElementById("overall-total-podiums").textContent = overallTotalPodiums;
+            document.getElementById("overall-total-poles").textContent = overallTotalPoles;
+            document.getElementById("overall-total-fastest-laps").textContent = overallTotalFastestLaps;
+            document.getElementById("overall-total-hattricks").textContent = overallTotalHattricks;
+        }
+
+        // Alternar entre temporadas
+        document.getElementById("btn-2023").addEventListener("click", () => {
+            document.getElementById("season-2023").classList.remove("hidden");
+            document.getElementById("season-2024").classList.add("hidden");
+            document.getElementById("btn-2023").classList.add("active");
+            document.getElementById("btn-2024").classList.remove("active");
+            updateStats("2023");
+        });
+
+        document.getElementById("btn-2024").addEventListener("click", () => {
+            document.getElementById("season-2024").classList.remove("hidden");
+            document.getElementById("season-2023").classList.add("hidden");
+            document.getElementById("btn-2024").classList.add("active");
+            document.getElementById("btn-2023").classList.remove("active");
+            updateStats("2024");
+        });
+
+        // Adicionar eventos para detectar mudanças e salvar dados
+        document.addEventListener("input", (event) => {
+            const target = event.target;
+            const row = target.closest("tr");
+            const seasonTable = row.closest("table");
+            const season = seasonTable.id.split("-")[2]; // Extrair "2023" ou "2024"
+            const raceKey = row.getAttribute("data-race");
+
+            const positionInput = row.querySelector(".position-input");
+            const poleCheckbox = row.querySelector(".pole-checkbox");
+            const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
+            const hattrickCheckbox = row.querySelector(".hattrick-checkbox");
+
+            const position = positionInput.value;
+            const pole = poleCheckbox.checked;
+            const fastestLap = fastestLapCheckbox.checked;
+            const hattrick = hattrickCheckbox.checked;
+
+            saveData(season, raceKey, position, pole, fastestLap, hattrick);
+
+            // Atualizar estatísticas da temporada ativa
+            const activeSeason = document.querySelector(".season-buttons button.active").id.split("-")[1];
+            updateStats(activeSeason);
+        });
+
+        // Função para abrir o modal com as estatísticas consolidadas de uma corrida específica
+        document.querySelectorAll(".race-name").forEach(raceName => {
+            raceName.addEventListener("click", () => {
+                const raceRow = raceName.closest("tr");
+                const raceKey = raceRow.getAttribute("data-race");
+                const raceNameText = raceName.textContent.trim();
+                const modal = document.getElementById("modal");
+                const modalTitle = document.getElementById("modal-title");
+                const modalWins = document.getElementById("modal-wins");
+                const modalPodiums = document.getElementById("modal-podiums");
+                const modalPoles = document.getElementById("modal-poles");
+                const modalFastestLaps = document.getElementById("modal-fastest-laps");
+                const modalHattricks = document.getElementById("modal-hattricks");
+
+                modalTitle.textContent = `Estatísticas Consolidadas: ${raceNameText}`;
+
+                const seasons = ["2023", "2024"];
+                let totalWins = 0;
+                let totalPodiums = 0;
+                let totalPoles = 0;
+                let totalFastestLaps = 0;
+                let totalHattricks = 0;
+
+                seasons.forEach(season => {
+                    const raceData = document.querySelector(`#race-table-${season} tr[data-race="${raceKey}"]`);
+                    if (raceData) {
+                        const positionInput = raceData.querySelector(".position-input");
+                        const poleCheckbox = raceData.querySelector(".pole-checkbox");
+                        const fastestLapCheckbox = raceData.querySelector(".fastest-lap-checkbox");
+                        const hattrickCheckbox = raceData.querySelector(".hattrick-checkbox");
+
+                        const position = parseInt(positionInput.value);
+
+                        // Contabilizar vitórias (posição 1)
+                        if (position === 1) {
+                            totalWins++;
+                        }
+
+                        // Contabilizar pódios (posições 1 a 3)
+                        if (position >= 1 && position <= 3) {
+                            totalPodiums++;
+                        }
+
+                        // Contabilizar pole positions
+                        if (poleCheckbox.checked) {
+                            totalPoles++;
+                        }
+
+                        // Contabilizar melhores voltas
+                        if (fastestLapCheckbox.checked) {
+                            totalFastestLaps++;
+                        }
+
+                        // Contabilizar hat-tricks
+                        if (hattrickCheckbox.checked) {
+                            totalHattricks++;
+                        }
+                    }
+                });
+
+                // Preencher o modal com as estatísticas consolidadas
+                modalWins.textContent = totalWins;
+                modalPodiums.textContent = totalPodiums;
+                modalPoles.textContent = totalPoles;
+                modalFastestLaps.textContent = totalFastestLaps;
+                modalHattricks.textContent = totalHattricks;
+
+                modal.classList.add("show");
+            });
+        });
+
+        // Fechar o modal
+        document.querySelector(".close-modal").addEventListener("click", () => {
+            document.getElementById("modal").classList.remove("show");
+        });
+
+        // Fechar o modal ao clicar fora dele
+        document.getElementById("modal").addEventListener("click", (event) => {
+            if (event.target === document.getElementById("modal")) {
+                document.getElementById("modal").classList.remove("show");
+            }
+        });
+
+        // Carregar dados salvos ao iniciar a página
+        loadData();
+
+        // Inicializar estatísticas da temporada ativa
+        updateStats("2023");
+    </script>
+</body>
+</html>
