@@ -91,7 +91,7 @@
             display: flex;
             justify-content: center;
             gap: 20px;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
         .season-buttons button {
             padding: 14px 30px;
@@ -113,6 +113,27 @@
         .season-buttons button:hover:not(.active) {
             background: #7a5fff;
             transform: scale(1.03);
+        }
+        .save-button {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .save-button button {
+            padding: 14px 40px;
+            background: #00ddeb;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 221, 235, 0.4);
+        }
+        .save-button button:hover {
+            background: #5e43ff;
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
         table {
             width: 100%;
@@ -323,6 +344,11 @@
         <div class="season-buttons">
             <button id="btn-2023" class="active">2023</button>
             <button id="btn-2024">2024</button>
+        </div>
+
+        <!-- Botão de Salvar -->
+        <div class="save-button">
+            <button id="save-btn">Salvar Alterações</button>
         </div>
 
         <!-- Tabela de Corridas da Temporada 2023 -->
@@ -746,14 +772,30 @@
         }
 
         // Função para salvar dados no localStorage
-        function saveData(season, raceKey, position, pole, fastestLap, hattrick) {
-            const data = {
-                position: position || "",
-                pole: pole || false,
-                fastestLap: fastestLap || false,
-                hattrick: hattrick || false
-            };
-            localStorage.setItem(`${season}-${raceKey}`, JSON.stringify(data));
+        function saveData() {
+            const seasons = ["2023", "2024"];
+            seasons.forEach(season => {
+                const table = document.getElementById(`race-table-${season}`);
+                if (!table) return;
+                const rows = table.querySelectorAll("tr");
+
+                rows.forEach(row => {
+                    const raceKey = row.getAttribute("data-race");
+                    const positionInput = row.querySelector(".position-input");
+                    const poleCheckbox = row.querySelector(".pole-checkbox");
+                    const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
+                    const hattrickCheckbox = row.querySelector(".hattrick-checkbox");
+
+                    const data = {
+                        position: positionInput.value || "",
+                        pole: poleCheckbox.checked,
+                        fastestLap: fastestLapCheckbox.checked,
+                        hattrick: hattrickCheckbox.checked
+                    };
+                    localStorage.setItem(`${season}-${raceKey}`, JSON.stringify(data));
+                });
+            });
+            alert("Alterações salvas com sucesso!");
         }
 
         // Função para atualizar as estatísticas da temporada ativa
@@ -850,27 +892,15 @@
             updateStats("2024");
         });
 
-        // Adicionar eventos para salvar dados ao alterar inputs
-        document.addEventListener("input", (event) => {
-            const target = event.target;
-            const row = target.closest("tr");
-            if (!row) return; // Verifica se o evento está dentro de uma linha da tabela
-            const seasonTable = row.closest("table");
-            const season = seasonTable.id.split("-")[2];
-            const raceKey = row.getAttribute("data-race");
+        // Evento para o botão de salvar
+        document.getElementById("save-btn").addEventListener("click", () => {
+            saveData();
+            const activeSeason = document.querySelector(".season-buttons button.active").id.split("-")[1];
+            updateStats(activeSeason);
+        });
 
-            const positionInput = row.querySelector(".position-input");
-            const poleCheckbox = row.querySelector(".pole-checkbox");
-            const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
-            const hattrickCheckbox = row.querySelector(".hattrick-checkbox");
-
-            const position = positionInput.value;
-            const pole = poleCheckbox.checked;
-            const fastestLap = fastestLapCheckbox.checked;
-            const hattrick = hattrickCheckbox.checked;
-
-            saveData(season, raceKey, position, pole, fastestLap, hattrick);
-
+        // Atualizar estatísticas ao alterar inputs (sem salvar automaticamente)
+        document.addEventListener("input", () => {
             const activeSeason = document.querySelector(".season-buttons button.active").id.split("-")[1];
             updateStats(activeSeason);
         });
@@ -940,9 +970,9 @@
 
         // Inicializar a página após o DOM estar carregado
         document.addEventListener("DOMContentLoaded", () => {
-            loadData(); // Carrega os dados do localStorage primeiro
-            const activeSeason = document.querySelector(".season-buttons button.active").id.split("-")[1]; // Pega a temporada ativa (padrão 2023)
-            updateStats(activeSeason); // Atualiza as estatísticas com base na temporada ativa
+            loadData(); // Carrega os dados salvos do localStorage
+            const activeSeason = document.querySelector(".season-buttons button.active").id.split("-")[1];
+            updateStats(activeSeason); // Atualiza as estatísticas da temporada ativa
         });
     </script>
 </body>
