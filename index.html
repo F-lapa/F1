@@ -12,14 +12,14 @@
             box-sizing: border-box;
         }
         body {
-            font-family: 'Poppins', sans-serif; /* Tipografia moderna e elegante */
-            background: linear-gradient(135deg, #1e1e2f, #2a2a4a); /* Fundo gradiente escuro */
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e1e2f, #2a2a4a);
             color: #e0e0e0;
             line-height: 1.6;
             overflow-x: hidden;
         }
         header {
-            background: linear-gradient(135deg, #5e43ff, #00ddeb); /* Gradiente vibrante */
+            background: linear-gradient(135deg, #5e43ff, #00ddeb);
             color: white;
             text-align: center;
             padding: 60px 20px;
@@ -43,10 +43,10 @@
             max-width: 1100px;
             margin: 40px auto;
             padding: 30px;
-            background: rgba(255, 255, 255, 0.05); /* Fundo translúcido */
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px); /* Efeito de vidro fosco */
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         h2 {
@@ -280,7 +280,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet"> <!-- Importando a fonte Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Cabeçalho -->
@@ -724,6 +724,7 @@
             const seasons = ["2023", "2024"];
             seasons.forEach(season => {
                 const table = document.getElementById(`race-table-${season}`);
+                if (!table) return; // Verifica se a tabela existe
                 const rows = table.querySelectorAll("tr");
 
                 rows.forEach(row => {
@@ -734,22 +735,27 @@
                     const hattrickCheckbox = row.querySelector(".hattrick-checkbox");
 
                     const savedData = JSON.parse(localStorage.getItem(`${season}-${raceKey}`)) || {};
-                    console.log(`${season}-${raceKey}`, savedData); // Log para depurar
+                    console.log(`Carregando ${season}-${raceKey}:`, savedData);
 
-                    // Garantir que os valores sejam aplicados corretamente
-                    if (savedData.position) positionInput.value = savedData.position;
-                    poleCheckbox.checked = savedData.pole === true;
-                    fastestLapCheckbox.checked = savedData.fastestLap === true;
-                    hattrickCheckbox.checked = savedData.hattrick === true;
+                    // Atribuir valores aos campos
+                    positionInput.value = savedData.position || "";
+                    poleCheckbox.checked = savedData.pole || false;
+                    fastestLapCheckbox.checked = savedData.fastestLap || false;
+                    hattrickCheckbox.checked = savedData.hattrick || false;
                 });
             });
         }
 
         // Função para salvar dados no localStorage
         function saveData(season, raceKey, position, pole, fastestLap, hattrick) {
-            const data = { position, pole, fastestLap, hattrick };
+            const data = {
+                position: position || "",
+                pole: pole || false,
+                fastestLap: fastestLap || false,
+                hattrick: hattrick || false
+            };
             localStorage.setItem(`${season}-${raceKey}`, JSON.stringify(data));
-            console.log(`Salvando ${season}-${raceKey}`, data); // Log para depurar
+            console.log(`Salvando ${season}-${raceKey}:`, data);
         }
 
         // Função para atualizar as estatísticas da temporada ativa
@@ -770,38 +776,16 @@
 
                 const position = parseInt(positionInput.value);
 
-                // Contabilizar corridas válidas
                 if (!isNaN(position)) {
                     totalRaces++;
+                    if (position === 1) totalWins++;
+                    if (position >= 1 && position <= 3) totalPodiums++;
                 }
-
-                // Contabilizar vitórias (posição 1)
-                if (position === 1) {
-                    totalWins++;
-                }
-
-                // Contabilizar pódios (posições 1 a 3)
-                if (position >= 1 && position <= 3) {
-                    totalPodiums++;
-                }
-
-                // Contabilizar pole positions
-                if (poleCheckbox.checked) {
-                    totalPoles++;
-                }
-
-                // Contabilizar melhores voltas
-                if (fastestLapCheckbox.checked) {
-                    totalFastestLaps++;
-                }
-
-                // Contabilizar hat-tricks
-                if (hattrickCheckbox.checked) {
-                    totalHattricks++;
-                }
+                if (poleCheckbox.checked) totalPoles++;
+                if (fastestLapCheckbox.checked) totalFastestLaps++;
+                if (hattrickCheckbox.checked) totalHattricks++;
             });
 
-            // Atualizar os valores nas estatísticas gerais da temporada ativa
             document.getElementById("total-races").textContent = totalRaces;
             document.getElementById("total-wins").textContent = totalWins;
             document.getElementById("total-podiums").textContent = totalPodiums;
@@ -809,7 +793,6 @@
             document.getElementById("total-fastest-laps").textContent = totalFastestLaps;
             document.getElementById("total-hattricks").textContent = totalHattricks;
 
-            // Atualizar estatísticas gerais de todas as temporadas
             updateOverallStats();
         }
 
@@ -825,7 +808,6 @@
 
             seasons.forEach(season => {
                 const rows = document.querySelectorAll(`#race-table-${season} tr`);
-
                 rows.forEach(row => {
                     const positionInput = row.querySelector(".position-input");
                     const poleCheckbox = row.querySelector(".pole-checkbox");
@@ -834,39 +816,17 @@
 
                     const position = parseInt(positionInput.value);
 
-                    // Contabilizar corridas válidas
                     if (!isNaN(position)) {
                         overallTotalRaces++;
+                        if (position === 1) overallTotalWins++;
+                        if (position >= 1 && position <= 3) overallTotalPodiums++;
                     }
-
-                    // Contabilizar vitórias (posição 1)
-                    if (position === 1) {
-                        overallTotalWins++;
-                    }
-
-                    // Contabilizar pódios (posições 1 a 3)
-                    if (position >= 1 && position <= 3) {
-                        overallTotalPodiums++;
-                    }
-
-                    // Contabilizar pole positions
-                    if (poleCheckbox.checked) {
-                        overallTotalPoles++;
-                    }
-
-                    // Contabilizar melhores voltas
-                    if (fastestLapCheckbox.checked) {
-                        overallTotalFastestLaps++;
-                    }
-
-                    // Contabilizar hat-tricks
-                    if (hattrickCheckbox.checked) {
-                        overallTotalHattricks++;
-                    }
+                    if (poleCheckbox.checked) overallTotalPoles++;
+                    if (fastestLapCheckbox.checked) overallTotalFastestLaps++;
+                    if (hattrickCheckbox.checked) overallTotalHattricks++;
                 });
             });
 
-            // Atualizar os valores nas estatísticas gerais de todas as temporadas
             document.getElementById("overall-total-races").textContent = overallTotalRaces;
             document.getElementById("overall-total-wins").textContent = overallTotalWins;
             document.getElementById("overall-total-podiums").textContent = overallTotalPodiums;
@@ -892,12 +852,13 @@
             updateStats("2024");
         });
 
-        // Adicionar eventos para detectar mudanças e salvar dados
+        // Adicionar eventos para salvar dados ao alterar inputs
         document.addEventListener("input", (event) => {
             const target = event.target;
             const row = target.closest("tr");
+            if (!row) return; // Verifica se o evento está dentro de uma linha da tabela
             const seasonTable = row.closest("table");
-            const season = seasonTable.id.split("-")[2]; // Extrair "2023" ou "2024"
+            const season = seasonTable.id.split("-")[2];
             const raceKey = row.getAttribute("data-race");
 
             const positionInput = row.querySelector(".position-input");
@@ -912,7 +873,6 @@
 
             saveData(season, raceKey, position, pole, fastestLap, hattrick);
 
-            // Atualizar estatísticas da temporada ativa
             const activeSeason = document.querySelector(".season-buttons button.active").id.split("-")[1];
             updateStats(activeSeason);
         });
@@ -950,34 +910,14 @@
 
                         const position = parseInt(positionInput.value);
 
-                        // Contabilizar vitórias (posição 1)
-                        if (position === 1) {
-                            totalWins++;
-                        }
-
-                        // Contabilizar pódios (posições 1 a 3)
-                        if (position >= 1 && position <= 3) {
-                            totalPodiums++;
-                        }
-
-                        // Contabilizar pole positions
-                        if (poleCheckbox.checked) {
-                            totalPoles++;
-                        }
-
-                        // Contabilizar melhores voltas
-                        if (fastestLapCheckbox.checked) {
-                            totalFastestLaps++;
-                        }
-
-                        // Contabilizar hat-tricks
-                        if (hattrickCheckbox.checked) {
-                            totalHattricks++;
-                        }
+                        if (position === 1) totalWins++;
+                        if (position >= 1 && position <= 3) totalPodiums++;
+                        if (poleCheckbox.checked) totalPoles++;
+                        if (fastestLapCheckbox.checked) totalFastestLaps++;
+                        if (hattrickCheckbox.checked) totalHattricks++;
                     }
                 });
 
-                // Preencher o modal com as estatísticas consolidadas
                 modalWins.textContent = totalWins;
                 modalPodiums.textContent = totalPodiums;
                 modalPoles.textContent = totalPoles;
@@ -1000,11 +940,13 @@
             }
         });
 
-        // Carregar dados salvos ao iniciar a página
-        loadData();
-
-        // Inicializar estatísticas da temporada ativa
-        updateStats("2023");
+        // Inicializar a página após o DOM estar carregado
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("DOM carregado, iniciando loadData");
+            loadData();
+            console.log("loadData concluído, iniciando updateStats");
+            updateStats("2023");
+        });
     </script>
 </body>
 </html>
