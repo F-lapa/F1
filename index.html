@@ -12,147 +12,158 @@
             box-sizing: border-box;
         }
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #1e1e2f, #2a2a4a);
-            color: #e0e0e0;
+            font-family: 'Racing Sans One', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a, #333333);
+            color: #ffffff;
             line-height: 1.6;
             overflow-x: hidden;
+            background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"%3E%3Crect width="100" height="100" fill="black"/%3E%3Cpath d="M0 0h50v50H0zM50 50h50v50H50z" fill="white"/%3E%3C/svg%3E');
+            background-size: 50px 50px;
         }
         header {
-            background: linear-gradient(135deg, #5e43ff, #00ddeb);
-            color: white;
+            background: linear-gradient(90deg, #ff0000, #000000);
+            color: #ffffff;
             text-align: center;
             padding: 60px 20px;
             position: relative;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border-bottom: 4px solid #ffffff;
         }
         header h1 {
-            font-size: 3.2em;
+            font-size: 3.5em;
             font-weight: 700;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
             animation: fadeInDown 1s ease-out;
         }
         header p {
-            font-size: 1.4em;
-            font-weight: 300;
-            opacity: 0.9;
+            font-size: 1.5em;
+            font-weight: 400;
+            font-family: 'Poppins', sans-serif;
             animation: fadeInUp 1s ease-out 0.3s forwards;
         }
         main {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 40px auto;
             padding: 30px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            border: 2px solid #ff0000;
         }
         h2 {
-            color: #00ddeb;
+            color: #ff0000;
             text-align: center;
             margin-bottom: 30px;
-            font-size: 2.2em;
-            font-weight: 600;
+            font-size: 2.5em;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
         }
         .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 25px;
             margin-bottom: 40px;
         }
         .stat-box {
-            background: linear-gradient(145deg, #5e43ff, #7a5fff);
-            color: white;
+            background: linear-gradient(145deg, #ffffff, #d3d3d3);
+            color: #000000;
             padding: 25px;
-            border-radius: 15px;
+            border-radius: 10px;
             text-align: center;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid #ff0000;
         }
         .stat-box:hover {
             transform: translateY(-8px) scale(1.03);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 12px 25px rgba(255, 0, 0, 0.3);
         }
         .stat-box h3 {
-            font-size: 2em;
+            font-size: 2.2em;
             font-weight: 700;
             margin-bottom: 8px;
         }
         .stat-box p {
-            font-size: 0.95em;
-            font-weight: 300;
-            opacity: 0.85;
+            font-size: 1em;
+            font-weight: 400;
+            font-family: 'Poppins', sans-serif;
         }
         .season-buttons {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 25px;
             margin-bottom: 20px;
         }
         .season-buttons button {
-            padding: 14px 30px;
-            background: #5e43ff;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1em;
-            font-weight: 500;
+            padding: 15px 35px;
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #ff0000;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         }
         .season-buttons button.active {
-            background: #00ddeb;
+            background: #ff0000;
+            color: #ffffff;
             transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(0, 221, 235, 0.4);
+            box-shadow: 0 6px 20px rgba(255, 0, 0, 0.5);
         }
         .season-buttons button:hover:not(.active) {
-            background: #7a5fff;
-            transform: scale(1.03);
+            background: #ffffff;
+            color: #ff0000;
+            border-color: #ffffff;
         }
-        .save-button {
+        .save-button-container {
             text-align: center;
             margin-bottom: 40px;
         }
-        .save-button button {
-            padding: 14px 40px;
-            background: #00ddeb;
-            color: white;
-            border: none;
-            border-radius: 50px;
+        #save-button {
+            padding: 15px 40px;
+            background: #ff0000;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            border-radius: 8px;
             font-size: 1.2em;
-            font-weight: 500;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 221, 235, 0.4);
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
         }
-        .save-button button:hover {
-            background: #5e43ff;
+        #save-button:hover {
+            background: #ffffff;
+            color: #ff0000;
+            border-color: #ff0000;
             transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid #ffffff;
         }
         th, td {
-            padding: 18px;
+            padding: 20px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         th {
-            background: #5e43ff;
-            color: white;
-            font-weight: 600;
+            background: #ff0000;
+            color: #ffffff;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -160,56 +171,58 @@
             transition: background 0.2s ease;
         }
         tr:nth-child(even) {
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255, 255, 255, 0.03);
         }
         tr:hover {
-            background: rgba(0, 221, 235, 0.1);
+            background: rgba(255, 0, 0, 0.1);
             cursor: pointer;
         }
         input[type="number"] {
-            width: 70px;
-            padding: 8px;
+            width: 80px;
+            padding: 10px;
             text-align: center;
-            border: none;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #e0e0e0;
-            font-size: 1em;
+            border: 1px solid #ff0000;
+            border-radius: 5px;
+            background: #ffffff;
+            color: #000000;
+            font-size: 1.1em;
             transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
         }
         input[type="number"]:focus {
-            background: rgba(255, 255, 255, 0.2);
+            background: #ffffff;
+            border-color: #ffffff;
             outline: none;
-            box-shadow: 0 0 10px rgba(0, 221, 235, 0.3);
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
         }
         input[type="checkbox"] {
-            transform: scale(1.3);
-            accent-color: #00ddeb;
+            transform: scale(1.5);
+            accent-color: #ff0000;
         }
         footer {
             text-align: center;
             margin-top: 60px;
             padding: 40px 20px;
-            background: linear-gradient(135deg, #5e43ff, #7a5fff);
-            color: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(90deg, #000000, #ff0000);
+            color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            border-top: 4px solid #ffffff;
         }
         footer h2 {
-            font-size: 2em;
+            font-size: 2.2em;
             margin-bottom: 30px;
         }
         footer .stats {
-            gap: 20px;
+            gap: 25px;
         }
         footer .stat-box {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: none;
-            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            color: #000000;
+            border: 2px solid #ff0000;
         }
         footer .stat-box:hover {
-            background: rgba(0, 221, 235, 0.2);
+            background: #ffffff;
             transform: translateY(-8px) scale(1.03);
         }
         .hidden {
@@ -223,7 +236,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.9);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -237,14 +250,13 @@
             visibility: visible;
         }
         .modal-content {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 30px;
-            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 35px;
+            border-radius: 15px;
             width: 90%;
-            max-width: 650px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 700px;
+            box-shadow: 0 15px 40px rgba(255, 0, 0, 0.4);
+            border: 2px solid #ff0000;
             text-align: center;
             transform: scale(0.85);
             transition: transform 0.3s ease;
@@ -253,33 +265,35 @@
             transform: scale(1);
         }
         .modal-content h3 {
-            color: #00ddeb;
+            color: #ff0000;
             margin-bottom: 25px;
-            font-size: 1.8em;
-            font-weight: 600;
+            font-size: 2em;
+            font-weight: 700;
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
         }
         .modal-content .summary {
             background: rgba(255, 255, 255, 0.05);
             padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         .modal-content .summary div {
             margin: 12px 0;
-            font-size: 1.2em;
-            font-weight: 300;
+            font-size: 1.3em;
+            font-weight: 400;
+            font-family: 'Poppins', sans-serif;
         }
         .close-modal {
             position: absolute;
             top: 15px;
             right: 15px;
-            background: #5e43ff;
-            color: white;
+            background: #ff0000;
+            color: #ffffff;
             border: none;
             border-radius: 50%;
-            width: 35px;
-            height: 35px;
-            font-size: 1.4em;
+            width: 40px;
+            height: 40px;
+            font-size: 1.6em;
             cursor: pointer;
             display: flex;
             justify-content: center;
@@ -287,7 +301,8 @@
             transition: all 0.3s ease;
         }
         .close-modal:hover {
-            background: #00ddeb;
+            background: #ffffff;
+            color: #ff0000;
             transform: rotate(90deg);
         }
 
@@ -301,7 +316,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Cabeçalho -->
@@ -346,9 +361,9 @@
             <button id="btn-2024">2024</button>
         </div>
 
-        <!-- Botão de Salvar -->
-        <div class="save-button">
-            <button id="save-btn">Salvar Alterações</button>
+        <!-- Botão Salvar Alterações -->
+        <div class="save-button-container">
+            <button id="save-button">Salvar Alterações</button>
         </div>
 
         <!-- Tabela de Corridas da Temporada 2023 -->
@@ -750,7 +765,7 @@
             const seasons = ["2023", "2024"];
             seasons.forEach(season => {
                 const table = document.getElementById(`race-table-${season}`);
-                if (!table) return; // Verifica se a tabela existe
+                if (!table) return;
                 const rows = table.querySelectorAll("tr");
 
                 rows.forEach(row => {
@@ -761,8 +776,8 @@
                     const hattrickCheckbox = row.querySelector(".hattrick-checkbox");
 
                     const savedData = JSON.parse(localStorage.getItem(`${season}-${raceKey}`)) || {};
+                    console.log(`Carregando ${season}-${raceKey}:`, savedData);
 
-                    // Atribuir valores aos campos
                     positionInput.value = savedData.position || "";
                     poleCheckbox.checked = savedData.pole || false;
                     fastestLapCheckbox.checked = savedData.fastestLap || false;
@@ -772,7 +787,19 @@
         }
 
         // Função para salvar dados no localStorage
-        function saveData() {
+        function saveData(season, raceKey, position, pole, fastestLap, hattrick) {
+            const data = {
+                position: position || "",
+                pole: pole || false,
+                fastestLap: fastestLap || false,
+                hattrick: hattrick || false
+            };
+            localStorage.setItem(`${season}-${raceKey}`, JSON.stringify(data));
+            console.log(`Salvando ${season}-${raceKey}:`, data);
+        }
+
+        // Função para salvar todas as alterações manualmente
+        function saveAllChanges() {
             const seasons = ["2023", "2024"];
             seasons.forEach(season => {
                 const table = document.getElementById(`race-table-${season}`);
@@ -786,16 +813,16 @@
                     const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
                     const hattrickCheckbox = row.querySelector(".hattrick-checkbox");
 
-                    const data = {
-                        position: positionInput.value || "",
-                        pole: poleCheckbox.checked,
-                        fastestLap: fastestLapCheckbox.checked,
-                        hattrick: hattrickCheckbox.checked
-                    };
-                    localStorage.setItem(`${season}-${raceKey}`, JSON.stringify(data));
+                    const position = positionInput.value;
+                    const pole = poleCheckbox.checked;
+                    const fastestLap = fastestLapCheckbox.checked;
+                    const hattrick = hattrickCheckbox.checked;
+
+                    saveData(season, raceKey, position, pole, fastestLap, hattrick);
                 });
             });
             alert("Alterações salvas com sucesso!");
+            updateStats(document.querySelector(".season-buttons button.active").id.split("-")[1]);
         }
 
         // Função para atualizar as estatísticas da temporada ativa
@@ -892,17 +919,34 @@
             updateStats("2024");
         });
 
-        // Evento para o botão de salvar
-        document.getElementById("save-btn").addEventListener("click", () => {
-            saveData();
+        // Salvar automaticamente ao alterar inputs
+        document.addEventListener("input", (event) => {
+            const target = event.target;
+            const row = target.closest("tr");
+            if (!row) return;
+            const seasonTable = row.closest("table");
+            const season = seasonTable.id.split("-")[2];
+            const raceKey = row.getAttribute("data-race");
+
+            const positionInput = row.querySelector(".position-input");
+            const poleCheckbox = row.querySelector(".pole-checkbox");
+            const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
+            const hattrickCheckbox = row.querySelector(".hattrick-checkbox");
+
+            const position = positionInput.value;
+            const pole = poleCheckbox.checked;
+            const fastestLap = fastestLapCheckbox.checked;
+            const hattrick = hattrickCheckbox.checked;
+
+            saveData(season, raceKey, position, pole, fastestLap, hattrick);
+
             const activeSeason = document.querySelector(".season-buttons button.active").id.split("-")[1];
             updateStats(activeSeason);
         });
 
-        // Atualizar estatísticas ao alterar inputs (sem salvar automaticamente)
-        document.addEventListener("input", () => {
-            const activeSeason = document.querySelector(".season-buttons button.active").id.split("-")[1];
-            updateStats(activeSeason);
+        // Evento para o botão Salvar Alterações
+        document.getElementById("save-button").addEventListener("click", () => {
+            saveAllChanges();
         });
 
         // Função para abrir o modal com as estatísticas consolidadas de uma corrida específica
@@ -970,9 +1014,10 @@
 
         // Inicializar a página após o DOM estar carregado
         document.addEventListener("DOMContentLoaded", () => {
-            loadData(); // Carrega os dados salvos do localStorage
-            const activeSeason = document.querySelector(".season-buttons button.active").id.split("-")[1];
-            updateStats(activeSeason); // Atualiza as estatísticas da temporada ativa
+            console.log("DOM carregado, iniciando loadData");
+            loadData();
+            console.log("loadData concluído, iniciando updateStats");
+            updateStats("2023");
         });
     </script>
 </body>
