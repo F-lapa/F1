@@ -83,12 +83,17 @@
         .stat-box h3 {
             font-size: 1.5em;
             font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: 2px;
         }
         .stat-box p {
             font-size: 0.9em;
             font-weight: 400;
             font-family: 'Poppins', sans-serif;
+        }
+        .stat-box .percentage {
+            font-size: 0.8em;
+            color: #555;
+            margin-top: 2px;
         }
         .stat-box p::before {
             content: "";
@@ -349,30 +354,37 @@
             <div class="stat-box">
                 <h3 id="total-races">0</h3>
                 <p>Corridas</p>
+                <div class="percentage" id="races-percentage">100%</div>
             </div>
             <div class="stat-box">
                 <h3 id="total-wins">0</h3>
                 <p>Vitórias</p>
+                <div class="percentage" id="wins-percentage">0%</div>
             </div>
             <div class="stat-box">
                 <h3 id="total-podiums">0</h3>
                 <p>Pódios</p>
+                <div class="percentage" id="podiums-percentage">0%</div>
             </div>
             <div class="stat-box">
                 <h3 id="total-poles">0</h3>
                 <p>Pole Positions</p>
+                <div class="percentage" id="poles-percentage">0%</div>
             </div>
             <div class="stat-box">
                 <h3 id="total-fastest-laps">0</h3>
                 <p>Melhores Voltas</p>
+                <div class="percentage" id="fastest-laps-percentage">0%</div>
             </div>
             <div class="stat-box">
                 <h3 id="total-hattricks">0</h3>
                 <p>Hat-Tricks</p>
+                <div class="percentage" id="hattricks-percentage">0%</div>
             </div>
             <div class="stat-box">
                 <h3 id="total-titles">0</h3>
                 <p>Títulos Mundiais</p>
+                <div class="percentage" id="titles-percentage">0%</div>
             </div>
         </div>
 
@@ -708,30 +720,37 @@
             <div class="stat-box">
                 <h3 id="overall-total-races">0</h3>
                 <p>Corridas</p>
+                <div class="percentage" id="overall-races-percentage">100%</div>
             </div>
             <div class="stat-box">
                 <h3 id="overall-total-wins">0</h3>
                 <p>Vitórias</p>
+                <div class="percentage" id="overall-wins-percentage">0%</div>
             </div>
             <div class="stat-box">
                 <h3 id="overall-total-podiums">0</h3>
                 <p>Pódios</p>
+                <div class="percentage" id="overall-podiums-percentage">0%</div>
             </div>
             <div class="stat-box">
                 <h3 id="overall-total-poles">0</h3>
                 <p>Pole Positions</p>
+                <div class="percentage" id="overall-poles-percentage">0%</div>
             </div>
             <div class="stat-box">
                 <h3 id="overall-total-fastest-laps">0</h3>
                 <p>Melhores Voltas</p>
+                <div class="percentage" id="overall-fastest-laps-percentage">0%</div>
             </div>
             <div class="stat-box">
                 <h3 id="overall-total-hattricks">0</h3>
                 <p>Hat-Tricks</p>
+                <div class="percentage" id="overall-hattricks-percentage">0%</div>
             </div>
             <div class="stat-box">
                 <h3 id="overall-total-titles">0</h3>
                 <p>Títulos Mundiais</p>
+                <div class="percentage" id="overall-titles-percentage">0%</div>
             </div>
         </div>
         <p>© 2023-2024 Fernando Lapa - Todos os direitos reservados.</p>
@@ -851,6 +870,16 @@
             document.getElementById("total-hattricks").textContent = totalHattricks;
             document.getElementById("total-titles").textContent = totalTitles;
 
+            // Atualizar porcentagens para a temporada ativa
+            const racesPossible = season === "2023" ? 22 : 24; // Total de corridas possíveis por temporada
+            document.getElementById("races-percentage").textContent = totalRaces > 0 ? `${Math.round((totalRaces / racesPossible) * 100)}%` : "0%";
+            document.getElementById("wins-percentage").textContent = totalRaces > 0 ? `${Math.round((totalWins / totalRaces) * 100)}%` : "0%";
+            document.getElementById("podiums-percentage").textContent = totalRaces > 0 ? `${Math.round((totalPodiums / totalRaces) * 100)}%` : "0%";
+            document.getElementById("poles-percentage").textContent = totalRaces > 0 ? `${Math.round((totalPoles / totalRaces) * 100)}%` : "0%";
+            document.getElementById("fastest-laps-percentage").textContent = totalRaces > 0 ? `${Math.round((totalFastestLaps / totalRaces) * 100)}%` : "0%";
+            document.getElementById("hattricks-percentage").textContent = totalRaces > 0 ? `${Math.round((totalHattricks / totalRaces) * 100)}%` : "0%";
+            document.getElementById("titles-percentage").textContent = `${Math.round((totalTitles / 1) * 100)}%`; // Apenas 1 título possível por temporada
+
             updateOverallStats();
         }
 
@@ -893,6 +922,16 @@
             document.getElementById("overall-total-fastest-laps").textContent = overallTotalFastestLaps;
             document.getElementById("overall-total-hattricks").textContent = overallTotalHattricks;
             document.getElementById("overall-total-titles").textContent = overallTotalTitles;
+
+            // Atualizar porcentagens gerais
+            const totalPossibleRaces = 22 + 24; // 22 em 2023 + 24 em 2024
+            document.getElementById("overall-races-percentage").textContent = overallTotalRaces > 0 ? `${Math.round((overallTotalRaces / totalPossibleRaces) * 100)}%` : "0%";
+            document.getElementById("overall-wins-percentage").textContent = overallTotalRaces > 0 ? `${Math.round((overallTotalWins / overallTotalRaces) * 100)}%` : "0%";
+            document.getElementById("overall-podiums-percentage").textContent = overallTotalRaces > 0 ? `${Math.round((overallTotalPodiums / overallTotalRaces) * 100)}%` : "0%";
+            document.getElementById("overall-poles-percentage").textContent = overallTotalRaces > 0 ? `${Math.round((overallTotalPoles / overallTotalRaces) * 100)}%` : "0%";
+            document.getElementById("overall-fastest-laps-percentage").textContent = overallTotalRaces > 0 ? `${Math.round((overallTotalFastestLaps / overallTotalRaces) * 100)}%` : "0%";
+            document.getElementById("overall-hattricks-percentage").textContent = overallTotalRaces > 0 ? `${Math.round((overallTotalHattricks / overallTotalRaces) * 100)}%` : "0%";
+            document.getElementById("overall-titles-percentage").textContent = `${Math.round((overallTotalTitles / 2) * 100)}%`; // 2 temporadas possíveis
         }
 
         document.getElementById("btn-2023").addEventListener("click", () => {
