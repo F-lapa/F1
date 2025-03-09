@@ -84,6 +84,7 @@
             font-size: 1.5em;
             font-weight: 700;
             margin-bottom: 2px;
+            transition: all 0.5s ease-out;
         }
         .stat-box p {
             font-size: 0.9em;
@@ -94,6 +95,7 @@
             font-size: 0.8em;
             color: #555;
             margin-top: 2px;
+            transition: all 0.5s ease-out;
         }
         .stat-box p::before {
             content: "";
@@ -354,37 +356,37 @@
             <div class="stat-box">
                 <h3 id="total-races">0</h3>
                 <p>Corridas</p>
-                <div class="percentage" id="races-percentage">100%</div>
+                <div class="percentage" id="races-percentage">0,00%</div>
             </div>
             <div class="stat-box">
                 <h3 id="total-wins">0</h3>
                 <p>Vitórias</p>
-                <div class="percentage" id="wins-percentage">0%</div>
+                <div class="percentage" id="wins-percentage">0,00%</div>
             </div>
             <div class="stat-box">
                 <h3 id="total-podiums">0</h3>
                 <p>Pódios</p>
-                <div class="percentage" id="podiums-percentage">0%</div>
+                <div class="percentage" id="podiums-percentage">0,00%</div>
             </div>
             <div class="stat-box">
                 <h3 id="total-poles">0</h3>
                 <p>Pole Positions</p>
-                <div class="percentage" id="poles-percentage">0%</div>
+                <div class="percentage" id="poles-percentage">0,00%</div>
             </div>
             <div class="stat-box">
                 <h3 id="total-fastest-laps">0</h3>
                 <p>Melhores Voltas</p>
-                <div class="percentage" id="fastest-laps-percentage">0%</div>
+                <div class="percentage" id="fastest-laps-percentage">0,00%</div>
             </div>
             <div class="stat-box">
                 <h3 id="total-hattricks">0</h3>
                 <p>Hat-Tricks</p>
-                <div class="percentage" id="hattricks-percentage">0%</div>
+                <div class="percentage" id="hattricks-percentage">0,00%</div>
             </div>
             <div class="stat-box">
                 <h3 id="total-titles">0</h3>
                 <p>Títulos Mundiais</p>
-                <div class="percentage" id="titles-percentage">0%</div>
+                <div class="percentage" id="titles-percentage">0,00%</div>
             </div>
         </div>
 
@@ -720,37 +722,37 @@
             <div class="stat-box">
                 <h3 id="overall-total-races">0</h3>
                 <p>Corridas</p>
-                <div class="percentage" id="overall-races-percentage">100%</div>
+                <div class="percentage" id="overall-races-percentage">0,00%</div>
             </div>
             <div class="stat-box">
                 <h3 id="overall-total-wins">0</h3>
                 <p>Vitórias</p>
-                <div class="percentage" id="overall-wins-percentage">0%</div>
+                <div class="percentage" id="overall-wins-percentage">0,00%</div>
             </div>
             <div class="stat-box">
                 <h3 id="overall-total-podiums">0</h3>
                 <p>Pódios</p>
-                <div class="percentage" id="overall-podiums-percentage">0%</div>
+                <div class="percentage" id="overall-podiums-percentage">0,00%</div>
             </div>
             <div class="stat-box">
                 <h3 id="overall-total-poles">0</h3>
                 <p>Pole Positions</p>
-                <div class="percentage" id="overall-poles-percentage">0%</div>
+                <div class="percentage" id="overall-poles-percentage">0,00%</div>
             </div>
             <div class="stat-box">
                 <h3 id="overall-total-fastest-laps">0</h3>
                 <p>Melhores Voltas</p>
-                <div class="percentage" id="overall-fastest-laps-percentage">0%</div>
+                <div class="percentage" id="overall-fastest-laps-percentage">0,00%</div>
             </div>
             <div class="stat-box">
                 <h3 id="overall-total-hattricks">0</h3>
                 <p>Hat-Tricks</p>
-                <div class="percentage" id="overall-hattricks-percentage">0%</div>
+                <div class="percentage" id="overall-hattricks-percentage">0,00%</div>
             </div>
             <div class="stat-box">
                 <h3 id="overall-total-titles">0</h3>
                 <p>Títulos Mundiais</p>
-                <div class="percentage" id="overall-titles-percentage">0%</div>
+                <div class="percentage" id="overall-titles-percentage">0,00%</div>
             </div>
         </div>
         <p>© 2023-2024 Fernando Lapa - Todos os direitos reservados.</p>
@@ -771,6 +773,25 @@
     </div>
 
     <script>
+        // Função para animar a contagem dos números
+        function animateCount(element, start, end, duration, isPercentage = false) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const current = start + progress * (end - start);
+                if (isPercentage) {
+                    element.textContent = `${current.toFixed(2).replace('.', ',')}%`;
+                } else {
+                    element.textContent = Math.floor(current);
+                }
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                }
+            };
+            requestAnimationFrame(step);
+        }
+
         function loadData() {
             const seasons = ["2023", "2024"];
             seasons.forEach(season => {
@@ -862,23 +883,24 @@
                 if (position === 1 && poleCheckbox.checked && fastestLapCheckbox.checked) totalHattricks++;
             });
 
-            document.getElementById("total-races").textContent = totalRaces;
-            document.getElementById("total-wins").textContent = totalWins;
-            document.getElementById("total-podiums").textContent = totalPodiums;
-            document.getElementById("total-poles").textContent = totalPoles;
-            document.getElementById("total-fastest-laps").textContent = totalFastestLaps;
-            document.getElementById("total-hattricks").textContent = totalHattricks;
-            document.getElementById("total-titles").textContent = totalTitles;
+            // Animação para as estatísticas da temporada ativa
+            animateCount(document.getElementById("total-races"), 0, totalRaces, 1000);
+            animateCount(document.getElementById("total-wins"), 0, totalWins, 1000);
+            animateCount(document.getElementById("total-podiums"), 0, totalPodiums, 1000);
+            animateCount(document.getElementById("total-poles"), 0, totalPoles, 1000);
+            animateCount(document.getElementById("total-fastest-laps"), 0, totalFastestLaps, 1000);
+            animateCount(document.getElementById("total-hattricks"), 0, totalHattricks, 1000);
+            animateCount(document.getElementById("total-titles"), 0, totalTitles, 1000);
 
-            // Atualizar porcentagens para a temporada ativa
-            const racesPossible = season === "2023" ? 22 : 24; // Total de corridas possíveis por temporada
-            document.getElementById("races-percentage").textContent = totalRaces > 0 ? `${Math.round((totalRaces / racesPossible) * 100)}%` : "0%";
-            document.getElementById("wins-percentage").textContent = totalRaces > 0 ? `${Math.round((totalWins / totalRaces) * 100)}%` : "0%";
-            document.getElementById("podiums-percentage").textContent = totalRaces > 0 ? `${Math.round((totalPodiums / totalRaces) * 100)}%` : "0%";
-            document.getElementById("poles-percentage").textContent = totalRaces > 0 ? `${Math.round((totalPoles / totalRaces) * 100)}%` : "0%";
-            document.getElementById("fastest-laps-percentage").textContent = totalRaces > 0 ? `${Math.round((totalFastestLaps / totalRaces) * 100)}%` : "0%";
-            document.getElementById("hattricks-percentage").textContent = totalRaces > 0 ? `${Math.round((totalHattricks / totalRaces) * 100)}%` : "0%";
-            document.getElementById("titles-percentage").textContent = `${Math.round((totalTitles / 1) * 100)}%`; // Apenas 1 título possível por temporada
+            // Cálculo e animação das porcentagens
+            const racesPossible = season === "2023" ? 22 : 24;
+            animateCount(document.getElementById("races-percentage"), 0, totalRaces > 0 ? (totalRaces / racesPossible) * 100 : 0, 1000, true);
+            animateCount(document.getElementById("wins-percentage"), 0, totalRaces > 0 ? (totalWins / totalRaces) * 100 : 0, 1000, true);
+            animateCount(document.getElementById("podiums-percentage"), 0, totalRaces > 0 ? (totalPodiums / totalRaces) * 100 : 0, 1000, true);
+            animateCount(document.getElementById("poles-percentage"), 0, totalRaces > 0 ? (totalPoles / totalRaces) * 100 : 0, 1000, true);
+            animateCount(document.getElementById("fastest-laps-percentage"), 0, totalRaces > 0 ? (totalFastestLaps / totalRaces) * 100 : 0, 1000, true);
+            animateCount(document.getElementById("hattricks-percentage"), 0, totalRaces > 0 ? (totalHattricks / totalRaces) * 100 : 0, 1000, true);
+            animateCount(document.getElementById("titles-percentage"), 0, (totalTitles / 1) * 100, 1000, true);
 
             updateOverallStats();
         }
@@ -915,23 +937,24 @@
                 if (document.getElementById(`champion-${season}`).checked) overallTotalTitles++;
             });
 
-            document.getElementById("overall-total-races").textContent = overallTotalRaces;
-            document.getElementById("overall-total-wins").textContent = overallTotalWins;
-            document.getElementById("overall-total-podiums").textContent = overallTotalPodiums;
-            document.getElementById("overall-total-poles").textContent = overallTotalPoles;
-            document.getElementById("overall-total-fastest-laps").textContent = overallTotalFastestLaps;
-            document.getElementById("overall-total-hattricks").textContent = overallTotalHattricks;
-            document.getElementById("overall-total-titles").textContent = overallTotalTitles;
+            // Animação para as estatísticas gerais
+            animateCount(document.getElementById("overall-total-races"), 0, overallTotalRaces, 1000);
+            animateCount(document.getElementById("overall-total-wins"), 0, overallTotalWins, 1000);
+            animateCount(document.getElementById("overall-total-podiums"), 0, overallTotalPodiums, 1000);
+            animateCount(document.getElementById("overall-total-poles"), 0, overallTotalPoles, 1000);
+            animateCount(document.getElementById("overall-total-fastest-laps"), 0, overallTotalFastestLaps, 1000);
+            animateCount(document.getElementById("overall-total-hattricks"), 0, overallTotalHattricks, 1000);
+            animateCount(document.getElementById("overall-total-titles"), 0, overallTotalTitles, 1000);
 
-            // Atualizar porcentagens gerais
-            const totalPossibleRaces = 22 + 24; // 22 em 2023 + 24 em 2024
-            document.getElementById("overall-races-percentage").textContent = overallTotalRaces > 0 ? `${Math.round((overallTotalRaces / totalPossibleRaces) * 100)}%` : "0%";
-            document.getElementById("overall-wins-percentage").textContent = overallTotalRaces > 0 ? `${Math.round((overallTotalWins / overallTotalRaces) * 100)}%` : "0%";
-            document.getElementById("overall-podiums-percentage").textContent = overallTotalRaces > 0 ? `${Math.round((overallTotalPodiums / overallTotalRaces) * 100)}%` : "0%";
-            document.getElementById("overall-poles-percentage").textContent = overallTotalRaces > 0 ? `${Math.round((overallTotalPoles / overallTotalRaces) * 100)}%` : "0%";
-            document.getElementById("overall-fastest-laps-percentage").textContent = overallTotalRaces > 0 ? `${Math.round((overallTotalFastestLaps / overallTotalRaces) * 100)}%` : "0%";
-            document.getElementById("overall-hattricks-percentage").textContent = overallTotalRaces > 0 ? `${Math.round((overallTotalHattricks / overallTotalRaces) * 100)}%` : "0%";
-            document.getElementById("overall-titles-percentage").textContent = `${Math.round((overallTotalTitles / 2) * 100)}%`; // 2 temporadas possíveis
+            // Cálculo e animação das porcentagens gerais
+            const totalPossibleRaces = 22 + 24;
+            animateCount(document.getElementById("overall-races-percentage"), 0, overallTotalRaces > 0 ? (overallTotalRaces / totalPossibleRaces) * 100 : 0, 1000, true);
+            animateCount(document.getElementById("overall-wins-percentage"), 0, overallTotalRaces > 0 ? (overallTotalWins / overallTotalRaces) * 100 : 0, 1000, true);
+            animateCount(document.getElementById("overall-podiums-percentage"), 0, overallTotalRaces > 0 ? (overallTotalPodiums / overallTotalRaces) * 100 : 0, 1000, true);
+            animateCount(document.getElementById("overall-poles-percentage"), 0, overallTotalRaces > 0 ? (overallTotalPoles / overallTotalRaces) * 100 : 0, 1000, true);
+            animateCount(document.getElementById("overall-fastest-laps-percentage"), 0, overallTotalRaces > 0 ? (overallTotalFastestLaps / overallTotalRaces) * 100 : 0, 1000, true);
+            animateCount(document.getElementById("overall-hattricks-percentage"), 0, overallTotalRaces > 0 ? (overallTotalHattricks / overallTotalRaces) * 100 : 0, 1000, true);
+            animateCount(document.getElementById("overall-titles-percentage"), 0, (overallTotalTitles / 2) * 100, 1000, true);
         }
 
         document.getElementById("btn-2023").addEventListener("click", () => {
@@ -1023,11 +1046,11 @@
                     }
                 });
 
-                modalWins.textContent = totalWins;
-                modalPodiums.textContent = totalPodiums;
-                modalPoles.textContent = totalPoles;
-                modalFastestLaps.textContent = totalFastestLaps;
-                modalHattricks.textContent = totalHattricks;
+                animateCount(modalWins, 0, totalWins, 1000);
+                animateCount(modalPodiums, 0, totalPodiums, 1000);
+                animateCount(modalPoles, 0, totalPoles, 1000);
+                animateCount(modalFastestLaps, 0, totalFastestLaps, 1000);
+                animateCount(modalHattricks, 0, totalHattricks, 1000);
 
                 modal.classList.add("show");
             });
