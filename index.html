@@ -60,6 +60,25 @@
             letter-spacing: 1px;
             text-shadow: 0 0 4px rgba(255, 0, 0, 0.5);
         }
+        .overall-stats-title {
+            color: #c0c0c0;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(192, 192, 192, 0.8), 0 0 10px rgba(192, 192, 192, 0.6), 0 0 15px rgba(255, 255, 255, 0.4);
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px rgba(192, 192, 192, 0.8), 0 0 10px rgba(192, 192, 192, 0.6), 0 0 15px rgba(255, 255, 255, 0.4);
+            }
+            to {
+                text-shadow: 0 0 10px rgba(192, 192, 192, 1), 0 0 20px rgba(192, 192, 192, 0.8), 0 0 25px rgba(255, 255, 255, 0.6);
+            }
+        }
         .stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -218,7 +237,7 @@
             accent-color: #ff0000;
         }
         .race-name span {
-            font-size: 1.2em; /* Aumenta apenas o tamanho das bandeiras */
+            font-size: 1.2em;
         }
         footer {
             text-align: center;
@@ -774,7 +793,7 @@
     </main>
 
     <footer>
-        <h2>Estatísticas Gerais de Todas as Temporadas</h2>
+        <h2 class="overall-stats-title">Estatísticas Gerais de Todas as Temporadas</h2>
         <div class="stats">
             <div class="stat-box">
                 <h3 id="overall-total-races">0</h3>
@@ -954,7 +973,6 @@
                 if (grandSlamCheckbox.checked) totalGrandSlams++;
             });
 
-            // Animação para as estatísticas da temporada ativa
             animateCount(document.getElementById("total-races"), 0, totalRaces, 1000);
             animateCount(document.getElementById("total-wins"), 0, totalWins, 1000);
             animateCount(document.getElementById("total-podiums"), 0, totalPodiums, 1000);
@@ -964,7 +982,6 @@
             animateCount(document.getElementById("total-grand-slams"), 0, totalGrandSlams, 1000);
             animateCount(document.getElementById("total-titles"), 0, totalTitles, 1000);
 
-            // Cálculo e animação das porcentagens
             const racesPossible = season === "2023" ? 22 : 24;
             animateCount(document.getElementById("races-percentage"), 0, totalRaces > 0 ? (totalRaces / racesPossible) * 100 : 0, 1000, true);
             animateCount(document.getElementById("wins-percentage"), 0, totalRaces > 0 ? (totalWins / totalRaces) * 100 : 0, 1000, true);
@@ -1013,7 +1030,6 @@
                 if (document.getElementById(`champion-${season}`).checked) overallTotalTitles++;
             });
 
-            // Animação para as estatísticas gerais
             animateCount(document.getElementById("overall-total-races"), 0, overallTotalRaces, 1000);
             animateCount(document.getElementById("overall-total-wins"), 0, overallTotalWins, 1000);
             animateCount(document.getElementById("overall-total-podiums"), 0, overallTotalPodiums, 1000);
@@ -1023,7 +1039,6 @@
             animateCount(document.getElementById("overall-total-grand-slams"), 0, overallTotalGrandSlams, 1000);
             animateCount(document.getElementById("overall-total-titles"), 0, overallTotalTitles, 1000);
 
-            // Cálculo e animação das porcentagens gerais
             const totalPossibleRaces = 22 + 24;
             animateCount(document.getElementById("overall-races-percentage"), 0, overallTotalRaces > 0 ? (overallTotalRaces / totalPossibleRaces) * 100 : 0, 1000, true);
             animateCount(document.getElementById("overall-wins-percentage"), 0, overallTotalRaces > 0 ? (overallTotalWins / overallTotalRaces) * 100 : 0, 1000, true);
