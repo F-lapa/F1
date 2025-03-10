@@ -109,7 +109,8 @@
         .stat-box:nth-child(4) p::before { content: "🚀"; }
         .stat-box:nth-child(5) p::before { content: "⏱️"; }
         .stat-box:nth-child(6) p::before { content: "🎩"; }
-        .stat-box:nth-child(7) p::before { content: "🌍"; }
+        .stat-box:nth-child(7) p::before { content: "🏅"; }
+        .stat-box:nth-child(8) p::before { content: "🌍"; }
         .season-buttons {
             display: flex;
             justify-content: center;
@@ -215,6 +216,9 @@
         input[type="checkbox"] {
             transform: scale(1);
             accent-color: #ff0000;
+        }
+        .race-name span {
+            font-size: 1.2em; /* Aumenta apenas o tamanho das bandeiras */
         }
         footer {
             text-align: center;
@@ -375,13 +379,18 @@
             </div>
             <div class="stat-box">
                 <h3 id="total-fastest-laps">0</h3>
-                <p>Melhores Voltas</p>
+                <p>Volta Mais Rápida</p>
                 <div class="percentage" id="fastest-laps-percentage">0,00%</div>
             </div>
             <div class="stat-box">
                 <h3 id="total-hattricks">0</h3>
                 <p>Hat-Tricks</p>
                 <div class="percentage" id="hattricks-percentage">0,00%</div>
+            </div>
+            <div class="stat-box">
+                <h3 id="total-grand-slams">0</h3>
+                <p>Grand Slams</p>
+                <div class="percentage" id="grand-slams-percentage">0,00%</div>
             </div>
             <div class="stat-box">
                 <h3 id="total-titles">0</h3>
@@ -407,141 +416,164 @@
                         <th>Corrida 🏁</th>
                         <th>Posição</th>
                         <th>Pole</th>
-                        <th>Volta</th>
+                        <th>Volta Mais Rápida</th>
+                        <th>Grand Slam</th>
                     </tr>
                 </thead>
                 <tbody id="race-table-2023">
                     <tr data-race="Bahrein">
-                        <td><span class="race-name">🇧🇭 Bahrein</span></td>
+                        <td><span class="race-name"><span>🇧🇭</span> Bahrein</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Arábia Saudita">
-                        <td><span class="race-name">🇸🇦 Arábia Saudita</span></td>
+                        <td><span class="race-name"><span>🇸🇦</span> Arábia Saudita</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Austrália">
-                        <td><span class="race-name">🇦🇺 Austrália</span></td>
+                        <td><span class="race-name"><span>🇦🇺</span> Austrália</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Azerbaijão">
-                        <td><span class="race-name">🇦🇿 Azerbaijão</span></td>
+                        <td><span class="race-name"><span>🇦🇿</span> Azerbaijão</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Miami">
-                        <td><span class="race-name">🇺🇸 Miami</span></td>
+                        <td><span class="race-name"><span>🇺🇸</span> Miami</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Mônaco">
-                        <td><span class="race-name">🇲🇨 Mônaco</span></td>
+                        <td><span class="race-name"><span>🇲🇨</span> Mônaco</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Espanha">
-                        <td><span class="race-name">🇪🇸 Espanha</span></td>
+                        <td><span class="race-name"><span>🇪🇸</span> Espanha</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Canadá">
-                        <td><span class="race-name">🇨🇦 Canadá</span></td>
+                        <td><span class="race-name"><span>🇨🇦</span> Canadá</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Áustria">
-                        <td><span class="race-name">🇦🇹 Áustria</span></td>
+                        <td><span class="race-name"><span>🇦🇹</span> Áustria</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Grã-Bretanha">
-                        <td><span class="race-name">🇬🇧 Grã-Bretanha</span></td>
+                        <td><span class="race-name"><span>🇬🇧</span> Grã-Bretanha</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Hungria">
-                        <td><span class="race-name">🇭🇺 Hungria</span></td>
+                        <td><span class="race-name"><span>🇭🇺</span> Hungria</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Bélgica">
-                        <td><span class="race-name">🇧🇪 Bélgica</span></td>
+                        <td><span class="race-name"><span>🇧🇪</span> Bélgica</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Países Baixos">
-                        <td><span class="race-name">🇳🇱 Países Baixos</span></td>
+                        <td><span class="race-name"><span>🇳🇱</span> Países Baixos</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Itália">
-                        <td><span class="race-name">🇮🇹 Itália</span></td>
+                        <td><span class="race-name"><span>🇮🇹</span> Itália</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Singapura">
-                        <td><span class="race-name">🇸🇬 Singapura</span></td>
+                        <td><span class="race-name"><span>🇸🇬</span> Singapura</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Japão">
-                        <td><span class="race-name">🇯🇵 Japão</span></td>
+                        <td><span class="race-name"><span>🇯🇵</span> Japão</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Catar">
-                        <td><span class="race-name">🇶🇦 Catar</span></td>
+                        <td><span class="race-name"><span>🇶🇦</span> Catar</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Estados Unidos">
-                        <td><span class="race-name">🇺🇸 Estados Unidos</span></td>
+                        <td><span class="race-name"><span>🇺🇸</span> Estados Unidos</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="México">
-                        <td><span class="race-name">🇲🇽 México</span></td>
+                        <td><span class="race-name"><span>🇲🇽</span> México</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Brasil">
-                        <td><span class="race-name">🇧🇷 Brasil</span></td>
+                        <td><span class="race-name"><span>🇧🇷</span> Brasil</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Las Vegas">
-                        <td><span class="race-name">🇺🇸 Las Vegas</span></td>
+                        <td><span class="race-name"><span>🇺🇸</span> Las Vegas</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Abu Dhabi">
-                        <td><span class="race-name">🇦🇪 Abu Dhabi</span></td>
+                        <td><span class="race-name"><span>🇦🇪</span> Abu Dhabi</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                 </tbody>
             </table>
@@ -559,153 +591,178 @@
                         <th>Corrida 🏁</th>
                         <th>Posição</th>
                         <th>Pole</th>
-                        <th>Volta</th>
+                        <th>Volta Mais Rápida</th>
+                        <th>Grand Slam</th>
                     </tr>
                 </thead>
                 <tbody id="race-table-2024">
                     <tr data-race="Bahrein">
-                        <td><span class="race-name">🇧🇭 Bahrein</span></td>
+                        <td><span class="race-name"><span>🇧🇭</span> Bahrein</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Arábia Saudita">
-                        <td><span class="race-name">🇸🇦 Arábia Saudita</span></td>
+                        <td><span class="race-name"><span>🇸🇦</span> Arábia Saudita</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Austrália">
-                        <td><span class="race-name">🇦🇺 Austrália</span></td>
+                        <td><span class="race-name"><span>🇦🇺</span> Austrália</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Japão">
-                        <td><span class="race-name">🇯🇵 Japão</span></td>
+                        <td><span class="race-name"><span>🇯🇵</span> Japão</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="China">
-                        <td><span class="race-name">🇨🇳 China</span></td>
+                        <td><span class="race-name"><span>🇨🇳</span> China</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Miami">
-                        <td><span class="race-name">🇺🇸 Miami</span></td>
+                        <td><span class="race-name"><span>🇺🇸</span> Miami</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Emilia-Romagna">
-                        <td><span class="race-name">🇮🇹 Emilia-Romagna</span></td>
+                        <td><span class="race-name"><span>🇮🇹</span> Emilia-Romagna</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Mônaco">
-                        <td><span class="race-name">🇲🇨 Mônaco</span></td>
+                        <td><span class="race-name"><span>🇲🇨</span> Mônaco</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Canadá">
-                        <td><span class="race-name">🇨🇦 Canadá</span></td>
+                        <td><span class="race-name"><span>🇨🇦</span> Canadá</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Espanha">
-                        <td><span class="race-name">🇪🇸 Espanha</span></td>
+                        <td><span class="race-name"><span>🇪🇸</span> Espanha</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Áustria">
-                        <td><span class="race-name">🇦🇹 Áustria</span></td>
+                        <td><span class="race-name"><span>🇦🇹</span> Áustria</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Grã-Bretanha">
-                        <td><span class="race-name">🇬🇧 Grã-Bretanha</span></td>
+                        <td><span class="race-name"><span>🇬🇧</span> Grã-Bretanha</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Hungria">
-                        <td><span class="race-name">🇭🇺 Hungria</span></td>
+                        <td><span class="race-name"><span>🇭🇺</span> Hungria</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Bélgica">
-                        <td><span class="race-name">🇧🇪 Bélgica</span></td>
+                        <td><span class="race-name"><span>🇧🇪</span> Bélgica</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Países Baixos">
-                        <td><span class="race-name">🇳🇱 Países Baixos</span></td>
+                        <td><span class="race-name"><span>🇳🇱</span> Países Baixos</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Itália">
-                        <td><span class="race-name">🇮🇹 Itália</span></td>
+                        <td><span class="race-name"><span>🇮🇹</span> Itália</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Azerbaijão">
-                        <td><span class="race-name">🇦🇿 Azerbaijão</span></td>
+                        <td><span class="race-name"><span>🇦🇿</span> Azerbaijão</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Singapura">
-                        <td><span class="race-name">🇸🇬 Singapura</span></td>
+                        <td><span class="race-name"><span>🇸🇬</span> Singapura</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Estados Unidos">
-                        <td><span class="race-name">🇺🇸 Estados Unidos</span></td>
+                        <td><span class="race-name"><span>🇺🇸</span> Estados Unidos</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="México">
-                        <td><span class="race-name">🇲🇽 México</span></td>
+                        <td><span class="race-name"><span>🇲🇽</span> México</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Brasil">
-                        <td><span class="race-name">🇧🇷 Brasil</span></td>
+                        <td><span class="race-name"><span>🇧🇷</span> Brasil</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Las Vegas">
-                        <td><span class="race-name">🇺🇸 Las Vegas</span></td>
+                        <td><span class="race-name"><span>🇺🇸</span> Las Vegas</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Catar">
-                        <td><span class="race-name">🇶🇦 Catar</span></td>
+                        <td><span class="race-name"><span>🇶🇦</span> Catar</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Abu Dhabi">
-                        <td><span class="race-name">🇦🇪 Abu Dhabi</span></td>
+                        <td><span class="race-name"><span>🇦🇪</span> Abu Dhabi</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
+                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                 </tbody>
             </table>
@@ -741,13 +798,18 @@
             </div>
             <div class="stat-box">
                 <h3 id="overall-total-fastest-laps">0</h3>
-                <p>Melhores Voltas</p>
+                <p>Volta Mais Rápida</p>
                 <div class="percentage" id="overall-fastest-laps-percentage">0,00%</div>
             </div>
             <div class="stat-box">
                 <h3 id="overall-total-hattricks">0</h3>
                 <p>Hat-Tricks</p>
                 <div class="percentage" id="overall-hattricks-percentage">0,00%</div>
+            </div>
+            <div class="stat-box">
+                <h3 id="overall-total-grand-slams">0</h3>
+                <p>Grand Slams</p>
+                <div class="percentage" id="overall-grand-slams-percentage">0,00%</div>
             </div>
             <div class="stat-box">
                 <h3 id="overall-total-titles">0</h3>
@@ -766,8 +828,9 @@
                 <div><strong>Vitórias:</strong> <span id="modal-wins">0</span></div>
                 <div><strong>Pódios:</strong> <span id="modal-podiums">0</span></div>
                 <div><strong>Pole Positions:</strong> <span id="modal-poles">0</span></div>
-                <div><strong>Melhores Voltas:</strong> <span id="modal-fastest-laps">0</span></div>
+                <div><strong>Volta Mais Rápida:</strong> <span id="modal-fastest-laps">0</span></div>
                 <div><strong>Hat-Tricks:</strong> <span id="modal-hattricks">0</span></div>
+                <div><strong>Grand Slams:</strong> <span id="modal-grand-slams">0</span></div>
             </div>
         </div>
     </div>
@@ -804,11 +867,13 @@
                     const positionInput = row.querySelector(".position-input");
                     const poleCheckbox = row.querySelector(".pole-checkbox");
                     const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
+                    const grandSlamCheckbox = row.querySelector(".grand-slam-checkbox");
 
                     const savedData = JSON.parse(localStorage.getItem(`${season}-${raceKey}`)) || {};
                     positionInput.value = savedData.position || "";
                     poleCheckbox.checked = savedData.pole || false;
                     fastestLapCheckbox.checked = savedData.fastestLap || false;
+                    grandSlamCheckbox.checked = savedData.grandSlam || false;
                 });
 
                 const championCheckbox = document.getElementById(`champion-${season}`);
@@ -816,11 +881,12 @@
             });
         }
 
-        function saveData(season, raceKey, position, pole, fastestLap) {
+        function saveData(season, raceKey, position, pole, fastestLap, grandSlam) {
             const data = {
                 position: position || "",
                 pole: pole || false,
-                fastestLap: fastestLap || false
+                fastestLap: fastestLap || false,
+                grandSlam: grandSlam || false
             };
             localStorage.setItem(`${season}-${raceKey}`, JSON.stringify(data));
         }
@@ -841,12 +907,14 @@
                     const positionInput = row.querySelector(".position-input");
                     const poleCheckbox = row.querySelector(".pole-checkbox");
                     const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
+                    const grandSlamCheckbox = row.querySelector(".grand-slam-checkbox");
 
                     const position = positionInput.value;
                     const pole = poleCheckbox.checked;
                     const fastestLap = fastestLapCheckbox.checked;
+                    const grandSlam = grandSlamCheckbox.checked;
 
-                    saveData(season, raceKey, position, pole, fastestLap);
+                    saveData(season, raceKey, position, pole, fastestLap, grandSlam);
                 });
 
                 const championCheckbox = document.getElementById(`champion-${season}`);
@@ -864,12 +932,14 @@
             let totalPoles = 0;
             let totalFastestLaps = 0;
             let totalHattricks = 0;
+            let totalGrandSlams = 0;
             let totalTitles = document.getElementById(`champion-${season}`).checked ? 1 : 0;
 
             rows.forEach(row => {
                 const positionInput = row.querySelector(".position-input");
                 const poleCheckbox = row.querySelector(".pole-checkbox");
                 const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
+                const grandSlamCheckbox = row.querySelector(".grand-slam-checkbox");
 
                 const position = parseInt(positionInput.value);
 
@@ -881,6 +951,7 @@
                 if (poleCheckbox.checked) totalPoles++;
                 if (fastestLapCheckbox.checked) totalFastestLaps++;
                 if (position === 1 && poleCheckbox.checked && fastestLapCheckbox.checked) totalHattricks++;
+                if (grandSlamCheckbox.checked) totalGrandSlams++;
             });
 
             // Animação para as estatísticas da temporada ativa
@@ -890,6 +961,7 @@
             animateCount(document.getElementById("total-poles"), 0, totalPoles, 1000);
             animateCount(document.getElementById("total-fastest-laps"), 0, totalFastestLaps, 1000);
             animateCount(document.getElementById("total-hattricks"), 0, totalHattricks, 1000);
+            animateCount(document.getElementById("total-grand-slams"), 0, totalGrandSlams, 1000);
             animateCount(document.getElementById("total-titles"), 0, totalTitles, 1000);
 
             // Cálculo e animação das porcentagens
@@ -900,6 +972,7 @@
             animateCount(document.getElementById("poles-percentage"), 0, totalRaces > 0 ? (totalPoles / totalRaces) * 100 : 0, 1000, true);
             animateCount(document.getElementById("fastest-laps-percentage"), 0, totalRaces > 0 ? (totalFastestLaps / totalRaces) * 100 : 0, 1000, true);
             animateCount(document.getElementById("hattricks-percentage"), 0, totalRaces > 0 ? (totalHattricks / totalRaces) * 100 : 0, 1000, true);
+            animateCount(document.getElementById("grand-slams-percentage"), 0, totalRaces > 0 ? (totalGrandSlams / totalRaces) * 100 : 0, 1000, true);
             animateCount(document.getElementById("titles-percentage"), 0, (totalTitles / 1) * 100, 1000, true);
 
             updateOverallStats();
@@ -913,6 +986,7 @@
             let overallTotalPoles = 0;
             let overallTotalFastestLaps = 0;
             let overallTotalHattricks = 0;
+            let overallTotalGrandSlams = 0;
             let overallTotalTitles = 0;
 
             seasons.forEach(season => {
@@ -921,6 +995,7 @@
                     const positionInput = row.querySelector(".position-input");
                     const poleCheckbox = row.querySelector(".pole-checkbox");
                     const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
+                    const grandSlamCheckbox = row.querySelector(".grand-slam-checkbox");
 
                     const position = parseInt(positionInput.value);
 
@@ -932,6 +1007,7 @@
                     if (poleCheckbox.checked) overallTotalPoles++;
                     if (fastestLapCheckbox.checked) overallTotalFastestLaps++;
                     if (position === 1 && poleCheckbox.checked && fastestLapCheckbox.checked) overallTotalHattricks++;
+                    if (grandSlamCheckbox.checked) overallTotalGrandSlams++;
                 });
 
                 if (document.getElementById(`champion-${season}`).checked) overallTotalTitles++;
@@ -944,6 +1020,7 @@
             animateCount(document.getElementById("overall-total-poles"), 0, overallTotalPoles, 1000);
             animateCount(document.getElementById("overall-total-fastest-laps"), 0, overallTotalFastestLaps, 1000);
             animateCount(document.getElementById("overall-total-hattricks"), 0, overallTotalHattricks, 1000);
+            animateCount(document.getElementById("overall-total-grand-slams"), 0, overallTotalGrandSlams, 1000);
             animateCount(document.getElementById("overall-total-titles"), 0, overallTotalTitles, 1000);
 
             // Cálculo e animação das porcentagens gerais
@@ -954,6 +1031,7 @@
             animateCount(document.getElementById("overall-poles-percentage"), 0, overallTotalRaces > 0 ? (overallTotalPoles / overallTotalRaces) * 100 : 0, 1000, true);
             animateCount(document.getElementById("overall-fastest-laps-percentage"), 0, overallTotalRaces > 0 ? (overallTotalFastestLaps / overallTotalRaces) * 100 : 0, 1000, true);
             animateCount(document.getElementById("overall-hattricks-percentage"), 0, overallTotalRaces > 0 ? (overallTotalHattricks / overallTotalRaces) * 100 : 0, 1000, true);
+            animateCount(document.getElementById("overall-grand-slams-percentage"), 0, overallTotalRaces > 0 ? (overallTotalGrandSlams / overallTotalRaces) * 100 : 0, 1000, true);
             animateCount(document.getElementById("overall-titles-percentage"), 0, (overallTotalTitles / 2) * 100, 1000, true);
         }
 
@@ -984,12 +1062,14 @@
             const positionInput = row.querySelector(".position-input");
             const poleCheckbox = row.querySelector(".pole-checkbox");
             const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
+            const grandSlamCheckbox = row.querySelector(".grand-slam-checkbox");
 
             const position = positionInput.value;
             const pole = poleCheckbox.checked;
             const fastestLap = fastestLapCheckbox.checked;
+            const grandSlam = grandSlamCheckbox.checked;
 
-            saveData(season, raceKey, position, pole, fastestLap);
+            saveData(season, raceKey, position, pole, fastestLap, grandSlam);
 
             const activeSeason = document.querySelector(".season-buttons button.active").id.split("-")[1];
             updateStats(activeSeason);
@@ -1019,6 +1099,7 @@
                 const modalPoles = document.getElementById("modal-poles");
                 const modalFastestLaps = document.getElementById("modal-fastest-laps");
                 const modalHattricks = document.getElementById("modal-hattricks");
+                const modalGrandSlams = document.getElementById("modal-grand-slams");
 
                 modalTitle.textContent = `Estatísticas Consolidadas: ${raceNameText}`;
 
@@ -1028,6 +1109,7 @@
                 let totalPoles = 0;
                 let totalFastestLaps = 0;
                 let totalHattricks = 0;
+                let totalGrandSlams = 0;
 
                 seasons.forEach(season => {
                     const raceData = document.querySelector(`#race-table-${season} tr[data-race="${raceKey}"]`);
@@ -1035,6 +1117,7 @@
                         const positionInput = raceData.querySelector(".position-input");
                         const poleCheckbox = raceData.querySelector(".pole-checkbox");
                         const fastestLapCheckbox = raceData.querySelector(".fastest-lap-checkbox");
+                        const grandSlamCheckbox = raceData.querySelector(".grand-slam-checkbox");
 
                         const position = parseInt(positionInput.value);
 
@@ -1043,6 +1126,7 @@
                         if (poleCheckbox.checked) totalPoles++;
                         if (fastestLapCheckbox.checked) totalFastestLaps++;
                         if (position === 1 && poleCheckbox.checked && fastestLapCheckbox.checked) totalHattricks++;
+                        if (grandSlamCheckbox.checked) totalGrandSlams++;
                     }
                 });
 
@@ -1051,6 +1135,7 @@
                 animateCount(modalPoles, 0, totalPoles, 1000);
                 animateCount(modalFastestLaps, 0, totalFastestLaps, 1000);
                 animateCount(modalHattricks, 0, totalHattricks, 1000);
+                animateCount(modalGrandSlams, 0, totalGrandSlams, 1000);
 
                 modal.classList.add("show");
             });
