@@ -287,58 +287,66 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.95);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1000;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
+            transition: opacity 0.3s ease;
         }
         .modal.show {
             opacity: 1;
             visibility: visible;
         }
         .modal-content {
-            background: rgba(0, 0, 0, 0.9);
-            padding: 15px;
-            border-radius: 10px;
+            background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+            padding: 20px;
+            border-radius: 15px;
             width: 90%;
             max-width: 500px;
-            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.4);
-            border: 2px solid #ff0000;
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2), 0 0 20px rgba(255, 0, 0, 0.1);
+            border: 2px solid #00ffff;
             text-align: center;
-            transform: scale(0.85);
-            transition: transform 0.3s ease;
+            transform: scale(0.9);
+            transition: transform 0.4s ease, opacity 0.3s ease;
+            position: relative;
         }
         .modal.show .modal-content {
             transform: scale(1);
+            opacity: 1;
         }
         .modal-content h3 {
-            color: #ff0000;
-            margin-bottom: 15px;
-            font-size: 1.5em;
+            color: #00ffff;
+            margin-bottom: 20px;
+            font-size: 1.8em;
             font-weight: 700;
-            text-shadow: 0 0 4px rgba(255, 0, 0, 0.5);
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
         }
         .modal-content .summary {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.1);
             padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         .modal-content .summary div {
-            margin: 5px 0;
-            font-size: 0.9em;
+            margin: 8px 0;
+            font-size: 1em;
             font-weight: 400;
             font-family: 'Poppins', sans-serif;
+            color: #ffffff;
+        }
+        .modal-content .summary div strong {
+            color: #ff5555;
+            margin-right: 5px;
         }
         .close-modal {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #ff0000;
+            top: -30px; /* Ajustado para ficar acima da bandeira */
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff5555;
             color: #ffffff;
             border: none;
             border-radius: 50%;
@@ -352,9 +360,55 @@
             transition: all 0.3s ease;
         }
         .close-modal:hover {
-            background: #ffffff;
-            color: #ff0000;
-            transform: rotate(90deg);
+            background: #00ffff;
+            color: #1e1e2f;
+            transform: translateX(-50%) rotate(90deg);
+        }
+        #broken-records {
+            margin-top: 20px;
+            padding: 15px;
+            background: linear-gradient(145deg, #2a2a40, #1e1e2f);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            border: 2px solid #00ffff;
+        }
+        #broken-records h3 {
+            color: #00ffff;
+            font-size: 1.6em;
+            text-align: center;
+            margin-bottom: 15px;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+        .record-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            color: #ffffff;
+            font-size: 1em;
+            border-left: 5px solid #ff5555;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .record-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+        }
+        .record-number {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #ff5555;
+            text-shadow: 0 0 5px rgba(255, 85, 85, 0.5);
+            min-width: 50px;
+            text-align: center;
+        }
+        .record-title {
+            flex-grow: 1;
+            text-align: left;
+            padding-left: 10px;
         }
         @keyframes fadeInDown {
             from { opacity: 0; transform: translateY(-20px); }
@@ -374,47 +428,47 @@
     </header>
 
     <main>
-        <h2>Estatísticas Gerais da Temporada Ativa</h2>
+        <h2 class="overall-stats-title">Estatísticas Gerais de Todas as Temporadas</h2>
         <div class="stats">
             <div class="stat-box">
-                <h3 id="total-races">0</h3>
+                <h3 id="overall-total-races">0</h3>
                 <p>Corridas</p>
-                <div class="percentage" id="races-percentage">0,00%</div>
+                <div class="percentage" id="overall-races-percentage">0,00%</div>
             </div>
             <div class="stat-box">
-                <h3 id="total-wins">0</h3>
+                <h3 id="overall-total-wins">0</h3>
                 <p>Vitórias</p>
-                <div class="percentage" id="wins-percentage">0,00%</div>
+                <div class="percentage" id="overall-wins-percentage">0,00%</div>
             </div>
             <div class="stat-box">
-                <h3 id="total-podiums">0</h3>
+                <h3 id="overall-total-podiums">0</h3>
                 <p>Pódios</p>
-                <div class="percentage" id="podiums-percentage">0,00%</div>
+                <div class="percentage" id="overall-podiums-percentage">0,00%</div>
             </div>
             <div class="stat-box">
-                <h3 id="total-poles">0</h3>
+                <h3 id="overall-total-poles">0</h3>
                 <p>Pole Positions</p>
-                <div class="percentage" id="poles-percentage">0,00%</div>
+                <div class="percentage" id="overall-poles-percentage">0,00%</div>
             </div>
             <div class="stat-box">
-                <h3 id="total-fastest-laps">0</h3>
+                <h3 id="overall-total-fastest-laps">0</h3>
                 <p>Volta Mais Rápida</p>
-                <div class="percentage" id="fastest-laps-percentage">0,00%</div>
+                <div class="percentage" id="overall-fastest-laps-percentage">0,00%</div>
             </div>
             <div class="stat-box">
-                <h3 id="total-hattricks">0</h3>
+                <h3 id="overall-total-hattricks">0</h3>
                 <p>Hat-Tricks</p>
-                <div class="percentage" id="hattricks-percentage">0,00%</div>
+                <div class="percentage" id="overall-hattricks-percentage">0,00%</div>
             </div>
             <div class="stat-box">
-                <h3 id="total-grand-slams">0</h3>
+                <h3 id="overall-total-grand-slams">0</h3>
                 <p>Grand Slams</p>
-                <div class="percentage" id="grand-slams-percentage">0,00%</div>
+                <div class="percentage" id="overall-grand-slams-percentage">0,00%</div>
             </div>
             <div class="stat-box">
-                <h3 id="total-titles">0</h3>
+                <h3 id="overall-total-titles">0</h3>
                 <p>Títulos Mundiais</p>
-                <div class="percentage" id="titles-percentage">0,00%</div>
+                <div class="percentage" id="overall-titles-percentage">0,00%</div>
             </div>
         </div>
 
@@ -599,6 +653,49 @@
             <div class="champion-section">
                 <label for="champion-2023">Campeão em 2023?</label>
                 <input type="checkbox" id="champion-2023" class="champion-checkbox">
+            </div>
+            <h2>Estatísticas da Temporada 2023</h2>
+            <div class="stats">
+                <div class="stat-box">
+                    <h3 id="total-races">0</h3>
+                    <p>Corridas</p>
+                    <div class="percentage" id="races-percentage">0,00%</div>
+                </div>
+                <div class="stat-box">
+                    <h3 id="total-wins">0</h3>
+                    <p>Vitórias</p>
+                    <div class="percentage" id="wins-percentage">0,00%</div>
+                </div>
+                <div class="stat-box">
+                    <h3 id="total-podiums">0</h3>
+                    <p>Pódios</p>
+                    <div class="percentage" id="podiums-percentage">0,00%</div>
+                </div>
+                <div class="stat-box">
+                    <h3 id="total-poles">0</h3>
+                    <p>Pole Positions</p>
+                    <div class="percentage" id="poles-percentage">0,00%</div>
+                </div>
+                <div class="stat-box">
+                    <h3 id="total-fastest-laps">0</h3>
+                    <p>Volta Mais Rápida</p>
+                    <div class="percentage" id="fastest-laps-percentage">0,00%</div>
+                </div>
+                <div class="stat-box">
+                    <h3 id="total-hattricks">0</h3>
+                    <p>Hat-Tricks</p>
+                    <div class="percentage" id="hattricks-percentage">0,00%</div>
+                </div>
+                <div class="stat-box">
+                    <h3 id="total-grand-slams">0</h3>
+                    <p>Grand Slams</p>
+                    <div class="percentage" id="grand-slams-percentage">0,00%</div>
+                </div>
+                <div class="stat-box">
+                    <h3 id="total-titles">0</h3>
+                    <p>Títulos Mundiais</p>
+                    <div class="percentage" id="titles-percentage">0,00%</div>
+                </div>
             </div>
         </div>
 
@@ -789,52 +886,56 @@
                 <label for="champion-2024">Campeão em 2024?</label>
                 <input type="checkbox" id="champion-2024" class="champion-checkbox">
             </div>
+            <h2>Estatísticas da Temporada 2024</h2>
+            <div class="stats">
+                <div class="stat-box">
+                    <h3 id="total-races">0</h3>
+                    <p>Corridas</p>
+                    <div class="percentage" id="races-percentage">0,00%</div>
+                </div>
+                <div class="stat-box">
+                    <h3 id="total-wins">0</h3>
+                    <p>Vitórias</p>
+                    <div class="percentage" id="wins-percentage">0,00%</div>
+                </div>
+                <div class="stat-box">
+                    <h3 id="total-podiums">0</h3>
+                    <p>Pódios</p>
+                    <div class="percentage" id="podiums-percentage">0,00%</div>
+                </div>
+                <div class="stat-box">
+                    <h3 id="total-poles">0</h3>
+                    <p>Pole Positions</p>
+                    <div class="percentage" id="poles-percentage">0,00%</div>
+                </div>
+                <div class="stat-box">
+                    <h3 id="total-fastest-laps">0</h3>
+                    <p>Volta Mais Rápida</p>
+                    <div class="percentage" id="fastest-laps-percentage">0,00%</div>
+                </div>
+                <div class="stat-box">
+                    <h3 id="total-hattricks">0</h3>
+                    <p>Hat-Tricks</p>
+                    <div class="percentage" id="hattricks-percentage">0,00%</div>
+                </div>
+                <div class="stat-box">
+                    <h3 id="total-grand-slams">0</h3>
+                    <p>Grand Slams</p>
+                    <div class="percentage" id="grand-slams-percentage">0,00%</div>
+                </div>
+                <div class="stat-box">
+                    <h3 id="total-titles">0</h3>
+                    <p>Títulos Mundiais</p>
+                    <div class="percentage" id="titles-percentage">0,00%</div>
+                </div>
+            </div>
         </div>
     </main>
 
     <footer>
-        <h2 class="overall-stats-title">Estatísticas Gerais de Todas as Temporadas</h2>
-        <div class="stats">
-            <div class="stat-box">
-                <h3 id="overall-total-races">0</h3>
-                <p>Corridas</p>
-                <div class="percentage" id="overall-races-percentage">0,00%</div>
-            </div>
-            <div class="stat-box">
-                <h3 id="overall-total-wins">0</h3>
-                <p>Vitórias</p>
-                <div class="percentage" id="overall-wins-percentage">0,00%</div>
-            </div>
-            <div class="stat-box">
-                <h3 id="overall-total-podiums">0</h3>
-                <p>Pódios</p>
-                <div class="percentage" id="overall-podiums-percentage">0,00%</div>
-            </div>
-            <div class="stat-box">
-                <h3 id="overall-total-poles">0</h3>
-                <p>Pole Positions</p>
-                <div class="percentage" id="overall-poles-percentage">0,00%</div>
-            </div>
-            <div class="stat-box">
-                <h3 id="overall-total-fastest-laps">0</h3>
-                <p>Volta Mais Rápida</p>
-                <div class="percentage" id="overall-fastest-laps-percentage">0,00%</div>
-            </div>
-            <div class="stat-box">
-                <h3 id="overall-total-hattricks">0</h3>
-                <p>Hat-Tricks</p>
-                <div class="percentage" id="overall-hattricks-percentage">0,00%</div>
-            </div>
-            <div class="stat-box">
-                <h3 id="overall-total-grand-slams">0</h3>
-                <p>Grand Slams</p>
-                <div class="percentage" id="overall-grand-slams-percentage">0,00%</div>
-            </div>
-            <div class="stat-box">
-                <h3 id="overall-total-titles">0</h3>
-                <p>Títulos Mundiais</p>
-                <div class="percentage" id="overall-titles-percentage">0,00%</div>
-            </div>
+        <div id="broken-records">
+            <h3>Recordes do Piloto</h3>
+            <div id="records-list"></div>
         </div>
         <p>© 2023-2024 Fernando Lapa - Todos os direitos reservados.</p>
     </footer>
@@ -855,7 +956,6 @@
     </div>
 
     <script>
-        // Função para animar a contagem dos números
         function animateCount(element, start, end, duration, isPercentage = false) {
             let startTimestamp = null;
             const step = (timestamp) => {
@@ -953,6 +1053,8 @@
             let totalHattricks = 0;
             let totalGrandSlams = 0;
             let totalTitles = document.getElementById(`champion-${season}`).checked ? 1 : 0;
+            let consecutiveWins = 0;
+            let maxConsecutiveWins = 0;
 
             rows.forEach(row => {
                 const positionInput = row.querySelector(".position-input");
@@ -964,7 +1066,13 @@
 
                 if (!isNaN(position)) {
                     totalRaces++;
-                    if (position === 1) totalWins++;
+                    if (position === 1) {
+                        totalWins++;
+                        consecutiveWins++;
+                        maxConsecutiveWins = Math.max(maxConsecutiveWins, consecutiveWins);
+                    } else {
+                        consecutiveWins = 0;
+                    }
                     if (position >= 1 && position <= 3) totalPodiums++;
                 }
                 if (poleCheckbox.checked) totalPoles++;
@@ -991,6 +1099,11 @@
             animateCount(document.getElementById("hattricks-percentage"), 0, totalRaces > 0 ? (totalHattricks / totalRaces) * 100 : 0, 1000, true);
             animateCount(document.getElementById("grand-slams-percentage"), 0, totalRaces > 0 ? (totalGrandSlams / totalRaces) * 100 : 0, 1000, true);
             animateCount(document.getElementById("titles-percentage"), 0, (totalTitles / 1) * 100, 1000, true);
+
+            updateRecordsList({
+                "Vitórias em uma Temporada": totalWins > 19 ? totalWins : 0,
+                "Vitórias Consecutivas": maxConsecutiveWins > 10 ? maxConsecutiveWins : 0
+            }, season);
 
             updateOverallStats();
         }
@@ -1048,6 +1161,41 @@
             animateCount(document.getElementById("overall-hattricks-percentage"), 0, overallTotalRaces > 0 ? (overallTotalHattricks / overallTotalRaces) * 100 : 0, 1000, true);
             animateCount(document.getElementById("overall-grand-slams-percentage"), 0, overallTotalRaces > 0 ? (overallTotalGrandSlams / overallTotalRaces) * 100 : 0, 1000, true);
             animateCount(document.getElementById("overall-titles-percentage"), 0, (overallTotalTitles / 2) * 100, 1000, true);
+
+            updateRecordsList({
+                "Títulos Mundiais": overallTotalTitles > 7 ? overallTotalTitles : 0,
+                "Vitórias": overallTotalWins > 105 ? overallTotalWins : 0,
+                "Pódios": overallTotalPodiums > 202 ? overallTotalPodiums : 0,
+                "Pole Positions": overallTotalPoles > 104 ? overallTotalPoles : 0,
+                "Voltas Mais Rápidas": overallTotalFastestLaps > 77 ? overallTotalFastestLaps : 0,
+                "Hat-Tricks": overallTotalHattricks > 22 ? overallTotalHattricks : 0,
+                "Grand Slams": overallTotalGrandSlams > 8 ? overallTotalGrandSlams : 0,
+                "Corridas Disputadas": overallTotalRaces > 356 ? overallTotalRaces : 0
+            });
+        }
+
+        function updateRecordsList(records, season = null) {
+            const recordsList = document.getElementById("records-list");
+            recordsList.innerHTML = ""; // Limpa a lista existente
+
+            Object.entries(records).forEach(([title, value]) => {
+                if (value > 0) {
+                    const recordItem = document.createElement("div");
+                    recordItem.classList.add("record-item");
+
+                    const recordNumber = document.createElement("span");
+                    recordNumber.classList.add("record-number");
+                    recordNumber.textContent = value;
+
+                    const recordTitle = document.createElement("span");
+                    recordTitle.classList.add("record-title");
+                    recordTitle.textContent = season ? `${title} (${season})` : title;
+
+                    recordItem.appendChild(recordNumber);
+                    recordItem.appendChild(recordTitle);
+                    recordsList.appendChild(recordItem);
+                }
+            });
         }
 
         document.getElementById("btn-2023").addEventListener("click", () => {
