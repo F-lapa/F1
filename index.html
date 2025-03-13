@@ -473,15 +473,15 @@
         </div>
 
         <div class="season-buttons">
-            <button id="btn-2023" class="active">2023</button>
-            <button id="btn-2024">2024</button>
+            <button id="btn-2023">2023</button>
+            <button id="btn-2024" class="active">2024</button>
         </div>
 
         <div class="save-button-container">
             <button id="save-button">Salvar Alterações</button>
         </div>
 
-        <div id="season-2023">
+        <div id="season-2023" class="hidden">
             <h2>Corridas de 2023</h2>
             <table>
                 <thead>
@@ -699,7 +699,7 @@
             </div>
         </div>
 
-        <div id="season-2024" class="hidden">
+        <div id="season-2024">
             <h2>Corridas de 2024</h2>
             <table>
                 <thead>
@@ -1323,7 +1323,7 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             loadData();
-            updateStats("2023");
+            updateStats("2024");
             document.querySelectorAll(".position-input").forEach(input => {
                 const value = parseInt(input.value);
                 if (!isNaN(value)) {
