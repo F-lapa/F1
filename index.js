@@ -271,7 +271,7 @@ function updateOverallStats() {
     animateCount(document.getElementById("overall-total-grand-slams"), 0, overallTotalGrandSlams, 1000);
     animateCount(document.getElementById("overall-total-titles"), 0, overallTotalTitles, 1000);
 
-    const totalPossibleRaces = 22 + 24; // 46 corridas no total (2023 + 2024)
+    const totalPossibleRaces = 22 + 24;
     animateCount(document.getElementById("overall-races-percentage"), 0, overallTotalRaces > 0 ? (overallTotalRaces / totalPossibleRaces) * 100 : 0, 1000, true);
     animateCount(document.getElementById("overall-wins-percentage"), 0, overallTotalRaces > 0 ? (overallTotalWins / overallTotalRaces) * 100 : 0, 1000, true);
     animateCount(document.getElementById("overall-podiums-percentage"), 0, overallTotalRaces > 0 ? (overallTotalPodiums / overallTotalRaces) * 100 : 0, 1000, true);
@@ -421,3 +421,13 @@ document.querySelectorAll(".champion-checkbox").forEach(checkbox => {
 // Inicialização
 loadData();
 updateStats("2024");
+
+// Tocar música de abertura da Fórmula 1
+const f1Theme = document.getElementById("f1-theme");
+f1Theme.play().catch(error => {
+    console.log("Erro ao tocar a música automaticamente:", error);
+    // Para navegadores que bloqueiam autoplay, toca com interação do usuário
+    document.body.addEventListener("click", () => {
+        f1Theme.play();
+    }, { once: true });
+});
