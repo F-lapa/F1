@@ -278,6 +278,7 @@
         }
         tr {
             transition: background 0.3s ease;
+            cursor: pointer;
         }
         tr:nth-child(even) {
             background: rgba(255, 255, 255, 0.03);
@@ -839,7 +840,7 @@
                         <td><input type="checkbox" class="grand-slam-checkbox"></td>
                     </tr>
                     <tr data-race="Mônaco">
-                        <td><span class="race-name"><span>🇲🇨</span> Mônaco</span></td>
+                        <td><span class="race-name"><span>🇲🇚</span> Mônaco</span></td>
                         <td><input type="number" min="1" placeholder="Pos" class="position-input"></td>
                         <td><input type="checkbox" class="pole-checkbox"></td>
                         <td><input type="checkbox" class="fastest-lap-checkbox"></td>
@@ -1021,7 +1022,7 @@
         <div class="modal-content">
             <button class="close-modal">×</button>
             <h3 id="modal-title">Estatísticas Consolidadas</h3>
-            <div class="summary">
+            <div class="summary" id="modal-summary">
                 <div><strong>Vitórias:</strong> <span id="modal-wins">0</span></div>
                 <div><strong>Pódios:</strong> <span id="modal-podiums">0</span></div>
                 <div><strong>Pole Positions:</strong> <span id="modal-poles">0</span></div>
@@ -1353,83 +1354,84 @@
             updateStats("2024");
         });
 
-               // Continuação do script a partir de onde parou
-        document.addEventListener("input", (event) => {
-            const target = event.target;
-            const row = target.closest("tr");
-            if (!row) return;
+              document.addEventListener("input", (event) => {
+            const inputElement = event.target;
+            const raceRow = inputElement.closest("tr");
+            if (!raceRow) return;
 
-            const seasonTable = row.closest("table");
-            const season = seasonTable.id.split("-")[2];
-            const raceKey = row.getAttribute("data-race");
+            const tableElement = raceRow.closest("table");
+            const season = tableElement.id.split("-")[2];
+            const raceName = raceRow.getAttribute("data-race");
 
-            const positionInput = row.querySelector(".position-input");
-            const poleCheckbox = row.querySelector(".pole-checkbox");
-            const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
-            const grandSlamCheckbox = row.querySelector(".grand-slam-checkbox");
+            const positionField = raceRow.querySelector(".position-input");
+            const poleField = raceRow.querySelector(".pole-checkbox");
+            const fastestLapField = raceRow.querySelector(".fastest-lap-checkbox");
+            const grandSlamField = raceRow.querySelector(".grand-slam-checkbox");
 
-            // Verifica se é uma mudança em Grand Slam e ajusta os outros campos automaticamente
-            if (target === grandSlamCheckbox && grandSlamCheckbox.checked) {
-                positionInput.value = 1;
-                poleCheckbox.checked = true;
-                fastestLapCheckbox.checked = true;
-            }
-
-            // Atualiza as estatísticas em tempo real
             updateStats(season);
         });
 
-        document.getElementById("save-button").addEventListener("click", () => {
-            saveAllChanges();
-            showModal();
-        });
+        document.getElementById("save-button").addEventListener("click", saveAllChanges);
 
-        document.querySelector(".close-modal").addEventListener("click", () => {
-            document.getElementById("modal").classList.remove("show");
-        });
-
-        function showModal() {
+        function showRaceStats(raceName) {
             const modal = document.getElementById("modal");
-            const seasons = ["2023", "2024"];
-            let totalWins = 0;
-            let totalPodiums = 0;
-            let totalPoles = 0;
-            let totalFastestLaps = 0;
-            let totalHattricks = 0;
-            let totalGrandSlams = 0;
+            const modalTitle = document.getElementById("modal-title");
+            const modalSummary = document.getElementById("modal-summary");
 
-            seasons.forEach(season => {
-                const rows = document.querySelectorAll(`#race-table-${season} tr`);
-                rows.forEach(row => {
-                    const position = parseInt(row.querySelector(".position-input").value);
+            modalTitle.textContent = `Estatísticas da Corrida: ${raceName}`;
+            let wins = 0, podiums = 0, poles = 0, fastestLaps = 0, hattricks = 0, grandSlams = 0;
+
+            ["2023", "2024"].forEach(season => {
+                const row = document.querySelector(`#race-table-${season} tr[data-race="${raceName}"]`);
+                if (row) {
+                    const position = parseInt(row.querySelector(".position-input").value) || 0;
                     const pole = row.querySelector(".pole-checkbox").checked;
                     const fastestLap = row.querySelector(".fastest-lap-checkbox").checked;
                     const grandSlam = row.querySelector(".grand-slam-checkbox").checked;
 
-                    if (!isNaN(position)) {
-                        if (position === 1) totalWins++;
-                        if (position >= 1 && position <= 3) totalPodiums++;
-                    }
-                    if (pole) totalPoles++;
-                    if (fastestLap) totalFastestLaps++;
-                    if (position === 1 && pole && fastestLap) totalHattricks++;
-                    if (grandSlam) totalGrandSlams++;
-                });
+                    if (position === 1) wins++;
+                    if (position >= 1 && position <= 3) podiums++;
+                    if (pole) poles++;
+                    if (fastestLap) fastestLaps++;
+                    if (position === 1 && pole && fastestLap) hattricks++;
+                    if (grandSlam) grandSlams++;
+                }
             });
 
-            document.getElementById("modal-wins").textContent = totalWins;
-            document.getElementById("modal-podiums").textContent = totalPodiums;
-            document.getElementById("modal-poles").textContent = totalPoles;
-            document.getElementById("modal-fastest-laps").textContent = totalFastestLaps;
-            document.getElementById("modal-hattricks").textContent = totalHattricks;
-            document.getElementById("modal-grand-slams").textContent = totalGrandSlams;
+            document.getElementById("modal-wins").textContent = wins;
+            document.getElementById("modal-podiums").textContent = podiums;
+            document.getElementById("modal-poles").textContent = poles;
+            document.getElementById("modal-fastest-laps").textContent = fastestLaps;
+            document.getElementById("modal-hattricks").textContent = hattricks;
+            document.getElementById("modal-grand-slams").textContent = grandSlams;
 
             modal.classList.add("show");
         }
 
-        // Carrega os dados salvos ao iniciar
+        document.querySelectorAll("#race-table-2023 tr, #race-table-2024 tr").forEach(row => {
+            row.addEventListener("click", (event) => {
+                if (event.target.tagName !== "INPUT") {
+                    const raceName = row.getAttribute("data-race");
+                    showRaceStats(raceName);
+                }
+            });
+        });
+
+        document.querySelector(".close-modal").addEventListener("click", () => {
+            const modal = document.getElementById("modal");
+            modal.classList.remove("show");
+        });
+
+        document.querySelectorAll(".champion-checkbox").forEach(checkbox => {
+            checkbox.addEventListener("change", (event) => {
+                const season = event.target.id.split("-")[1];
+                saveChampionStatus(season, event.target.checked);
+                updateStats(season);
+            });
+        });
+
         loadData();
-        updateStats("2024"); // Inicia com a temporada 2024 ativa
+        updateStats("2024");
     </script>
 </body>
 </html>
