@@ -139,20 +139,20 @@ h2 {
 
 .stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 10px;
-    margin-bottom: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 8px;
+    margin-bottom: 10px;
 }
 
 .stat-box {
     background: linear-gradient(145deg, #ffffff, #b0b0b0);
     color: #000000;
-    padding: 10px;
-    border-radius: 8px;
+    padding: 8px;
+    border-radius: 6px;
     text-align: center;
-    box-shadow: 0 0 10px rgba(255, 0, 71, 0.4);
+    box-shadow: 0 0 8px rgba(255, 0, 71, 0.4);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 2px solid #00d4ff;
+    border: 1px solid #00d4ff;
     position: relative;
     overflow: hidden;
 }
@@ -175,8 +175,8 @@ h2 {
 }
 
 .stat-box:hover {
-    transform: translateY(-5px) scale(1.03);
-    box-shadow: 0 0 15px rgba(255, 0, 71, 0.6);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 0 12px rgba(255, 0, 71, 0.6);
 }
 
 .stat-box h3, .stat-box p, .stat-box .percentage {
@@ -185,27 +185,27 @@ h2 {
 }
 
 .stat-box h3 {
-    font-size: 1.5em;
+    font-size: 1.2em;
     font-weight: 700;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
 }
 
 .stat-box p {
-    font-size: 0.9em;
+    font-size: 0.8em;
     font-weight: 400;
     font-family: 'Poppins', sans-serif;
 }
 
 .stat-box .percentage {
-    font-size: 0.8em;
+    font-size: 0.7em;
     color: #333;
-    margin-top: 3px;
+    margin-top: 2px;
 }
 
 .stat-box p::before {
     content: "";
     display: inline-block;
-    width: 20px;
+    width: 16px;
     text-align: center;
 }
 
