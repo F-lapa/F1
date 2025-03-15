@@ -12,114 +12,183 @@
         }
         body {
             font-family: 'Racing Sans One', sans-serif;
-            background: linear-gradient(135deg, #1a1a1a, #333333);
+            background: linear-gradient(135deg, #0d1b2a, #1b263b);
             color: #ffffff;
             line-height: 1.4;
             overflow-x: hidden;
+            position: relative;
             background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"%3E%3Crect width="100" height="100" fill="black"/%3E%3Cpath d="M0 0h50v50H0zM50 50h50v50H50z" fill="white"/%3E%3C/svg%3E');
             background-size: 50px 50px;
         }
+        canvas#particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
         header {
-            background: linear-gradient(90deg, #ff0000, #000000);
+            background: linear-gradient(90deg, #ff0047, #000000);
             color: #ffffff;
             text-align: center;
-            padding: 40px 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            border-bottom: 3px solid #ffffff;
+            padding: 50px 15px;
+            box-shadow: 0 0 20px rgba(255, 0, 71, 0.5);
+            border-bottom: 4px solid #00d4ff;
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 0, 71, 0.2), transparent);
+            animation: pulse 6s infinite;
+            z-index: 0;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.2; }
+            100% { transform: scale(1); opacity: 0.5; }
+        }
+        header .logo-f1 {
+            width: 100px;
+            height: auto;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+            z-index: 1;
+            position: relative;
         }
         header h1 {
-            font-size: 2.5em;
+            font-size: 3em;
             font-weight: 700;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            text-shadow: 0 0 8px rgba(255, 0, 0, 0.8);
-            animation: fadeInDown 1s ease-out;
+            text-shadow: 0 0 15px rgba(255, 0, 71, 0.8), 0 0 25px rgba(0, 212, 255, 0.6);
+            animation: neonGlow 2s infinite alternate;
+            display: inline-flex;
+            align-items: center;
+            z-index: 1;
+            position: relative;
+        }
+        header h1 img.flag-br {
+            width: 40px;
+            height: auto;
+            margin-left: 10px;
+            filter: drop-shadow(0 0 5px rgba(0, 255, 0, 0.5));
+        }
+        @keyframes neonGlow {
+            0% { text-shadow: 0 0 10px #ff0047, 0 0 20px #ff0047, 0 0 30px #00d4ff; }
+            100% { text-shadow: 0 0 15px #00d4ff, 0 0 25px #ff0047, 0 0 40px #ffffff; }
         }
         header p {
-            font-size: 1.2em;
+            font-size: 1.3em;
             font-weight: 400;
             font-family: 'Poppins', sans-serif;
-            animation: fadeInUp 1s ease-out 0.3s forwards;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+            z-index: 1;
+            position: relative;
         }
         main {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.85);
-            border-radius: 10px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
-            border: 2px solid #ff0000;
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(255, 0, 71, 0.3), 0 0 50px rgba(0, 212, 255, 0.2);
+            border: 2px solid #00d4ff;
+            position: relative;
         }
         h2 {
-            color: #ff0000;
+            color: #ff0047;
             text-align: center;
-            margin-bottom: 15px;
-            font-size: 1.8em;
+            margin-bottom: 20px;
+            font-size: 2em;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            text-shadow: 0 0 4px rgba(255, 0, 0, 0.5);
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 10px rgba(255, 0, 71, 0.7);
         }
         .overall-stats-title {
-            color: #c0c0c0;
+            color: #00d4ff;
             text-align: center;
-            margin-bottom: 15px;
-            font-size: 1.8em;
+            margin-bottom: 20px;
+            font-size: 2em;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            text-shadow: 0 0 5px rgba(192, 192, 192, 0.8), 0 0 10px rgba(192, 192, 192, 0.6), 0 0 15px rgba(255, 255, 255, 0.4);
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5);
             animation: glow 1.5s ease-in-out infinite alternate;
         }
         @keyframes glow {
-            from {
-                text-shadow: 0 0 5px rgba(192, 192, 192, 0.8), 0 0 10px rgba(192, 192, 192, 0.6), 0 0 15px rgba(255, 255, 255, 0.4);
-            }
-            to {
-                text-shadow: 0 0 10px rgba(192, 192, 192, 1), 0 0 20px rgba(192, 192, 192, 0.8), 0 0 25px rgba(255, 255, 255, 0.6);
-            }
+            from { text-shadow: 0 0 10px rgba(0, 212, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5); }
+            to { text-shadow: 0 0 20px rgba(0, 212, 255, 1), 0 0 30px rgba(255, 255, 255, 0.7); }
         }
         .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 10px;
-            margin-bottom: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
         }
         .stat-box {
-            background: linear-gradient(145deg, #ffffff, #d3d3d3);
+            background: linear-gradient(145deg, #ffffff, #b0b0b0);
             color: #000000;
-            padding: 10px;
-            border-radius: 8px;
+            padding: 15px;
+            border-radius: 10px;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 15px rgba(255, 0, 71, 0.4);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid #ff0000;
+            border: 2px solid #00d4ff;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.2), transparent);
+            animation: rotate 8s infinite linear;
+            z-index: 0;
+        }
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         .stat-box:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.3);
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 0 25px rgba(255, 0, 71, 0.6);
+        }
+        .stat-box h3, .stat-box p, .stat-box .percentage {
+            position: relative;
+            z-index: 1;
         }
         .stat-box h3 {
-            font-size: 1.5em;
+            font-size: 1.8em;
             font-weight: 700;
-            margin-bottom: 2px;
-            transition: all 0.5s ease-out;
+            margin-bottom: 5px;
         }
         .stat-box p {
-            font-size: 0.9em;
+            font-size: 1em;
             font-weight: 400;
             font-family: 'Poppins', sans-serif;
         }
         .stat-box .percentage {
-            font-size: 0.8em;
-            color: #555;
-            margin-top: 2px;
-            transition: all 0.5s ease-out;
+            font-size: 0.9em;
+            color: #333;
+            margin-top: 5px;
         }
         .stat-box p::before {
             content: "";
             display: inline-block;
-            width: 15px;
+            width: 20px;
             text-align: center;
         }
         .stat-box:nth-child(1) p::before { content: "🏁"; }
@@ -133,153 +202,157 @@
         .season-buttons {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-bottom: 10px;
+            gap: 20px;
+            margin-bottom: 15px;
         }
         .season-buttons button {
-            padding: 8px 20px;
+            padding: 10px 25px;
             background: #000000;
             color: #ffffff;
-            border: 1px solid #ff0000;
-            border-radius: 5px;
-            font-size: 0.9em;
+            border: 2px solid #ff0047;
+            border-radius: 8px;
+            font-size: 1em;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
             text-transform: uppercase;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 15px rgba(255, 0, 71, 0.4);
         }
         .season-buttons button.active {
-            background: #ff0000;
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.5);
+            background: #ff0047;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 0, 71, 0.7);
         }
         .season-buttons button:hover:not(.active) {
-            background: #ffffff;
-            color: #ff0000;
-            border-color: #ffffff;
+            background: #00d4ff;
+            color: #000000;
+            border-color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
         }
         .save-button-container {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         #save-button {
-            padding: 8px 25px;
-            background: #ff0000;
+            padding: 10px 30px;
+            background: #ff0047;
             color: #ffffff;
-            border: 1px solid #ffffff;
-            border-radius: 5px;
-            font-size: 0.9em;
+            border: 2px solid #00d4ff;
+            border-radius: 8px;
+            font-size: 1em;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
             text-transform: uppercase;
-            box-shadow: 0 3px 10px rgba(255, 0, 0, 0.4);
+            box-shadow: 0 0 15px rgba(255, 0, 71, 0.5);
         }
         #save-button:hover {
-            background: #ffffff;
-            color: #ff0000;
-            border-color: #ff0000;
-            transform: scale(1.05);
+            background: #00d4ff;
+            color: #000000;
+            border-color: #ff0047;
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(0, 212, 255, 0.7);
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-top: 15px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            border: 1px solid #ffffff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+            border: 2px solid #ff0047;
         }
         th, td {
-            padding: 8px;
+            padding: 10px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         th {
-            background: #ff0000;
+            background: linear-gradient(90deg, #ff0047, #000000);
             color: #ffffff;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 0.9em;
+            letter-spacing: 1px;
+            font-size: 1em;
         }
         tr {
-            transition: background 0.2s ease;
+            transition: background 0.3s ease;
         }
         tr:nth-child(even) {
             background: rgba(255, 255, 255, 0.03);
         }
         tr:hover {
-            background: rgba(255, 0, 0, 0.1);
-            cursor: pointer;
+            background: rgba(255, 0, 71, 0.15);
+            box-shadow: 0 0 15px rgba(255, 0, 71, 0.3);
         }
         input[type="number"] {
-            width: 50px;
-            padding: 5px;
+            width: 60px;
+            padding: 6px;
             text-align: center;
-            border: 1px solid #ff0000;
-            border-radius: 4px;
+            border: 2px solid #ff0047;
+            border-radius: 6px;
             background: #ffffff;
             color: #000000;
-            font-size: 0.9em;
+            font-size: 1em;
             transition: all 0.3s ease;
             font-family: 'Poppins', sans-serif;
         }
         input[type="number"]:focus {
-            border-color: #ffffff;
+            border-color: #00d4ff;
             outline: none;
-            box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
         }
         input[type="checkbox"] {
-            transform: scale(1);
-            accent-color: #ff0000;
+            transform: scale(1.2);
+            accent-color: #ff0047;
         }
         .race-name span {
-            font-size: 1.2em;
+            font-size: 1.3em;
         }
         footer {
             text-align: center;
-            margin-top: 30px;
-            padding: 20px 15px;
-            background: linear-gradient(90deg, #000000, #ff0000);
+            margin-top: 40px;
+            padding: 25px 15px;
+            background: linear-gradient(90deg, #000000, #ff0047);
             color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-            border-top: 3px solid #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(255, 0, 71, 0.4);
+            border-top: 4px solid #00d4ff;
         }
         footer h2 {
-            font-size: 1.6em;
-            margin-bottom: 15px;
+            font-size: 1.8em;
+            margin-bottom: 20px;
         }
         footer .stats {
-            gap: 10px;
+            gap: 15px;
         }
         footer .stat-box {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             color: #000000;
-            border: 1px solid #ff0000;
+            border: 2px solid #ff0047;
         }
         footer .stat-box:hover {
             background: #ffffff;
-            transform: translateY(-5px) scale(1.02);
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
         }
         .hidden {
             display: none;
         }
         .champion-section {
-            margin-top: 15px;
+            margin-top: 20px;
             text-align: center;
         }
         .champion-section label {
-            font-size: 1em;
-            margin-right: 10px;
+            font-size: 1.1em;
+            margin-right: 15px;
             font-family: 'Poppins', sans-serif;
+            text-shadow: 0 0 5px rgba(255, 0, 71, 0.5);
         }
         .champion-section input[type="checkbox"] {
-            transform: scale(1);
-            accent-color: #ff0000;
+            transform: scale(1.2);
+            accent-color: #ff0047;
         }
         .modal {
             position: fixed;
@@ -301,13 +374,13 @@
             visibility: visible;
         }
         .modal-content {
-            background: linear-gradient(135deg, #1e1e2f, #2a2a40);
-            padding: 20px;
-            border-radius: 15px;
+            background: linear-gradient(135deg, #0d1b2a, #1b263b);
+            padding: 25px;
+            border-radius: 20px;
             width: 90%;
-            max-width: 500px;
-            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2), 0 0 20px rgba(255, 0, 0, 0.1);
-            border: 2px solid #00ffff;
+            max-width: 550px;
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.3), 0 0 20px rgba(255, 0, 71, 0.2);
+            border: 3px solid #ff0047;
             text-align: center;
             transform: scale(0.9);
             transition: transform 0.4s ease, opacity 0.3s ease;
@@ -318,112 +391,116 @@
             opacity: 1;
         }
         .modal-content h3 {
-            color: #00ffff;
-            margin-bottom: 20px;
-            font-size: 1.8em;
+            color: #00d4ff;
+            margin-bottom: 25px;
+            font-size: 2em;
             font-weight: 700;
-            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
         }
         .modal-content .summary {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
         }
         .modal-content .summary div {
-            margin: 8px 0;
-            font-size: 1em;
+            margin: 10px 0;
+            font-size: 1.1em;
             font-weight: 400;
             font-family: 'Poppins', sans-serif;
             color: #ffffff;
         }
         .modal-content .summary div strong {
-            color: #ff5555;
-            margin-right: 5px;
+            color: #ff0047;
+            margin-right: 8px;
         }
         .close-modal {
             position: absolute;
-            top: -30px;
+            top: -35px;
             left: 50%;
             transform: translateX(-50%);
-            background: #ff5555;
+            background: #ff0047;
             color: #ffffff;
             border: none;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            font-size: 1.2em;
+            width: 35px;
+            height: 35px;
+            font-size: 1.5em;
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
             transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 0, 71, 0.5);
         }
         .close-modal:hover {
-            background: #00ffff;
-            color: #1e1e2f;
+            background: #00d4ff;
+            color: #000000;
             transform: translateX(-50%) rotate(90deg);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
         }
         #broken-records {
-            margin-top: 20px;
-            padding: 15px;
-            background: linear-gradient(145deg, #2a2a40, #1e1e2f);
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            border: 2px solid #00ffff;
+            margin-top: 25px;
+            padding: 20px;
+            background: linear-gradient(145deg, #1b263b, #0d1b2a);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+            border: 3px solid #ff0047;
         }
         #broken-records h3 {
-            color: #00ffff;
-            font-size: 1.6em;
+            color: #00d4ff;
+            font-size: 1.8em;
             text-align: center;
-            margin-bottom: 15px;
-            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
         }
         .record-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: rgba(255, 255, 255, 0.05);
-            padding: 12px 15px;
-            margin: 8px 0;
-            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 12px;
             font-family: 'Poppins', sans-serif;
             color: #ffffff;
-            font-size: 1em;
-            border-left: 5px solid #ff5555;
+            font-size: 1.1em;
+            border-left: 6px solid #ff0047;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .record-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+            transform: translateX(8px);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
         }
         .record-number {
-            font-size: 1.4em;
+            font-size: 1.5em;
             font-weight: 700;
-            color: #ff5555;
-            text-shadow: 0 0 5px rgba(255, 85, 85, 0.5);
-            min-width: 50px;
+            color: #ff0047;
+            text-shadow: 0 0 10px rgba(255, 0, 71, 0.5);
+            min-width: 60px;
             text-align: center;
         }
         .record-title {
             flex-grow: 1;
             text-align: left;
-            padding-left: 10px;
+            padding-left: 15px;
         }
         @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
+            from { opacity: 0; transform: translateY(-30px); }
             to { opacity: 1; transform: translateY(0); }
         }
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <canvas id="particles"></canvas>
     <header>
-        <h1>Fernando Lapa</h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg" alt="Fórmula 1 Logo" class="logo-f1">
+        <h1>Fernando Lapa <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Flag_of_Brazil.svg" alt="Bandeira do Brasil" class="flag-br"></h1>
         <p>Piloto Brasileiro de Fórmula 1</p>
     </header>
 
@@ -956,6 +1033,67 @@
     </div>
 
     <script>
+        // Script para partículas animadas
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particlesArray = [];
+        const numberOfParticles = 100;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 5 + 1;
+                this.speedX = Math.random() * 3 - 1.5;
+                this.speedY = Math.random() * 3 - 1.5;
+                this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.size > 0.2) this.size -= 0.1;
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+                if (particlesArray[i].size <= 0.2) {
+                    particlesArray.splice(i, 1);
+                    i--;
+                    particlesArray.push(new Particle());
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        initParticles();
+        animateParticles();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
         function animateCount(element, start, end, duration, isPercentage = false) {
             let startTimestamp = null;
             const step = (timestamp) => {
@@ -1215,6 +1353,7 @@
             updateStats("2024");
         });
 
+               // Continuação do script a partir de onde parou
         document.addEventListener("input", (event) => {
             const target = event.target;
             const row = target.closest("tr");
@@ -1229,108 +1368,68 @@
             const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
             const grandSlamCheckbox = row.querySelector(".grand-slam-checkbox");
 
-            const position = positionInput.value;
-            const pole = poleCheckbox.checked;
-            const fastestLap = fastestLapCheckbox.checked;
-            const grandSlam = grandSlamCheckbox.checked;
+            // Verifica se é uma mudança em Grand Slam e ajusta os outros campos automaticamente
+            if (target === grandSlamCheckbox && grandSlamCheckbox.checked) {
+                positionInput.value = 1;
+                poleCheckbox.checked = true;
+                fastestLapCheckbox.checked = true;
+            }
 
-            saveData(season, raceKey, position, pole, fastestLap, grandSlam);
+            // Atualiza as estatísticas em tempo real
             updateStats(season);
         });
 
         document.getElementById("save-button").addEventListener("click", () => {
             saveAllChanges();
-        });
-
-        document.querySelectorAll(".champion-checkbox").forEach(checkbox => {
-            checkbox.addEventListener("change", () => {
-                const season = checkbox.id.split("-")[1];
-                saveChampionStatus(season, checkbox.checked);
-                updateStats(season);
-            });
-        });
-
-        document.querySelectorAll(".race-name").forEach(raceName => {
-            raceName.addEventListener("click", () => {
-                const raceRow = raceName.closest("tr");
-                const raceKey = raceRow.getAttribute("data-race");
-                const raceNameText = raceName.textContent.trim();
-                const modal = document.getElementById("modal");
-                const modalTitle = document.getElementById("modal-title");
-                const modalWins = document.getElementById("modal-wins");
-                const modalPodiums = document.getElementById("modal-podiums");
-                const modalPoles = document.getElementById("modal-poles");
-                const modalFastestLaps = document.getElementById("modal-fastest-laps");
-                const modalHattricks = document.getElementById("modal-hattricks");
-                const modalGrandSlams = document.getElementById("modal-grand-slams");
-
-                modalTitle.textContent = `Estatísticas Consolidadas: ${raceNameText}`;
-
-                const seasons = ["2023", "2024"];
-                let totalWins = 0;
-                let totalPodiums = 0;
-                let totalPoles = 0;
-                let totalFastestLaps = 0;
-                let totalHattricks = 0;
-                let totalGrandSlams = 0;
-
-                seasons.forEach(season => {
-                    const raceData = document.querySelector(`#race-table-${season} tr[data-race="${raceKey}"]`);
-                    if (raceData) {
-                        const positionInput = raceData.querySelector(".position-input");
-                        const poleCheckbox = raceData.querySelector(".pole-checkbox");
-                        const fastestLapCheckbox = raceData.querySelector(".fastest-lap-checkbox");
-                        const grandSlamCheckbox = raceData.querySelector(".grand-slam-checkbox");
-
-                        const position = parseInt(positionInput.value);
-
-                        if (position === 1) totalWins++;
-                        if (position >= 1 && position <= 3) totalPodiums++;
-                        if (poleCheckbox.checked) totalPoles++;
-                        if (fastestLapCheckbox.checked) totalFastestLaps++;
-                        if (position === 1 && poleCheckbox.checked && fastestLapCheckbox.checked) totalHattricks++;
-                        if (grandSlamCheckbox.checked) totalGrandSlams++;
-                    }
-                });
-
-                animateCount(modalWins, 0, totalWins, 1000);
-                animateCount(modalPodiums, 0, totalPodiums, 1000);
-                animateCount(modalPoles, 0, totalPoles, 1000);
-                animateCount(modalFastestLaps, 0, totalFastestLaps, 1000);
-                animateCount(modalHattricks, 0, totalHattricks, 1000);
-                animateCount(modalGrandSlams, 0, totalGrandSlams, 1000);
-
-                modal.classList.add("show");
-            });
+            showModal();
         });
 
         document.querySelector(".close-modal").addEventListener("click", () => {
             document.getElementById("modal").classList.remove("show");
         });
 
-        document.getElementById("modal").addEventListener("click", (event) => {
-            if (event.target === document.getElementById("modal")) {
-                document.getElementById("modal").classList.remove("show");
-            }
-        });
+        function showModal() {
+            const modal = document.getElementById("modal");
+            const seasons = ["2023", "2024"];
+            let totalWins = 0;
+            let totalPodiums = 0;
+            let totalPoles = 0;
+            let totalFastestLaps = 0;
+            let totalHattricks = 0;
+            let totalGrandSlams = 0;
 
-        document.querySelectorAll(".position-input").forEach(input => {
-            input.addEventListener("input", () => {
-                const value = parseInt(input.value);
-                input.style.backgroundColor = value === 1 ? "#d4edda" : value <= 3 ? "#fff3cd" : "#ffffff";
-            });
-        });
+            seasons.forEach(season => {
+                const rows = document.querySelectorAll(`#race-table-${season} tr`);
+                rows.forEach(row => {
+                    const position = parseInt(row.querySelector(".position-input").value);
+                    const pole = row.querySelector(".pole-checkbox").checked;
+                    const fastestLap = row.querySelector(".fastest-lap-checkbox").checked;
+                    const grandSlam = row.querySelector(".grand-slam-checkbox").checked;
 
-        document.addEventListener("DOMContentLoaded", () => {
-            loadData();
-            updateStats("2024");
-            document.querySelectorAll(".position-input").forEach(input => {
-                const value = parseInt(input.value);
-                if (!isNaN(value)) {
-                    input.style.backgroundColor = value === 1 ? "#d4edda" : value <= 3 ? "#fff3cd" : "#ffffff";
-                }
+                    if (!isNaN(position)) {
+                        if (position === 1) totalWins++;
+                        if (position >= 1 && position <= 3) totalPodiums++;
+                    }
+                    if (pole) totalPoles++;
+                    if (fastestLap) totalFastestLaps++;
+                    if (position === 1 && pole && fastestLap) totalHattricks++;
+                    if (grandSlam) totalGrandSlams++;
+                });
             });
-        });
+
+            document.getElementById("modal-wins").textContent = totalWins;
+            document.getElementById("modal-podiums").textContent = totalPodiums;
+            document.getElementById("modal-poles").textContent = totalPoles;
+            document.getElementById("modal-fastest-laps").textContent = totalFastestLaps;
+            document.getElementById("modal-hattricks").textContent = totalHattricks;
+            document.getElementById("modal-grand-slams").textContent = totalGrandSlams;
+
+            modal.classList.add("show");
+        }
+
+        // Carrega os dados salvos ao iniciar
+        loadData();
+        updateStats("2024"); // Inicia com a temporada 2024 ativa
     </script>
 </body>
 </html>
