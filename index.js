@@ -13,10 +13,16 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// Autenticação anônima
-firebase.auth().signInAnonymously().catch(error => {
-  console.error("Erro na autenticação anônima:", error);
-});
+// Verificar inicialização do Firebase antes de autenticar
+if (!firebase.apps.length) {
+  console.error("Firebase não inicializado corretamente.");
+} else {
+  // Autenticação anônima
+  firebase.auth().signInAnonymously().catch(error => {
+    console.error("Erro na autenticação anônima:", error);
+    alert("Erro na autenticação com o Firebase. Verifique se a autenticação anônima está habilitada no Firebase Console.");
+  });
+}
 
 // Script para partículas animadas
 const canvas = document.getElementById('particles');
@@ -107,7 +113,7 @@ function validateInputs(row, season) {
 
   positionInput.addEventListener('input', () => {
     const pos = parseInt(positionInput.value);
-    if (pos < 1 || pos > 20) {
+    if (pos < 1 || pos > 20 || isNaN(pos)) {
       positionInput.value = '';
     }
     // Grand Slam requires position 1, pole, and fastest lap
@@ -477,6 +483,9 @@ document.querySelectorAll("#race-table-2023 tr, #race-table-2024 tr").forEach(ro
     if (event.target.tagName !== "INPUT" && event.target.tagName !== "BUTTON") {
       const raceName = row.getAttribute("data-race");
       showRaceStats(raceName);
+      // Tocar áudio ao interagir com a tabela
+      const f1Theme = document.getElementById("f1-theme");
+      f1Theme.play().catch(err => console.error("Erro ao tentar tocar a música após clique:", err));
     }
   });
 });
@@ -495,15 +504,6 @@ document.querySelectorAll(".champion-checkbox").forEach(checkbox => {
     await saveChampionStatus(season, event.target.checked);
     updateStats(season);
   });
-});
-
-// Tocar música de abertura da Fórmula 1
-const f1Theme = document.getElementById("f1-theme");
-f1Theme.play().catch(error => {
-  console.log("Erro ao tocar a música automaticamente:", error);
-  document.body.addEventListener("click", () => {
-    f1Theme.play().catch(err => console.error("Erro ao tentar tocar a música após clique:", err));
-  }, { once: true });
 });
 
 // Inicialização
