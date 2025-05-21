@@ -98,6 +98,49 @@ function animateCount(element, start, end, duration, isPercentage = false) {
   requestAnimationFrame(step);
 }
 
+// Validação de inputs
+function validateInputs(row, season) {
+  const positionInput = row.querySelector(".position-input");
+  const poleCheckbox = row.querySelector(".pole-checkbox");
+  const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
+  const grandSlamCheckbox = row.querySelector(".grand-slam-checkbox");
+
+  positionInput.addEventListener('input', () => {
+    const pos = parseInt(positionInput.value);
+    if (pos < 1 || pos > 20) {
+      positionInput.value = '';
+    }
+    // Grand Slam requires position 1, pole, and fastest lap
+    if (grandSlamCheckbox.checked && (pos !== 1 || !poleCheckbox.checked || !fastestLapCheckbox.checked)) {
+      grandSlamCheckbox.checked = false;
+    }
+    updateStats(season);
+  });
+
+  poleCheckbox.addEventListener('change', () => {
+    if (grandSlamCheckbox.checked && !poleCheckbox.checked) {
+      grandSlamCheckbox.checked = false;
+    }
+    updateStats(season);
+  });
+
+  fastestLapCheckbox.addEventListener('change', () => {
+    if (grandSlamCheckbox.checked && !fastestLapCheckbox.checked) {
+      grandSlamCheckbox.checked = false;
+    }
+    updateStats(season);
+  });
+
+  grandSlamCheckbox.addEventListener('change', () => {
+    if (grandSlamCheckbox.checked) {
+      positionInput.value = 1;
+      poleCheckbox.checked = true;
+      fastestLapCheckbox.checked = true;
+    }
+    updateStats(season);
+  });
+}
+
 // Carregar dados do Firestore
 async function loadData() {
   const seasons = ["2023", "2024"];
@@ -113,21 +156,32 @@ async function loadData() {
       const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
       const grandSlamCheckbox = row.querySelector(".grand-slam-checkbox");
 
-      const docRef = db.collection("races").doc(`${season}-${raceKey}`);
-      const doc = await docRef.get();
-      if (doc.exists) {
-        const savedData = doc.data();
-        positionInput.value = savedData.position || "";
-        poleCheckbox.checked = savedData.pole || false;
-        fastestLapCheckbox.checked = savedData.fastestLap || false;
-        grandSlamCheckbox.checked = savedData.grandSlam || false;
+      // Adicionar validação aos inputs
+      validateInputs(row, season);
+
+      try {
+        const docRef = db.collection("races").doc(`${season}-${raceKey}`);
+        const doc = await docRef.get();
+        if (doc.exists) {
+          const savedData = doc.data();
+          positionInput.value = savedData.position || "";
+          poleCheckbox.checked = savedData.pole || false;
+          fastestLapCheckbox.checked = savedData.fastestLap || false;
+          grandSlamCheckbox.checked = savedData.grandSlam || false;
+        }
+      } catch (error) {
+        console.error(`Erro ao carregar dados para ${season}-${raceKey}:`, error);
       }
     }
 
-    const championCheckbox = document.getElementById(`champion-${season}`);
-    const championDoc = await db.collection("champions").doc(`champion-${season}`).get();
-    if (championDoc.exists) {
-      championCheckbox.checked = championDoc.data().isChampion || false;
+    try {
+      const championCheckbox = document.getElementById(`champion-${season}`);
+      const championDoc = await db.collection("champions").doc(`champion-${season}`).get();
+      if (championDoc.exists) {
+        championCheckbox.checked = championDoc.data().isChampion || false;
+      }
+    } catch (error) {
+      console.error(`Erro ao carregar status de campeão para ${season}:`, error);
     }
   }
   updateStats("2024"); // Atualiza as estatísticas iniciais para 2024
@@ -135,18 +189,26 @@ async function loadData() {
 
 // Salvar dados de uma corrida no Firestore
 async function saveData(season, raceKey, position, pole, fastestLap, grandSlam) {
-  const data = {
-    position: position || "",
-    pole: pole || false,
-    fastestLap: fastestLap || false,
-    grandSlam: grandSlam || false
-  };
-  await db.collection("races").doc(`${season}-${raceKey}`).set(data);
+  try {
+    const data = {
+      position: position || "",
+      pole: pole || false,
+      fastestLap: fastestLap || false,
+      grandSlam: grandSlam || false
+    };
+    await db.collection("races").doc(`${season}-${raceKey}`).set(data);
+  } catch (error) {
+    console.error(`Erro ao salvar dados para ${season}-${raceKey}:`, error);
+  }
 }
 
 // Salvar status de campeão no Firestore
 async function saveChampionStatus(season, isChampion) {
-  await db.collection("champions").doc(`champion-${season}`).set({ isChampion });
+  try {
+    await db.collection("champions").doc(`champion-${season}`).set({ isChampion });
+  } catch (error) {
+    console.error(`Erro ao salvar status de campeão para ${season}:`, error);
+  }
 }
 
 // Salvar todas as alterações
@@ -201,7 +263,7 @@ function updateStats(season) {
 
     const position = parseInt(positionInput.value);
 
-    if (!isNaN(position)) {
+    if (!isNaN(position) && position >= 1 && position <= 20) {
       totalRaces++;
       if (position === 1) {
         totalWins++;
@@ -219,24 +281,24 @@ function updateStats(season) {
   });
 
   const seasonStatsContainer = document.getElementById(`season-${season}`);
-  animateCount(seasonStatsContainer.querySelector("#total-races"), 0, totalRaces, 1000);
-  animateCount(seasonStatsContainer.querySelector("#total-wins"), 0, totalWins, 1000);
-  animateCount(seasonStatsContainer.querySelector("#total-podiums"), 0, totalPodiums, 1000);
-  animateCount(seasonStatsContainer.querySelector("#total-poles"), 0, totalPoles, 1000);
-  animateCount(seasonStatsContainer.querySelector("#total-fastest-laps"), 0, totalFastestLaps, 1000);
-  animateCount(seasonStatsContainer.querySelector("#total-hattricks"), 0, totalHattricks, 1000);
-  animateCount(seasonStatsContainer.querySelector("#total-grand-slams"), 0, totalGrandSlams, 1000);
-  animateCount(seasonStatsContainer.querySelector("#total-titles"), 0, totalTitles, 1000);
+  animateCount(seasonStatsContainer.querySelector("#total-races"), parseInt(seasonStatsContainer.querySelector("#total-races").textContent) || 0, totalRaces, 1000);
+  animateCount(seasonStatsContainer.querySelector("#total-wins"), parseInt(seasonStatsContainer.querySelector("#total-wins").textContent) || 0, totalWins, 1000);
+  animateCount(seasonStatsContainer.querySelector("#total-podiums"), parseInt(seasonStatsContainer.querySelector("#total-podiums").textContent) || 0, totalPodiums, 1000);
+  animateCount(seasonStatsContainer.querySelector("#total-poles"), parseInt(seasonStatsContainer.querySelector("#total-poles").textContent) || 0, totalPoles, 1000);
+  animateCount(seasonStatsContainer.querySelector("#total-fastest-laps"), parseInt(seasonStatsContainer.querySelector("#total-fastest-laps").textContent) || 0, totalFastestLaps, 1000);
+  animateCount(seasonStatsContainer.querySelector("#total-hattricks"), parseInt(seasonStatsContainer.querySelector("#total-hattricks").textContent) || 0, totalHattricks, 1000);
+  animateCount(seasonStatsContainer.querySelector("#total-grand-slams"), parseInt(seasonStatsContainer.querySelector("#total-grand-slams").textContent) || 0, totalGrandSlams, 1000);
+  animateCount(seasonStatsContainer.querySelector("#total-titles"), parseInt(seasonStatsContainer.querySelector("#total-titles").textContent) || 0, totalTitles, 1000);
 
   const racesPossible = season === "2023" ? 22 : 24;
-  animateCount(seasonStatsContainer.querySelector("#races-percentage"), 0, totalRaces > 0 ? (totalRaces / racesPossible) * 100 : 0, 1000, true);
-  animateCount(seasonStatsContainer.querySelector("#wins-percentage"), 0, totalRaces > 0 ? (totalWins / totalRaces) * 100 : 0, 1000, true);
-  animateCount(seasonStatsContainer.querySelector("#podiums-percentage"), 0, totalRaces > 0 ? (totalPodiums / totalRaces) * 100 : 0, 1000, true);
-  animateCount(seasonStatsContainer.querySelector("#poles-percentage"), 0, totalRaces > 0 ? (totalPoles / totalRaces) * 100 : 0, 1000, true);
-  animateCount(seasonStatsContainer.querySelector("#fastest-laps-percentage"), 0, totalRaces > 0 ? (totalFastestLaps / totalRaces) * 100 : 0, 1000, true);
-  animateCount(seasonStatsContainer.querySelector("#hattricks-percentage"), 0, totalRaces > 0 ? (totalHattricks / totalRaces) * 100 : 0, 1000, true);
-  animateCount(seasonStatsContainer.querySelector("#grand-slams-percentage"), 0, totalRaces > 0 ? (totalGrandSlams / totalRaces) * 100 : 0, 1000, true);
-  animateCount(seasonStatsContainer.querySelector("#titles-percentage"), 0, totalTitles > 0 ? 100 : 0, 1000, true);
+  animateCount(seasonStatsContainer.querySelector("#races-percentage"), parseFloat(seasonStatsContainer.querySelector("#races-percentage").textContent.replace(',', '.')) || 0, totalRaces > 0 ? (totalRaces / racesPossible) * 100 : 0, 1000, true);
+  animateCount(seasonStatsContainer.querySelector("#wins-percentage"), parseFloat(seasonStatsContainer.querySelector("#wins-percentage").textContent.replace(',', '.')) || 0, totalRaces > 0 ? (totalWins / totalRaces) * 100 : 0, 1000, true);
+  animateCount(seasonStatsContainer.querySelector("#podiums-percentage"), parseFloat(seasonStatsContainer.querySelector("#podiums-percentage").textContent.replace(',', '.')) || 0, totalRaces > 0 ? (totalPodiums / totalRaces) * 100 : 0, 1000, true);
+  animateCount(seasonStatsContainer.querySelector("#poles-percentage"), parseFloat(seasonStatsContainer.querySelector("#poles-percentage").textContent.replace(',', '.')) || 0, totalRaces > 0 ? (totalPoles / totalRaces) * 100 : 0, 1000, true);
+  animateCount(seasonStatsContainer.querySelector("#fastest-laps-percentage"), parseFloat(seasonStatsContainer.querySelector("#fastest-laps-percentage").textContent.replace(',', '.')) || 0, totalRaces > 0 ? (totalFastestLaps / totalRaces) * 100 : 0, 1000, true);
+  animateCount(seasonStatsContainer.querySelector("#hattricks-percentage"), parseFloat(seasonStatsContainer.querySelector("#hattricks-percentage").textContent.replace(',', '.')) || 0, totalRaces > 0 ? (totalHattricks / totalRaces) * 100 : 0, 1000, true);
+  animateCount(seasonStatsContainer.querySelector("#grand-slams-percentage"), parseFloat(seasonStatsContainer.querySelector("#grand-slams-percentage").textContent.replace(',', '.')) || 0, totalRaces > 0 ? (totalGrandSlams / totalRaces) * 100 : 0, 1000, true);
+  animateCount(seasonStatsContainer.querySelector("#titles-percentage"), parseFloat(seasonStatsContainer.querySelector("#titles-percentage").textContent.replace(',', '.')) || 0, totalTitles > 0 ? 100 : 0, 1000, true);
 
   updateRecordsList({
     "Vitórias em uma Temporada": totalWins > 19 ? totalWins : 0,
@@ -270,7 +332,7 @@ async function updateOverallStats() {
 
       const position = parseInt(positionInput.value);
 
-      if (!isNaN(position)) {
+      if (!isNaN(position) && position >= 1 && position <= 20) {
         overallTotalRaces++;
         if (position === 1) {
           overallTotalWins++;
@@ -287,28 +349,32 @@ async function updateOverallStats() {
       if (grandSlamCheckbox.checked) overallTotalGrandSlams++;
     });
 
-    const championDoc = await db.collection("champions").doc(`champion-${season}`).get();
-    if (championDoc.exists && championDoc.data().isChampion) overallTotalTitles++;
+    try {
+      const championDoc = await db.collection("champions").doc(`champion-${season}`).get();
+      if (championDoc.exists && championDoc.data().isChampion) overallTotalTitles++;
+    } catch (error) {
+      console.error(`Erro ao carregar status de campeão para ${season}:`, error);
+    }
   }
 
-  animateCount(document.getElementById("overall-total-races"), 0, overallTotalRaces, 1000);
-  animateCount(document.getElementById("overall-total-wins"), 0, overallTotalWins, 1000);
-  animateCount(document.getElementById("overall-total-podiums"), 0, overallTotalPodiums, 1000);
-  animateCount(document.getElementById("overall-total-poles"), 0, overallTotalPoles, 1000);
-  animateCount(document.getElementById("overall-total-fastest-laps"), 0, overallTotalFastestLaps, 1000);
-  animateCount(document.getElementById("overall-total-hattricks"), 0, overallTotalHattricks, 1000);
-  animateCount(document.getElementById("overall-total-grand-slams"), 0, overallTotalGrandSlams, 1000);
-  animateCount(document.getElementById("overall-total-titles"), 0, overallTotalTitles, 1000);
+  animateCount(document.getElementById("overall-total-races"), parseInt(document.getElementById("overall-total-races").textContent) || 0, overallTotalRaces, 1000);
+  animateCount(document.getElementById("overall-total-wins"), parseInt(document.getElementById("overall-total-wins").textContent) || 0, overallTotalWins, 1000);
+  animateCount(document.getElementById("overall-total-podiums"), parseInt(document.getElementById("overall-total-podiums").textContent) || 0, overallTotalPodiums, 1000);
+  animateCount(document.getElementById("overall-total-poles"), parseInt(document.getElementById("overall-total-poles").textContent) || 0, overallTotalPoles, 1000);
+  animateCount(document.getElementById("overall-total-fastest-laps"), parseInt(document.getElementById("overall-total-fastest-laps").textContent) || 0, overallTotalFastestLaps, 1000);
+  animateCount(document.getElementById("overall-total-hattricks"), parseInt(document.getElementById("overall-total-hattricks").textContent) || 0, overallTotalHattricks, 1000);
+  animateCount(document.getElementById("overall-total-grand-slams"), parseInt(document.getElementById("overall-total-grand-slams").textContent) || 0, overallTotalGrandSlams, 1000);
+  animateCount(document.getElementById("overall-total-titles"), parseInt(document.getElementById("overall-total-titles").textContent) || 0, overallTotalTitles, 1000);
 
   const totalPossibleRaces = 22 + 24;
-  animateCount(document.getElementById("overall-races-percentage"), 0, overallTotalRaces > 0 ? (overallTotalRaces / totalPossibleRaces) * 100 : 0, 1000, true);
-  animateCount(document.getElementById("overall-wins-percentage"), 0, overallTotalRaces > 0 ? (overallTotalWins / overallTotalRaces) * 100 : 0, 1000, true);
-  animateCount(document.getElementById("overall-podiums-percentage"), 0, overallTotalRaces > 0 ? (overallTotalPodiums / overallTotalRaces) * 100 : 0, 1000, true);
-  animateCount(document.getElementById("overall-poles-percentage"), 0, overallTotalRaces > 0 ? (overallTotalPoles / overallTotalRaces) * 100 : 0, 1000, true);
-  animateCount(document.getElementById("overall-fastest-laps-percentage"), 0, overallTotalRaces > 0 ? (overallTotalFastestLaps / overallTotalRaces) * 100 : 0, 1000, true);
-  animateCount(document.getElementById("overall-hattricks-percentage"), 0, overallTotalRaces > 0 ? (overallTotalHattricks / overallTotalRaces) * 100 : 0, 1000, true);
-  animateCount(document.getElementById("overall-grand-slams-percentage"), 0, overallTotalRaces > 0 ? (overallTotalGrandSlams / overallTotalRaces) * 100 : 0, 1000, true);
-  animateCount(document.getElementById("overall-titles-percentage"), 0, overallTotalTitles > 0 ? (overallTotalTitles / 2) * 100 : 0, 1000, true);
+  animateCount(document.getElementById("overall-races-percentage"), parseFloat(document.getElementById("overall-races-percentage").textContent.replace(',', '.')) || 0, overallTotalRaces > 0 ? (overallTotalRaces / totalPossibleRaces) * 100 : 0, 1000, true);
+  animateCount(document.getElementById("overall-wins-percentage"), parseFloat(document.getElementById("overall-wins-percentage").textContent.replace(',', '.')) || 0, overallTotalRaces > 0 ? (overallTotalWins / overallTotalRaces) * 100 : 0, 1000, true);
+  animateCount(document.getElementById("overall-podiums-percentage"), parseFloat(document.getElementById("overall-podiums-percentage").textContent.replace(',', '.')) || 0, overallTotalRaces > 0 ? (overallTotalPodiums / overallTotalRaces) * 100 : 0, 1000, true);
+  animateCount(document.getElementById("overall-poles-percentage"), parseFloat(document.getElementById("overall-poles-percentage").textContent.replace(',', '.')) || 0, overallTotalRaces > 0 ? (overallTotalPoles / overallTotalRaces) * 100 : 0, 1000, true);
+  animateCount(document.getElementById("overall-fastest-laps-percentage"), parseFloat(document.getElementById("overall-fastest-laps-percentage").textContent.replace(',', '.')) || 0, overallTotalRaces > 0 ? (overallTotalFastestLaps / overallTotalRaces) * 100 : 0, 1000, true);
+  animateCount(document.getElementById("overall-hattricks-percentage"), parseFloat(document.getElementById("overall-hattricks-percentage").textContent.replace(',', '.')) || 0, overallTotalRaces > 0 ? (overallTotalHattricks / overallTotalRaces) * 100 : 0, 1000, true);
+  animateCount(document.getElementById("overall-grand-slams-percentage"), parseFloat(document.getElementById("overall-grand-slams-percentage").textContent.replace(',', '.')) || 0, overallTotalRaces > 0 ? (overallTotalGrandSlams / overallTotalRaces) * 100 : 0, 1000, true);
+  animateCount(document.getElementById("overall-titles-percentage"), parseFloat(document.getElementById("overall-titles-percentage").textContent.replace(',', '.')) || 0, overallTotalTitles > 0 ? (overallTotalTitles / 2) * 100 : 0, 1000, true);
 
   updateRecordsList({
     "Títulos Mundiais": overallTotalTitles > 7 ? overallTotalTitles : 0,
@@ -365,19 +431,6 @@ document.getElementById("btn-2024").addEventListener("click", () => {
   updateStats("2024");
 });
 
-// Atualizar estatísticas ao alterar inputs
-document.addEventListener("input", (event) => {
-  const inputElement = event.target;
-  const raceRow = inputElement.closest("tr");
-  if (!raceRow) return;
-
-  const tableElement = raceRow.closest("table");
-  const season = tableElement.id.split("-")[2];
-  const raceName = raceRow.getAttribute("data-race");
-
-  updateStats(season);
-});
-
 // Salvar alterações ao clicar no botão
 document.getElementById("save-button").addEventListener("click", saveAllChanges);
 
@@ -414,13 +467,14 @@ function showRaceStats(raceName) {
   document.getElementById("modal-hattricks").textContent = hattricks;
   document.getElementById("modal-grand-slams").textContent = grandSlams;
 
+  modal.classList.remove("hidden");
   modal.classList.add("show");
 }
 
 // Evento de clique nas linhas das tabelas
 document.querySelectorAll("#race-table-2023 tr, #race-table-2024 tr").forEach(row => {
   row.addEventListener("click", (event) => {
-    if (event.target.tagName !== "INPUT") {
+    if (event.target.tagName !== "INPUT" && event.target.tagName !== "BUTTON") {
       const raceName = row.getAttribute("data-race");
       showRaceStats(raceName);
     }
@@ -431,6 +485,7 @@ document.querySelectorAll("#race-table-2023 tr, #race-table-2024 tr").forEach(ro
 document.querySelector(".close-modal").addEventListener("click", () => {
   const modal = document.getElementById("modal");
   modal.classList.remove("show");
+  modal.classList.add("hidden");
 });
 
 // Atualizar estatísticas ao alterar status de campeão
@@ -442,14 +497,16 @@ document.querySelectorAll(".champion-checkbox").forEach(checkbox => {
   });
 });
 
-// Inicialização
-loadData();
-
 // Tocar música de abertura da Fórmula 1
 const f1Theme = document.getElementById("f1-theme");
 f1Theme.play().catch(error => {
   console.log("Erro ao tocar a música automaticamente:", error);
   document.body.addEventListener("click", () => {
-    f1Theme.play();
+    f1Theme.play().catch(err => console.error("Erro ao tentar tocar a música após clique:", err));
   }, { once: true });
+});
+
+// Inicialização
+document.addEventListener("DOMContentLoaded", () => {
+  loadData();
 });
