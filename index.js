@@ -1,8 +1,8 @@
 // Firebase SDKs (garanta que você os tenha no seu HTML antes deste script)
 // <script type="module">
-//   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-//   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-//   import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 // </script>
 
 // Sua configuração do Firebase (MANTENHA A SUA CONFIGURAÇÃO REAL AQUI)
@@ -17,25 +17,28 @@ const firebaseConfig = {
 };
 
 // Inicializa Firebase
-// Certifique-se de que 'initializeApp', 'getAuth', 'getDatabase' estão importados corretamente
-// se estiver usando módulos ES6 (type="module" no script tag).
 let app;
 let auth;
 let database;
+
+try {
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    database = getDatabase(app);
+} catch (e) {
+    console.error("Erro crítico inicializando Firebase:", e);
+    // Se o DOM já estiver pronto, você poderia tentar exibir um modal aqui,
+    // mas é mais seguro lidar com isso no DOMContentLoaded.
+    alert("Falha crítica ao inicializar os serviços base. A aplicação pode não funcionar corretamente.");
+}
+
 let userId = null; // ID do usuário autenticado
 let races = []; // Array para armazenar as corridas do usuário
 let firebaseRacesRef = null; // Referência ao nó das corridas no Firebase
+let unsubscribeRacesListener = null; // Função para desregistrar o listener de corridas
 
-// ==== Elementos do DOM ====
-const loginButton = document.getElementById('login-button');
-const logoutButton = document.getElementById('logout-button');
-const raceForm = document.getElementById('race-form');
-const saveButton = document.getElementById('save-race-button');
-const racesTableBody = document.getElementById('races-table-body');
-const overallStatsContainer = document.getElementById('overall-stats');
-const loadingIndicator = document.getElementById('loading-indicator');
-const noRacesMessage = document.getElementById('no-races-message');
-const authStatusElement = document.getElementById('auth-status'); // Elemento para mostrar status de login
+// ==== Elementos do DOM (serão atribuídos quando o DOM estiver pronto) ====
+let loginButton, logoutButton, raceForm, saveButton, racesTableBody, overallStatsContainer, loadingIndicator, noRacesMessage, authStatusElement, messageModalElement, modalMessageTitleElement, modalMessageTextElement, closeModalButtonElement;
 
 // ==== Funções Auxiliares ====
 
@@ -46,20 +49,26 @@ const authStatusElement = document.getElementById('auth-status'); // Elemento pa
  */
 function parseTimeToSeconds(timeString) {
     if (!timeString) return 0;
-    const parts = timeString.split(':').map(Number);
+    const parts = timeString.split(':');
     let seconds = 0;
-    if (parts.length === 3) { // HH:MM:SS
-        seconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
-    } else if (parts.length === 2) { // MM:SS
-        seconds = parts[0] * 60 + parts[1];
-    } else if (parts.length === 1) { // SS (ou SS.ms)
-        seconds = parts[0];
+    let milliseconds = 0;
+
+    if (parts[parts.length - 1].includes('.')) {
+        const lastPart = parts[parts.length - 1].split('.');
+        parts[parts.length - 1] = lastPart[0];
+        milliseconds = parseFloat('0.' + (lastPart[1] || '0'));
     }
-    // Considerar milissegundos se houver (ex: "1.234")
-    if (timeString.includes('.')) {
-        seconds += parseFloat('0.' + timeString.split('.')[1] || '0');
+
+    const numericParts = parts.map(Number);
+
+    if (numericParts.length === 3) { // HH:MM:SS
+        seconds = numericParts[0] * 3600 + numericParts[1] * 60 + numericParts[2];
+    } else if (numericParts.length === 2) { // MM:SS
+        seconds = numericParts[0] * 60 + numericParts[1];
+    } else if (numericParts.length === 1) { // SS
+        seconds = numericParts[0];
     }
-    return seconds;
+    return seconds + milliseconds;
 }
 
 /**
@@ -68,7 +77,7 @@ function parseTimeToSeconds(timeString) {
  * @returns {string} Tempo formatado.
  */
 function formatTime(totalSeconds) {
-    if (isNaN(totalSeconds) || totalSeconds <= 0) return '-';
+    if (isNaN(totalSeconds) || totalSeconds < 0) return '-'; // Corrigido para < 0, pois 0 é válido
 
     const hours = Math.floor(totalSeconds / 3600);
     totalSeconds %= 3600;
@@ -78,10 +87,14 @@ function formatTime(totalSeconds) {
     let result = '';
     if (hours > 0) {
         result += String(hours).padStart(2, '0') + ':';
+        result += String(minutes).padStart(2, '0') + ':';
+        result += String(seconds.toFixed(3)).padStart(6, '0');
+    } else if (minutes > 0) {
+        result += String(minutes).padStart(2, '0') + ':';
+        result += String(seconds.toFixed(3)).padStart(6, '0');
+    } else {
+         result += String(seconds.toFixed(3)); // Não pad se for só segundos
     }
-    result += String(minutes).padStart(2, '0') + ':';
-    result += String(seconds.toFixed(3)).padStart(6, '0'); // Garante 3 casas decimais
-
     return result;
 }
 
@@ -92,33 +105,36 @@ function formatTime(totalSeconds) {
  * @param {string} type Tipo da mensagem (success, error, info).
  */
 function showMessageModal(title, text, type = 'info') {
-    const modal = document.getElementById('message-modal');
-    document.getElementById('modal-message-title').textContent = title;
-    document.getElementById('modal-message-text').textContent = text;
-
-    const titleElement = document.getElementById('modal-message-title');
-    titleElement.classList.remove('text-green-600', 'text-red-600', 'text-blue-600');
-    if (type === 'success') {
-        titleElement.classList.add('text-green-600');
-    } else if (type === 'error') {
-        titleElement.classList.add('text-red-600');
-    } else {
-        titleElement.classList.add('text-blue-600');
+    if (!messageModalElement || !modalMessageTitleElement || !modalMessageTextElement) {
+        console.warn("Modal elements not found. Message:", title, text);
+        alert(`${title}\n${text}`); // Fallback para alert
+        return;
     }
 
-    modal.classList.remove('hidden');
-    setTimeout(() => modal.classList.add('show'), 10);
+    modalMessageTitleElement.textContent = title;
+    modalMessageTextElement.textContent = text;
+
+    modalMessageTitleElement.classList.remove('text-green-600', 'text-red-600', 'text-blue-600');
+    if (type === 'success') {
+        modalMessageTitleElement.classList.add('text-green-600');
+    } else if (type === 'error') {
+        modalMessageTitleElement.classList.add('text-red-600');
+    } else {
+        modalMessageTitleElement.classList.add('text-blue-600');
+    }
+
+    messageModalElement.classList.remove('hidden');
+    setTimeout(() => messageModalElement.classList.add('show'), 10);
 }
 
 /**
  * Fecha o modal de mensagem.
  */
 function closeModal() {
-    const modal = document.getElementById('message-modal');
-    modal.classList.remove('show');
-    setTimeout(() => modal.classList.add('hidden'), 300);
+    if (!messageModalElement) return;
+    messageModalElement.classList.remove('show');
+    setTimeout(() => messageModalElement.classList.add('hidden'), 300);
 }
-
 
 /**
  * Adiciona uma linha à tabela de corridas.
@@ -127,53 +143,60 @@ function closeModal() {
  * @param {boolean} isTemporary Indica se é uma linha temporária (da digitação).
  */
 function addRaceRowToTable(raceData, index, isTemporary = false) {
+    if (!racesTableBody) return;
     const row = racesTableBody.insertRow();
     row.classList.add(
         'bg-white', 'border-b', 'dark:bg-gray-800', 'dark:border-gray-700',
-        'hover:bg-gray-50', 'dark:hover:bg-gray-600',
-        isTemporary ? 'text-gray-500' : 'text-gray-900' // Cor mais clara para temporário
+        'hover:bg-gray-50', 'dark:hover:bg-gray-600'
     );
     if (isTemporary) {
-        row.id = 'temporary-race-row'; // ID para fácil remoção/atualização
-        row.classList.add('opacity-70', 'italic'); // Destaca como temporário
+        row.id = 'temporary-race-row';
+        row.classList.add('opacity-70', 'italic', 'text-gray-500', 'dark:text-gray-400');
+    } else {
+        row.classList.add('text-gray-900', 'dark:text-white');
     }
 
-    // Adiciona células com os dados da corrida
-    // 'index + 1' para começar a contagem da corrida em 1
     const raceNumberCell = row.insertCell();
-    raceNumberCell.textContent = isTemporary ? '...' : (index + 1); // Mostra '...' para temporário
+    raceNumberCell.textContent = isTemporary ? '...' : (index + 1);
+    raceNumberCell.classList.add('px-6', 'py-4', 'font-medium');
+
 
     const nameCell = row.insertCell();
     nameCell.textContent = raceData.name || '-';
+    nameCell.classList.add('px-6', 'py-4');
 
     const positionCell = row.insertCell();
     positionCell.textContent = raceData.position || '-';
+    positionCell.classList.add('px-6', 'py-4');
 
     const lapsCell = row.insertCell();
     lapsCell.textContent = raceData.totalLaps || '-';
+    lapsCell.classList.add('px-6', 'py-4');
 
     const timeCell = row.insertCell();
-    timeCell.textContent = raceData.time || '-';
+    timeCell.textContent = raceData.time ? formatTime(parseTimeToSeconds(raceData.time)) : '-'; // Formata o tempo aqui
+    timeCell.classList.add('px-6', 'py-4');
 
     const fastestLapCell = row.insertCell();
     fastestLapCell.textContent = raceData.fastestLap ? (raceData.fastestLap === 'sim' ? 'Sim' : 'Não') : '-';
+    fastestLapCell.classList.add('px-6', 'py-4');
 
     const lapsLedCell = row.insertCell();
     lapsLedCell.textContent = raceData.lapsLed || '-';
-
+    lapsLedCell.classList.add('px-6', 'py-4');
 
     const actionsCell = row.insertCell();
     actionsCell.classList.add('px-6', 'py-4', 'text-right');
 
-    if (!isTemporary) { // Botões de ação apenas para corridas salvas
+    if (!isTemporary && raceData.id) {
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Excluir';
         deleteButton.classList.add(
             'font-medium', 'text-red-600', 'dark:text-red-500', 'hover:underline', 'ml-2'
         );
-        deleteButton.onclick = () => deleteRace(raceData.id); // raceData.id deve vir do Firebase
+        deleteButton.onclick = () => deleteRace(raceData.id);
         actionsCell.appendChild(deleteButton);
-    } else {
+    } else if (isTemporary) {
         actionsCell.textContent = '(digitando...)';
         actionsCell.classList.add('text-xs', 'text-gray-400');
     }
@@ -183,24 +206,24 @@ function addRaceRowToTable(raceData, index, isTemporary = false) {
  * Atualiza as estatísticas exibidas na interface.
  */
 function updateStats() {
+    if (!racesTableBody || !overallStatsContainer || !noRacesMessage) return;
+
     let totalRaces = 0;
     let totalPositions = 0;
     let totalFastestLaps = 0;
     let totalLapsLed = 0;
     let totalTimeSeconds = 0;
-    let totalCompletedRaces = 0; // Para calcular a média da posição
+    let totalCompletedRaces = 0;
 
-    // Limpa a tabela para repopular com os dados mais recentes
     racesTableBody.innerHTML = '';
 
-    // Adiciona as corridas salvas e calcula suas estatísticas
     races.forEach((race, index) => {
-        addRaceRowToTable(race, index, false); // false = não é temporário
-        totalRaces++; // Incrementa para cada corrida existente
+        addRaceRowToTable(race, index, false);
+        totalRaces++;
 
         if (race.position && !isNaN(parseInt(race.position))) {
             totalPositions += parseInt(race.position);
-            totalCompletedRaces++; // Apenas corridas com posição definida
+            totalCompletedRaces++;
         }
         if (race.fastestLap === 'sim') {
             totalFastestLaps++;
@@ -213,57 +236,47 @@ function updateStats() {
         }
     });
 
-    // ==== Lógica para adicionar a corrida atual que está sendo digitada (temporária) ====
-    const currentRaceName = document.getElementById('race-name').value.trim();
-    // Verifica se há pelo menos o nome da corrida ou alguma posição para considerar uma corrida temporária
-    if (currentRaceName || document.getElementById('position').value.trim()) {
-        const currentPosition = document.getElementById('position').value.trim();
-        const currentTotalLaps = document.getElementById('total-laps').value.trim();
-        const currentTime = document.getElementById('time').value.trim();
-        const currentFastestLap = document.getElementById('fastest-lap').value;
-        const currentLapsLed = document.getElementById('laps-led').value.trim();
+    const currentRaceNameInput = document.getElementById('race-name');
+    const currentPositionInput = document.getElementById('position');
 
+    const currentRaceName = currentRaceNameInput ? currentRaceNameInput.value.trim() : '';
+    const currentPositionValue = currentPositionInput ? currentPositionInput.value.trim() : '';
+
+
+    if (currentRaceName || currentPositionValue) {
         const currentRaceData = {
             name: currentRaceName,
-            position: currentPosition,
-            totalLaps: currentTotalLaps,
-            time: currentTime,
-            fastestLap: currentFastestLap,
-            lapsLed: currentLapsLed
+            position: currentPositionValue,
+            totalLaps: document.getElementById('total-laps')?.value.trim() || '',
+            time: document.getElementById('time')?.value.trim() || '',
+            fastestLap: document.getElementById('fastest-lap')?.value || 'nao',
+            lapsLed: document.getElementById('laps-led')?.value.trim() || ''
         };
+        addRaceRowToTable(currentRaceData, races.length, true);
+        totalRaces++;
 
-        // Adiciona a corrida atual que está sendo digitada para exibição e cálculo de estatísticas
-        // Ela aparecerá como a última linha da tabela.
-        addRaceRowToTable(currentRaceData, races.length, true); // true = é temporário
-
-        // Inclui os dados temporários nos cálculos das estatísticas gerais
-        totalRaces++; // Conta a corrida temporária no total
-
-        if (currentPosition && !isNaN(parseInt(currentPosition))) {
-            totalPositions += parseInt(currentPosition);
+        if (currentRaceData.position && !isNaN(parseInt(currentRaceData.position))) {
+            totalPositions += parseInt(currentRaceData.position);
             totalCompletedRaces++;
         }
-        if (currentFastestLap === 'sim') {
+        if (currentRaceData.fastestLap === 'sim') {
             totalFastestLaps++;
         }
-        if (currentLapsLed && !isNaN(parseInt(currentLapsLed))) {
-            totalLapsLed += parseInt(currentLapsLed);
+        if (currentRaceData.lapsLed && !isNaN(parseInt(currentRaceData.lapsLed))) {
+            totalLapsLed += parseInt(currentRaceData.lapsLed);
         }
-        if (currentTime) {
-            totalTimeSeconds += parseTimeToSeconds(currentTime);
+        if (currentRaceData.time) {
+            totalTimeSeconds += parseTimeToSeconds(currentRaceData.time);
         }
     }
-    // ====================================================================================
 
-    // Atualiza o painel de estatísticas gerais
     document.getElementById('stat-total-races').textContent = totalRaces;
     document.getElementById('stat-avg-position').textContent = totalCompletedRaces > 0 ? (totalPositions / totalCompletedRaces).toFixed(2) : '-';
     document.getElementById('stat-fastest-laps').textContent = totalFastestLaps;
     document.getElementById('stat-laps-led').textContent = totalLapsLed;
     document.getElementById('stat-total-time').textContent = formatTime(totalTimeSeconds);
 
-    // Mostra/esconde mensagem "Nenhuma corrida registrada"
-    if (races.length === 0 && !currentRaceName) { // Verifica se não há corridas salvas e nem sendo digitada
+    if (races.length === 0 && !currentRaceName && !currentPositionValue) {
         noRacesMessage.classList.remove('hidden');
     } else {
         noRacesMessage.classList.add('hidden');
@@ -274,21 +287,27 @@ function updateStats() {
  * Carrega as corridas do Firebase para o usuário logado.
  */
 async function loadRaces() {
-    loadingIndicator.classList.remove('hidden'); // Mostra indicador de carregamento
-    racesTableBody.innerHTML = ''; // Limpa a tabela antes de carregar
-    noRacesMessage.classList.add('hidden'); // Esconde a mensagem de "nenhuma corrida" temporariamente
+    if (!loadingIndicator || !racesTableBody || !noRacesMessage) return;
+
+    loadingIndicator.classList.remove('hidden');
+    racesTableBody.innerHTML = '';
+    noRacesMessage.classList.add('hidden');
+
+    if (unsubscribeRacesListener) {
+        unsubscribeRacesListener(); // Cancela o listener anterior
+        unsubscribeRacesListener = null;
+    }
 
     if (!userId) {
-        // Se não houver usuário logado, limpa as corridas e estatísticas
         races = [];
-        updateStats(); // Atualiza a UI para mostrar zero corridas
+        updateStats();
         loadingIndicator.classList.add('hidden');
-        noRacesMessage.classList.remove('hidden'); // Mostra a mensagem de nenhuma corrida
+        noRacesMessage.classList.remove('hidden');
         return;
     }
 
     firebaseRacesRef = ref(database, `users/${userId}/races`);
-    onValue(firebaseRacesRef, (snapshot) => {
+    unsubscribeRacesListener = onValue(firebaseRacesRef, (snapshot) => {
         races = [];
         const data = snapshot.val();
         if (data) {
@@ -296,12 +315,14 @@ async function loadRaces() {
                 races.push({ id: key, ...data[key] });
             }
         }
-        updateStats(); // Atualiza a UI e as estatísticas após carregar
-        loadingIndicator.classList.add('hidden'); // Esconde indicador
+        updateStats();
+        loadingIndicator.classList.add('hidden');
     }, (error) => {
         console.error("Erro ao carregar corridas:", error);
         loadingIndicator.classList.add('hidden');
         showMessageModal('Erro!', 'Não foi possível carregar suas corridas.', 'error');
+        races = []; // Garante que races esteja vazio em caso de erro
+        updateStats(); // Atualiza a UI para refletir o erro/estado vazio
     });
 }
 
@@ -310,23 +331,23 @@ async function loadRaces() {
  * @param {object} raceData
  */
 async function saveRace(raceData) {
+    if (!userId) {
+        showMessageModal('Erro!', 'Você precisa estar logado para salvar corridas.', 'error');
+        return;
+    }
+    if (!database) {
+        showMessageModal('Erro!', 'Conexão com o banco de dados não estabelecida.', 'error');
+        return;
+    }
+
     try {
-        if (!userId) {
-            console.error("Usuário não autenticado. Não é possível salvar corridas.");
-            showMessageModal('Erro!', 'Você precisa estar logado para salvar corridas.', 'error');
-            return;
-        }
-
         const userRacesRef = ref(database, `users/${userId}/races`);
-        const newRaceRef = push(userRacesRef); // Gera uma nova chave única para a corrida
+        const newRaceRef = push(userRacesRef);
         await set(newRaceRef, raceData);
-        console.log("Corrida salva com sucesso no Firebase!");
-
-        // raceForm.reset() e updateStats() já são chamados após o onValue em loadRaces,
-        // que é ativado automaticamente após o set().
-        raceForm.reset(); // Limpa o formulário após salvar para adicionar nova corrida
+        
+        if (raceForm) raceForm.reset(); // Limpa o formulário
+        // updateStats() será chamado automaticamente pelo listener onValue após o set.
         showMessageModal('Sucesso!', 'Corrida salva com sucesso!', 'success');
-
     } catch (error) {
         console.error("Erro ao salvar corrida:", error);
         showMessageModal('Erro!', 'Erro ao salvar corrida. Tente novamente.', 'error');
@@ -341,136 +362,181 @@ async function deleteRace(raceId) {
     if (!confirm('Tem certeza que deseja excluir esta corrida?')) {
         return;
     }
-    try {
-        if (!userId) {
-            console.error("Usuário não autenticado. Não é possível excluir corridas.");
-            showMessageModal('Erro!', 'Você precisa estar logado para excluir corridas.', 'error');
-            return;
-        }
+    if (!userId) {
+        showMessageModal('Erro!', 'Você precisa estar logado para excluir corridas.', 'error');
+        return;
+    }
+    if (!database) {
+        showMessageModal('Erro!', 'Conexão com o banco de dados não estabelecida.', 'error');
+        return;
+    }
 
+    try {
         const raceToDeleteRef = ref(database, `users/${userId}/races/${raceId}`);
         await remove(raceToDeleteRef);
-        console.log("Corrida excluída com sucesso do Firebase!");
+        // O onValue em loadRaces() se encarrega de atualizar a UI.
         showMessageModal('Sucesso!', 'Corrida excluída com sucesso!', 'success');
-        // O onValue em loadRaces() se encarrega de atualizar a UI
     } catch (error) {
         console.error("Erro ao excluir corrida:", error);
         showMessageModal('Erro!', 'Erro ao excluir corrida. Tente novamente.', 'error');
     }
 }
 
-// ==== Inicialização e Event Listeners ====
-
-// Configuração inicial do Firebase e autenticação
-window.onload = () => {
-    try {
-        // Verifica se o app já foi inicializado para evitar erros
-        if (!app) {
-            app = firebase.initializeApp(firebaseConfig);
-            auth = firebase.auth(); // Use firebase.auth() se estiver usando a CDN antiga ou configure o import
-            database = firebase.database(); // Use firebase.database() se estiver usando a CDN antiga ou configure o import
-        }
-
-        // Listener de mudança de estado de autenticação
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                userId = user.uid;
-                loginButton.classList.add('hidden');
-                logoutButton.classList.remove('hidden');
-                authStatusElement.textContent = `Logado como: ${user.email}`;
-                authStatusElement.classList.remove('text-red-500');
-                authStatusElement.classList.add('text-green-600');
-                loadRaces(); // Carrega as corridas para o usuário logado
-                setupRaceInputListeners(); // Configura listeners para o formulário
-            } else {
-                userId = null;
-                loginButton.classList.remove('hidden');
-                logoutButton.classList.add('hidden');
-                authStatusElement.textContent = 'Não logado';
-                authStatusElement.classList.remove('text-green-600');
-                authStatusElement.classList.add('text-red-500');
-                loadRaces(); // Limpa as corridas e estatísticas na UI
-            }
-        });
-
-        // Configura os listeners iniciais para o formulário
-        setupRaceInputListeners();
-        // Carrega corridas inicial (será ajustado pelo onAuthStateChanged)
-        loadRaces();
-
-        // Listener do botão de login (simulação ou link real)
-        loginButton.addEventListener('click', () => {
-            // Em um app real, aqui você chamaria um método de login (ex: Google, email/senha)
-            showMessageModal('Login', 'Funcionalidade de login ainda não implementada nesta demo.', 'info');
-            // Exemplo de login temporário para teste se não tiver autenticação
-            // try {
-            //     const tempUser = await firebase.auth().signInAnonymously();
-            //     console.log("Logado anonimamente:", tempUser.user.uid);
-            // } catch (error) {
-            //     console.error("Erro login anônimo:", error);
-            // }
-        });
-
-        // Listener do botão de logout
-        logoutButton.addEventListener('click', async () => {
-            try {
-                await firebase.auth().signOut();
-                showMessageModal('Logout', 'Você foi desconectado.', 'success');
-            } catch (error) {
-                console.error("Erro ao fazer logout:", error);
-                showMessageModal('Erro!', 'Erro ao fazer logout. Tente novamente.', 'error');
-            }
-        });
-
-        // Listener do botão salvar corrida
-        saveButton.addEventListener('click', (e) => {
-            e.preventDefault(); // Impede o envio padrão do formulário
-
-            const raceName = document.getElementById('race-name').value.trim();
-            const position = document.getElementById('position').value.trim();
-            const totalLaps = document.getElementById('total-laps').value.trim();
-            const time = document.getElementById('time').value.trim();
-            const fastestLap = document.getElementById('fastest-lap').value; // 'sim' ou 'não'
-            const lapsLed = document.getElementById('laps-led').value.trim();
-
-            if (!raceName) {
-                showMessageModal('Atenção', 'O nome da corrida é obrigatório.', 'info');
-                return;
-            }
-
-            const newRaceData = {
-                name: raceName,
-                position: position || null, // Armazena null se vazio
-                totalLaps: totalLaps || null,
-                time: time || null,
-                fastestLap: fastestLap,
-                lapsLed: lapsLed || null
-            };
-
-            saveRace(newRaceData);
-        });
-
-    } catch (error) {
-        console.error("Erro na inicialização do Firebase ou listeners:", error);
-        showMessageModal('Erro!', 'Ocorreu um erro ao inicializar o aplicativo.', 'error');
-    }
-};
-
 /**
  * Configura os listeners de input para o formulário de corrida.
- * Esta função é chamada ao carregar a página e ao fazer login/logout.
  */
 function setupRaceInputListeners() {
+    if (!raceForm) return;
     const inputs = raceForm.querySelectorAll('input, select');
     inputs.forEach(input => {
         input.removeEventListener('input', updateStats); // Evita duplicar listeners
-        input.addEventListener('input', updateStats); // Cada mudança no input chama updateStats
+        input.addEventListener('input', updateStats);
     });
 }
 
-// Opcional: listener para o modal de mensagem (clicar fora fecha)
-document.getElementById('message-modal').addEventListener('click', (e) => {
-    if (e.target.id === 'message-modal') {
-        closeModal();
+
+// ==== Inicialização e Event Listeners (quando o DOM estiver pronto) ====
+document.addEventListener('DOMContentLoaded', () => {
+    // Atribui elementos do DOM a variáveis
+    loginButton = document.getElementById('login-button');
+    logoutButton = document.getElementById('logout-button');
+    raceForm = document.getElementById('race-form');
+    saveButton = document.getElementById('save-race-button');
+    racesTableBody = document.getElementById('races-table-body');
+    overallStatsContainer = document.getElementById('overall-stats');
+    loadingIndicator = document.getElementById('loading-indicator');
+    noRacesMessage = document.getElementById('no-races-message');
+    authStatusElement = document.getElementById('auth-status');
+    messageModalElement = document.getElementById('message-modal');
+    modalMessageTitleElement = document.getElementById('modal-message-title');
+    modalMessageTextElement = document.getElementById('modal-message-text');
+    closeModalButtonElement = document.getElementById('close-modal-button'); // Para o botão de fechar no modal
+
+    // Verificação de elementos essenciais
+    const essentialElements = { loginButton, logoutButton, raceForm, saveButton, racesTableBody, overallStatsContainer, loadingIndicator, noRacesMessage, authStatusElement, messageModalElement, modalMessageTitleElement, modalMessageTextElement };
+    for (const key in essentialElements) {
+        if (!essentialElements[key]) {
+            console.error(`Elemento do DOM essencial não encontrado: ${key}. Verifique o ID no HTML.`);
+            if (authStatusElement) authStatusElement.textContent = "Erro: Falha ao carregar componentes da página.";
+            // Poderia mostrar um erro mais visível para o usuário aqui
+            return; // Impede a execução do restante do script se algo crítico faltar
+        }
+    }
+    
+    // Se o Firebase falhou na inicialização global, tenta de novo ou mostra erro.
+    if (!app || !auth || !database) {
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            database = getDatabase(app);
+        } catch (e) {
+            console.error("Erro na inicialização do Firebase (DOMContentLoaded):", e);
+            showMessageModal('Erro Crítico', 'Não foi possível conectar aos serviços Firebase. Tente recarregar a página.', 'error');
+            return;
+        }
+    }
+
+    // Listener de mudança de estado de autenticação
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            userId = user.uid;
+            loginButton.classList.add('hidden');
+            logoutButton.classList.remove('hidden');
+            authStatusElement.textContent = `Logado como: ${user.email || user.displayName || 'Usuário Anônimo'}`;
+            authStatusElement.classList.remove('text-red-500');
+            authStatusElement.classList.add('text-green-600');
+            loadRaces();
+            setupRaceInputListeners(); // Reconfigura listeners caso o formulário seja recriado ou modificado
+            if (raceForm) raceForm.style.display = ''; // Mostra o formulário
+            if (overallStatsContainer) overallStatsContainer.style.display = ''; // Mostra estatísticas
+        } else {
+            userId = null;
+            if (unsubscribeRacesListener) {
+                unsubscribeRacesListener();
+                unsubscribeRacesListener = null;
+            }
+            races = [];
+            firebaseRacesRef = null;
+
+            loginButton.classList.remove('hidden');
+            logoutButton.classList.add('hidden');
+            authStatusElement.textContent = 'Não logado';
+            authStatusElement.classList.remove('text-green-600');
+            authStatusElement.classList.add('text-red-500');
+            
+            updateStats(); // Limpa estatísticas e tabela
+            if (racesTableBody) racesTableBody.innerHTML = '';
+            if (noRacesMessage) noRacesMessage.classList.remove('hidden');
+            if (loadingIndicator) loadingIndicator.classList.add('hidden');
+            if (raceForm) raceForm.style.display = 'none'; // Esconde o formulário
+            if (overallStatsContainer) overallStatsContainer.style.display = 'none'; // Esconde estatísticas
+        }
+    });
+
+    setupRaceInputListeners(); // Configuração inicial dos listeners do formulário
+    // loadRaces(); // Chamado por onAuthStateChanged, não precisa aqui geralmente
+
+    loginButton.addEventListener('click', async () => {
+        showMessageModal('Login', 'Para testar, o login anônimo será tentado. Em uma aplicação real, integre com Google, Email, etc.', 'info');
+        try {
+            await signInAnonymously(auth);
+            // onAuthStateChanged irá lidar com as atualizações da UI após o login
+        } catch (error) {
+            console.error("Erro no login anônimo:", error);
+            showMessageModal('Erro de Login', `Falha ao tentar login anônimo: ${error.message}`, 'error');
+        }
+    });
+
+    logoutButton.addEventListener('click', async () => {
+        try {
+            await signOut(auth);
+            showMessageModal('Logout', 'Você foi desconectado.', 'success');
+            // onAuthStateChanged irá lidar com as atualizações da UI
+        } catch (error) {
+            console.error("Erro ao fazer logout:", error);
+            showMessageModal('Erro!', 'Erro ao fazer logout. Tente novamente.', 'error');
+        }
+    });
+
+    saveButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (!userId) {
+            showMessageModal('Atenção', 'Você precisa estar logado para salvar uma corrida.', 'info');
+            return;
+        }
+
+        const raceName = document.getElementById('race-name')?.value.trim();
+        const position = document.getElementById('position')?.value.trim();
+        const totalLaps = document.getElementById('total-laps')?.value.trim();
+        const time = document.getElementById('time')?.value.trim();
+        const fastestLap = document.getElementById('fastest-lap')?.value;
+        const lapsLed = document.getElementById('laps-led')?.value.trim();
+
+        if (!raceName) {
+            showMessageModal('Atenção', 'O nome da corrida é obrigatório.', 'info');
+            return;
+        }
+
+        const newRaceData = {
+            name: raceName,
+            position: position || null,
+            totalLaps: totalLaps || null,
+            time: time || null,
+            fastestLap: fastestLap || 'nao',
+            lapsLed: lapsLed || null
+        };
+        saveRace(newRaceData);
+    });
+
+    // Listener para o modal de mensagem (clicar fora fecha)
+    messageModalElement.addEventListener('click', (e) => {
+        if (e.target.id === 'message-modal') {
+            closeModal();
+        }
+    });
+    
+    // Listener para o botão de fechar explicitamente no modal (se existir)
+    if (closeModalButtonElement) {
+        closeModalButtonElement.addEventListener('click', closeModal);
     }
 });
