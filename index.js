@@ -1,586 +1,476 @@
-// Configuração do Firebase
+// Firebase SDKs (garanta que você os tenha no seu HTML antes deste script)
+// <script type="module">
+//   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+//   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+//   import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+// </script>
+
+// Sua configuração do Firebase (MANTENHA A SUA CONFIGURAÇÃO REAL AQUI)
 const firebaseConfig = {
-  apiKey: "AIzaSyAuutbwYf0ZHatqPGFJCweAmWHq84x9zac",
-  authDomain: "formula-1-4d935.firebaseapp.com",
-  projectId: "formula-1-4d935",
-  storageBucket: "formula-1-4d935.firebasestorage.app",
-  messagingSenderId: "451569681777",
-  appId: "1:451569681777:web:4bfcc9d590d480965c22d0",
-  measurementId: "G-2JTBM17G1T"
+    apiKey: "AIzaSyAuutbwYf0ZHatqPGFJCweAmWHq84x9zac", // Substitua pela sua chave
+    authDomain: "formula-1-4d935.firebaseapp.com",
+    projectId: "formula-1-4d935",
+    storageBucket: "formula-1-4d935.firebasestorage.app",
+    messagingSenderId: "451569681777",
+    appId: "1:451569681777:web:4bfcc9d590d480965c22d0",
+    measurementId: "G-2JTBM17G1T"
 };
 
-// Inicializar Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+// Inicializa Firebase
+// Certifique-se de que 'initializeApp', 'getAuth', 'getDatabase' estão importados corretamente
+// se estiver usando módulos ES6 (type="module" no script tag).
+let app;
+let auth;
+let database;
+let userId = null; // ID do usuário autenticado
+let races = []; // Array para armazenar as corridas do usuário
+let firebaseRacesRef = null; // Referência ao nó das corridas no Firebase
 
-// Verificar inicialização do Firebase antes de autenticar
-if (!firebase.apps.length) {
-  console.error("Firebase não inicializado corretamente.");
-} else {
-  // Autenticação anônima
-  firebase.auth().signInAnonymously().catch(error => {
-    console.error("Erro na autenticação anônima:", error);
-    alert("Erro na autenticação com o Firebase. Habilite a autenticação anônima no Firebase Console.");
-  });
+// ==== Elementos do DOM ====
+const loginButton = document.getElementById('login-button');
+const logoutButton = document.getElementById('logout-button');
+const raceForm = document.getElementById('race-form');
+const saveButton = document.getElementById('save-race-button');
+const racesTableBody = document.getElementById('races-table-body');
+const overallStatsContainer = document.getElementById('overall-stats');
+const loadingIndicator = document.getElementById('loading-indicator');
+const noRacesMessage = document.getElementById('no-races-message');
+const authStatusElement = document.getElementById('auth-status'); // Elemento para mostrar status de login
+
+// ==== Funções Auxiliares ====
+
+/**
+ * Converte um tempo (HH:MM:SS.ms ou MM:SS.ms ou SS.ms) para segundos.
+ * @param {string} timeString
+ * @returns {number} Tempo total em segundos.
+ */
+function parseTimeToSeconds(timeString) {
+    if (!timeString) return 0;
+    const parts = timeString.split(':').map(Number);
+    let seconds = 0;
+    if (parts.length === 3) { // HH:MM:SS
+        seconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
+    } else if (parts.length === 2) { // MM:SS
+        seconds = parts[0] * 60 + parts[1];
+    } else if (parts.length === 1) { // SS (ou SS.ms)
+        seconds = parts[0];
+    }
+    // Considerar milissegundos se houver (ex: "1.234")
+    if (timeString.includes('.')) {
+        seconds += parseFloat('0.' + timeString.split('.')[1] || '0');
+    }
+    return seconds;
 }
 
-// Script para partículas animadas
-const canvas = document.getElementById('particles');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+/**
+ * Formata um tempo em segundos para HH:MM:SS.ms ou MM:SS.ms ou SS.ms.
+ * @param {number} totalSeconds
+ * @returns {string} Tempo formatado.
+ */
+function formatTime(totalSeconds) {
+    if (isNaN(totalSeconds) || totalSeconds <= 0) return '-';
 
-const particlesArray = [];
-const numberOfParticles = 100;
+    const hours = Math.floor(totalSeconds / 3600);
+    totalSeconds %= 3600;
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
 
-class Particle {
-  constructor() {
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
-    this.size = Math.random() * 5 + 1;
-    this.speedX = Math.random() * 3 - 1.5;
-    this.speedY = Math.random() * 3 - 1.5;
-    this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
-  }
-  update() {
-    this.x += this.speedX;
-    this.y += this.speedY;
-    if (this.size > 0.2) this.size -= 0.1;
-    if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-    if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-  }
-  draw() {
-    ctx.fillStyle = this.color;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fill();
-  }
+    let result = '';
+    if (hours > 0) {
+        result += String(hours).padStart(2, '0') + ':';
+    }
+    result += String(minutes).padStart(2, '0') + ':';
+    result += String(seconds.toFixed(3)).padStart(6, '0'); // Garante 3 casas decimais
+
+    return result;
 }
 
-function initParticles() {
-  for (let i = 0; i < numberOfParticles; i++) {
-    particlesArray.push(new Particle());
-  }
+/**
+ * Exibe um modal de mensagem personalizado.
+ * @param {string} title Título da mensagem.
+ * @param {string} text Conteúdo da mensagem.
+ * @param {string} type Tipo da mensagem (success, error, info).
+ */
+function showMessageModal(title, text, type = 'info') {
+    const modal = document.getElementById('message-modal');
+    document.getElementById('modal-message-title').textContent = title;
+    document.getElementById('modal-message-text').textContent = text;
+
+    const titleElement = document.getElementById('modal-message-title');
+    titleElement.classList.remove('text-green-600', 'text-red-600', 'text-blue-600');
+    if (type === 'success') {
+        titleElement.classList.add('text-green-600');
+    } else if (type === 'error') {
+        titleElement.classList.add('text-red-600');
+    } else {
+        titleElement.classList.add('text-blue-600');
+    }
+
+    modal.classList.remove('hidden');
+    setTimeout(() => modal.classList.add('show'), 10);
 }
 
-function animateParticles() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  for (let i = 0; i < particlesArray.length; i++) {
-    particlesArray[i].update();
-    particlesArray[i].draw();
-    if (particlesArray[i].size <= 0.2) {
-      particlesArray.splice(i, 1);
-      i--;
-      particlesArray.push(new Particle());
-    }
-  }
-  requestAnimationFrame(animateParticles);
+/**
+ * Fecha o modal de mensagem.
+ */
+function closeModal() {
+    const modal = document.getElementById('message-modal');
+    modal.classList.remove('show');
+    setTimeout(() => modal.classList.add('hidden'), 300);
 }
 
-initParticles();
-animateParticles();
 
-window.addEventListener('resize', () => {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-});
+/**
+ * Adiciona uma linha à tabela de corridas.
+ * @param {object} raceData Dados da corrida.
+ * @param {number} index Índice da corrida.
+ * @param {boolean} isTemporary Indica se é uma linha temporária (da digitação).
+ */
+function addRaceRowToTable(raceData, index, isTemporary = false) {
+    const row = racesTableBody.insertRow();
+    row.classList.add(
+        'bg-white', 'border-b', 'dark:bg-gray-800', 'dark:border-gray-700',
+        'hover:bg-gray-50', 'dark:hover:bg-gray-600',
+        isTemporary ? 'text-gray-500' : 'text-gray-900' // Cor mais clara para temporário
+    );
+    if (isTemporary) {
+        row.id = 'temporary-race-row'; // ID para fácil remoção/atualização
+        row.classList.add('opacity-70', 'italic'); // Destaca como temporário
+    }
 
-// Função para animação de contagem
-function animateCount(element, start, end, duration, isPercentage = false) {
-  if (!element) return;
-  let startTimestamp = null;
-  const step = (timestamp) => {
-    if (!startTimestamp) startTimestamp = timestamp;
-    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-    const current = start + progress * (end - start);
-    if (isPercentage) {
-      element.textContent = `${current.toFixed(2).replace('.', ',')}%`;
-    } else {
-      element.textContent = Math.floor(current);
-    }
-    if (progress < 1) {
-      requestAnimationFrame(step);
-    }
-  };
-  requestAnimationFrame(step);
+    // Adiciona células com os dados da corrida
+    // 'index + 1' para começar a contagem da corrida em 1
+    const raceNumberCell = row.insertCell();
+    raceNumberCell.textContent = isTemporary ? '...' : (index + 1); // Mostra '...' para temporário
+
+    const nameCell = row.insertCell();
+    nameCell.textContent = raceData.name || '-';
+
+    const positionCell = row.insertCell();
+    positionCell.textContent = raceData.position || '-';
+
+    const lapsCell = row.insertCell();
+    lapsCell.textContent = raceData.totalLaps || '-';
+
+    const timeCell = row.insertCell();
+    timeCell.textContent = raceData.time || '-';
+
+    const fastestLapCell = row.insertCell();
+    fastestLapCell.textContent = raceData.fastestLap ? (raceData.fastestLap === 'sim' ? 'Sim' : 'Não') : '-';
+
+    const lapsLedCell = row.insertCell();
+    lapsLedCell.textContent = raceData.lapsLed || '-';
+
+
+    const actionsCell = row.insertCell();
+    actionsCell.classList.add('px-6', 'py-4', 'text-right');
+
+    if (!isTemporary) { // Botões de ação apenas para corridas salvas
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Excluir';
+        deleteButton.classList.add(
+            'font-medium', 'text-red-600', 'dark:text-red-500', 'hover:underline', 'ml-2'
+        );
+        deleteButton.onclick = () => deleteRace(raceData.id); // raceData.id deve vir do Firebase
+        actionsCell.appendChild(deleteButton);
+    } else {
+        actionsCell.textContent = '(digitando...)';
+        actionsCell.classList.add('text-xs', 'text-gray-400');
+    }
 }
 
-// Validação de inputs
-function validateInputs(row, season) {
-  const positionInput = row.querySelector(".position-input");
-  const poleCheckbox = row.querySelector(".pole-checkbox");
-  const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
-  const grandSlamCheckbox = row.querySelector(".grand-slam-checkbox");
+/**
+ * Atualiza as estatísticas exibidas na interface.
+ */
+function updateStats() {
+    let totalRaces = 0;
+    let totalPositions = 0;
+    let totalFastestLaps = 0;
+    let totalLapsLed = 0;
+    let totalTimeSeconds = 0;
+    let totalCompletedRaces = 0; // Para calcular a média da posição
 
-  if (!positionInput || !poleCheckbox || !fastestLapCheckbox || !grandSlamCheckbox) {
-    console.error("Elementos de input não encontrados na linha:", row);
-    return;
-  }
+    // Limpa a tabela para repopular com os dados mais recentes
+    racesTableBody.innerHTML = '';
 
-  positionInput.addEventListener('input', () => {
-    const pos = parseInt(positionInput.value);
-    if (pos < 1 || pos > 20 || isNaN(pos)) {
-      positionInput.value = '';
-    }
-    if (grandSlamCheckbox.checked && (pos !== 1 || !poleCheckbox.checked || !fastestLapCheckbox.checked)) {
-      grandSlamCheckbox.checked = false;
-    }
-    updateStats(season);
-  });
+    // Adiciona as corridas salvas e calcula suas estatísticas
+    races.forEach((race, index) => {
+        addRaceRowToTable(race, index, false); // false = não é temporário
+        totalRaces++; // Incrementa para cada corrida existente
 
-  poleCheckbox.addEventListener('change', () => {
-    if (grandSlamCheckbox.checked && !poleCheckbox.checked) {
-      grandSlamCheckbox.checked = false;
-    }
-    updateStats(season);
-  });
+        if (race.position && !isNaN(parseInt(race.position))) {
+            totalPositions += parseInt(race.position);
+            totalCompletedRaces++; // Apenas corridas com posição definida
+        }
+        if (race.fastestLap === 'sim') {
+            totalFastestLaps++;
+        }
+        if (race.lapsLed && !isNaN(parseInt(race.lapsLed))) {
+            totalLapsLed += parseInt(race.lapsLed);
+        }
+        if (race.time) {
+            totalTimeSeconds += parseTimeToSeconds(race.time);
+        }
+    });
 
-  fastestLapCheckbox.addEventListener('change', () => {
-    if (grandSlamCheckbox.checked && !fastestLapCheckbox.checked) {
-      grandSlamCheckbox.checked = false;
-    }
-    updateStats(season);
-  });
+    // ==== Lógica para adicionar a corrida atual que está sendo digitada (temporária) ====
+    const currentRaceName = document.getElementById('race-name').value.trim();
+    // Verifica se há pelo menos o nome da corrida ou alguma posição para considerar uma corrida temporária
+    if (currentRaceName || document.getElementById('position').value.trim()) {
+        const currentPosition = document.getElementById('position').value.trim();
+        const currentTotalLaps = document.getElementById('total-laps').value.trim();
+        const currentTime = document.getElementById('time').value.trim();
+        const currentFastestLap = document.getElementById('fastest-lap').value;
+        const currentLapsLed = document.getElementById('laps-led').value.trim();
 
-  grandSlamCheckbox.addEventListener('change', () => {
-    if (grandSlamCheckbox.checked) {
-      positionInput.value = 1;
-      poleCheckbox.checked = true;
-      fastestLapCheckbox.checked = true;
-    }
-    updateStats(season);
-  });
+        const currentRaceData = {
+            name: currentRaceName,
+            position: currentPosition,
+            totalLaps: currentTotalLaps,
+            time: currentTime,
+            fastestLap: currentFastestLap,
+            lapsLed: currentLapsLed
+        };
+
+        // Adiciona a corrida atual que está sendo digitada para exibição e cálculo de estatísticas
+        // Ela aparecerá como a última linha da tabela.
+        addRaceRowToTable(currentRaceData, races.length, true); // true = é temporário
+
+        // Inclui os dados temporários nos cálculos das estatísticas gerais
+        totalRaces++; // Conta a corrida temporária no total
+
+        if (currentPosition && !isNaN(parseInt(currentPosition))) {
+            totalPositions += parseInt(currentPosition);
+            totalCompletedRaces++;
+        }
+        if (currentFastestLap === 'sim') {
+            totalFastestLaps++;
+        }
+        if (currentLapsLed && !isNaN(parseInt(currentLapsLed))) {
+            totalLapsLed += parseInt(currentLapsLed);
+        }
+        if (currentTime) {
+            totalTimeSeconds += parseTimeToSeconds(currentTime);
+        }
+    }
+    // ====================================================================================
+
+    // Atualiza o painel de estatísticas gerais
+    document.getElementById('stat-total-races').textContent = totalRaces;
+    document.getElementById('stat-avg-position').textContent = totalCompletedRaces > 0 ? (totalPositions / totalCompletedRaces).toFixed(2) : '-';
+    document.getElementById('stat-fastest-laps').textContent = totalFastestLaps;
+    document.getElementById('stat-laps-led').textContent = totalLapsLed;
+    document.getElementById('stat-total-time').textContent = formatTime(totalTimeSeconds);
+
+    // Mostra/esconde mensagem "Nenhuma corrida registrada"
+    if (races.length === 0 && !currentRaceName) { // Verifica se não há corridas salvas e nem sendo digitada
+        noRacesMessage.classList.remove('hidden');
+    } else {
+        noRacesMessage.classList.add('hidden');
+    }
 }
 
-// Carregar dados do Firestore
-async function loadData() {
-  const seasons = ["2023", "2024"];
-  for (const season of seasons) {
-    const table = document.getElementById(`race-table-${season}`);
-    if (!table) {
-      console.error(`Tabela para ${season} não encontrada`);
-      continue;
-    }
-    const rows = table.querySelectorAll("tr");
+/**
+ * Carrega as corridas do Firebase para o usuário logado.
+ */
+async function loadRaces() {
+    loadingIndicator.classList.remove('hidden'); // Mostra indicador de carregamento
+    racesTableBody.innerHTML = ''; // Limpa a tabela antes de carregar
+    noRacesMessage.classList.add('hidden'); // Esconde a mensagem de "nenhuma corrida" temporariamente
 
-    for (const row of rows) {
-      const raceKey = row.getAttribute("data-race");
-      if (!raceKey) continue;
+    if (!userId) {
+        // Se não houver usuário logado, limpa as corridas e estatísticas
+        races = [];
+        updateStats(); // Atualiza a UI para mostrar zero corridas
+        loadingIndicator.classList.add('hidden');
+        noRacesMessage.classList.remove('hidden'); // Mostra a mensagem de nenhuma corrida
+        return;
+    }
 
-      const positionInput = row.querySelector(".position-input");
-      const poleCheckbox = row.querySelector(".pole-checkbox");
-      const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
-      const grandSlamCheckbox = row.querySelector(".grand-slam-checkbox");
-
-      if (!positionInput || !poleCheckbox || !fastestLapCheckbox || !grandSlamCheckbox) {
-        console.error(`Inputs não encontrados para ${season}-${raceKey}`);
-        continue;
-      }
-
-      validateInputs(row, season);
-
-      try {
-        const docRef = db.collection("races").doc(`${season}-${raceKey}`);
-        const doc = await docRef.get();
-        if (doc.exists) {
-          const savedData = doc.data();
-          positionInput.value = savedData.position || "";
-          poleCheckbox.checked = savedData.pole || false;
-          fastestLapCheckbox.checked = savedData.fastestLap || false;
-          grandSlamCheckbox.checked = savedData.grandSlam || false;
-        }
-      } catch (error) {
-        console.error(`Erro ao carregar dados para ${season}-${raceKey}:`, error);
-      }
-    }
-
-    try {
-      const championCheckbox = document.getElementById(`champion-${season}`);
-      if (championCheckbox) {
-        const championDoc = await db.collection("champions").doc(`champion-${season}`).get();
-        if (championDoc.exists) {
-          championCheckbox.checked = championDoc.data().isChampion || false;
-        }
-      }
-    } catch (error) {
-      console.error(`Erro ao carregar status de campeão para ${season}:`, error);
-    }
-  }
-  updateStats("2024");
+    firebaseRacesRef = ref(database, `users/${userId}/races`);
+    onValue(firebaseRacesRef, (snapshot) => {
+        races = [];
+        const data = snapshot.val();
+        if (data) {
+            for (let key in data) {
+                races.push({ id: key, ...data[key] });
+            }
+        }
+        updateStats(); // Atualiza a UI e as estatísticas após carregar
+        loadingIndicator.classList.add('hidden'); // Esconde indicador
+    }, (error) => {
+        console.error("Erro ao carregar corridas:", error);
+        loadingIndicator.classList.add('hidden');
+        showMessageModal('Erro!', 'Não foi possível carregar suas corridas.', 'error');
+    });
 }
 
-// Salvar dados de uma corrida no Firestore
-async function saveData(season, raceKey, position, pole, fastestLap, grandSlam) {
-  try {
-    const data = {
-      position: position || "",
-      pole: pole || false,
-      fastestLap: fastestLap || false,
-      grandSlam: grandSlam || false
-    };
-    await db.collection("races").doc(`${season}-${raceKey}`).set(data);
-  } catch (error) {
-    console.error(`Erro ao salvar dados para ${season}-${raceKey}:`, error);
-  }
+/**
+ * Salva uma nova corrida no Firebase.
+ * @param {object} raceData
+ */
+async function saveRace(raceData) {
+    try {
+        if (!userId) {
+            console.error("Usuário não autenticado. Não é possível salvar corridas.");
+            showMessageModal('Erro!', 'Você precisa estar logado para salvar corridas.', 'error');
+            return;
+        }
+
+        const userRacesRef = ref(database, `users/${userId}/races`);
+        const newRaceRef = push(userRacesRef); // Gera uma nova chave única para a corrida
+        await set(newRaceRef, raceData);
+        console.log("Corrida salva com sucesso no Firebase!");
+
+        // raceForm.reset() e updateStats() já são chamados após o onValue em loadRaces,
+        // que é ativado automaticamente após o set().
+        raceForm.reset(); // Limpa o formulário após salvar para adicionar nova corrida
+        showMessageModal('Sucesso!', 'Corrida salva com sucesso!', 'success');
+
+    } catch (error) {
+        console.error("Erro ao salvar corrida:", error);
+        showMessageModal('Erro!', 'Erro ao salvar corrida. Tente novamente.', 'error');
+    }
 }
 
-// Salvar status de campeão no Firestore
-async function saveChampionStatus(season, isChampion) {
-  try {
-    await db.collection("champions").doc(`champion-${season}`).set({ isChampion });
-  } catch (error) {
-    console.error(`Erro ao salvar status de campeão para ${season}:`, error);
-  }
+/**
+ * Exclui uma corrida do Firebase.
+ * @param {string} raceId ID da corrida a ser excluída.
+ */
+async function deleteRace(raceId) {
+    if (!confirm('Tem certeza que deseja excluir esta corrida?')) {
+        return;
+    }
+    try {
+        if (!userId) {
+            console.error("Usuário não autenticado. Não é possível excluir corridas.");
+            showMessageModal('Erro!', 'Você precisa estar logado para excluir corridas.', 'error');
+            return;
+        }
+
+        const raceToDeleteRef = ref(database, `users/${userId}/races/${raceId}`);
+        await remove(raceToDeleteRef);
+        console.log("Corrida excluída com sucesso do Firebase!");
+        showMessageModal('Sucesso!', 'Corrida excluída com sucesso!', 'success');
+        // O onValue em loadRaces() se encarrega de atualizar a UI
+    } catch (error) {
+        console.error("Erro ao excluir corrida:", error);
+        showMessageModal('Erro!', 'Erro ao excluir corrida. Tente novamente.', 'error');
+    }
 }
 
-// Salvar todas as alterações
-async function saveAllChanges() {
-  const seasons = ["2023", "2024"];
-  for (const season of seasons) {
-    const table = document.getElementById(`race-table-${season}`);
-    if (!table) continue;
-    const rows = table.querySelectorAll("tr");
+// ==== Inicialização e Event Listeners ====
 
-    for (const row of rows) {
-      const raceKey = row.getAttribute("data-race");
-      if (!raceKey) continue;
+// Configuração inicial do Firebase e autenticação
+window.onload = () => {
+    try {
+        // Verifica se o app já foi inicializado para evitar erros
+        if (!app) {
+            app = firebase.initializeApp(firebaseConfig);
+            auth = firebase.auth(); // Use firebase.auth() se estiver usando a CDN antiga ou configure o import
+            database = firebase.database(); // Use firebase.database() se estiver usando a CDN antiga ou configure o import
+        }
 
-      const positionInput = row.querySelector(".position-input");
-      const poleCheckbox = row.querySelector(".pole-checkbox");
-      const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
-      const grandSlamCheckbox = row.querySelector(".grand-slam-checkbox");
+        // Listener de mudança de estado de autenticação
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                userId = user.uid;
+                loginButton.classList.add('hidden');
+                logoutButton.classList.remove('hidden');
+                authStatusElement.textContent = `Logado como: ${user.email}`;
+                authStatusElement.classList.remove('text-red-500');
+                authStatusElement.classList.add('text-green-600');
+                loadRaces(); // Carrega as corridas para o usuário logado
+                setupRaceInputListeners(); // Configura listeners para o formulário
+            } else {
+                userId = null;
+                loginButton.classList.remove('hidden');
+                logoutButton.classList.add('hidden');
+                authStatusElement.textContent = 'Não logado';
+                authStatusElement.classList.remove('text-green-600');
+                authStatusElement.classList.add('text-red-500');
+                loadRaces(); // Limpa as corridas e estatísticas na UI
+            }
+        });
 
-      if (!positionInput || !poleCheckbox || !fastestLapCheckbox || !grandSlamCheckbox) continue;
+        // Configura os listeners iniciais para o formulário
+        setupRaceInputListeners();
+        // Carrega corridas inicial (será ajustado pelo onAuthStateChanged)
+        loadRaces();
 
-      const position = positionInput.value;
-      const pole = poleCheckbox.checked;
-      const fastestLap = fastestLapCheckbox.checked;
-      const grandSlam = grandSlamCheckbox.checked;
+        // Listener do botão de login (simulação ou link real)
+        loginButton.addEventListener('click', () => {
+            // Em um app real, aqui você chamaria um método de login (ex: Google, email/senha)
+            showMessageModal('Login', 'Funcionalidade de login ainda não implementada nesta demo.', 'info');
+            // Exemplo de login temporário para teste se não tiver autenticação
+            // try {
+            //     const tempUser = await firebase.auth().signInAnonymously();
+            //     console.log("Logado anonimamente:", tempUser.user.uid);
+            // } catch (error) {
+            //     console.error("Erro login anônimo:", error);
+            // }
+        });
 
-      await saveData(season, raceKey, position, pole, fastestLap, grandSlam);
-    }
+        // Listener do botão de logout
+        logoutButton.addEventListener('click', async () => {
+            try {
+                await firebase.auth().signOut();
+                showMessageModal('Logout', 'Você foi desconectado.', 'success');
+            } catch (error) {
+                console.error("Erro ao fazer logout:", error);
+                showMessageModal('Erro!', 'Erro ao fazer logout. Tente novamente.', 'error');
+            }
+        });
 
-    const championCheckbox = document.getElementById(`champion-${season}`);
-    if (championCheckbox) {
-      await saveChampionStatus(season, championCheckbox.checked);
-    }
-  }
-  alert("Alterações salvas com sucesso!");
-  updateStats(document.querySelector(".season-buttons button.active")?.id.split("-")[1] || "2024");
+        // Listener do botão salvar corrida
+        saveButton.addEventListener('click', (e) => {
+            e.preventDefault(); // Impede o envio padrão do formulário
+
+            const raceName = document.getElementById('race-name').value.trim();
+            const position = document.getElementById('position').value.trim();
+            const totalLaps = document.getElementById('total-laps').value.trim();
+            const time = document.getElementById('time').value.trim();
+            const fastestLap = document.getElementById('fastest-lap').value; // 'sim' ou 'não'
+            const lapsLed = document.getElementById('laps-led').value.trim();
+
+            if (!raceName) {
+                showMessageModal('Atenção', 'O nome da corrida é obrigatório.', 'info');
+                return;
+            }
+
+            const newRaceData = {
+                name: raceName,
+                position: position || null, // Armazena null se vazio
+                totalLaps: totalLaps || null,
+                time: time || null,
+                fastestLap: fastestLap,
+                lapsLed: lapsLed || null
+            };
+
+            saveRace(newRaceData);
+        });
+
+    } catch (error) {
+        console.error("Erro na inicialização do Firebase ou listeners:", error);
+        showMessageModal('Erro!', 'Ocorreu um erro ao inicializar o aplicativo.', 'error');
+    }
+};
+
+/**
+ * Configura os listeners de input para o formulário de corrida.
+ * Esta função é chamada ao carregar a página e ao fazer login/logout.
+ */
+function setupRaceInputListeners() {
+    const inputs = raceForm.querySelectorAll('input, select');
+    inputs.forEach(input => {
+        input.removeEventListener('input', updateStats); // Evita duplicar listeners
+        input.addEventListener('input', updateStats); // Cada mudança no input chama updateStats
+    });
 }
 
----
-
-### Correção de `updateStats`
-
-```javascript
-// Atualizar estatísticas da temporada
-function updateStats(season) {
-  const rows = document.querySelectorAll(`#race-table-${season} tr`);
-  const seasonStatsContainer = document.getElementById(`season-${season}`);
-  if (!seasonStatsContainer) return;
-
-  let totalRaces = 0;
-  let totalWins = 0;
-  let totalPodiums = 0;
-  let totalPoles = 0;
-  let totalFastestLaps = 0;
-  let totalHattricks = 0;
-  let totalGrandSlams = 0;
-  let totalTitles = 0;
-  let consecutiveWins = 0;
-  let maxConsecutiveWins = 0;
-
-  rows.forEach(row => {
-    const positionInput = row.querySelector(".position-input");
-    const poleCheckbox = row.querySelector(".pole-checkbox");
-    const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
-    const grandSlamCheckbox = row.querySelector(".grand-slam-checkbox");
-
-    if (!positionInput || !poleCheckbox || !fastestLapCheckbox || !grandSlamCheckbox) return;
-
-    // **CORREÇÃO APLICADA AQUI:** Incrementa totalRaces para cada linha de corrida válida
-    totalRaces++;
-
-    const position = parseInt(positionInput.value);
-
-    if (!isNaN(position) && position >= 1 && position <= 20) {
-      if (position === 1) {
-        totalWins++;
-        consecutiveWins++;
-        maxConsecutiveWins = Math.max(maxConsecutiveWins, consecutiveWins);
-      } else {
-        consecutiveWins = 0;
-      }
-      if (position >= 1 && position <= 3) totalPodiums++;
-    }
-    if (poleCheckbox.checked) totalPoles++;
-    if (fastestLapCheckbox.checked) totalFastestLaps++;
-    if (position === 1 && poleCheckbox.checked && fastestLapCheckbox.checked) totalHattricks++;
-    if (grandSlamCheckbox.checked) totalGrandSlams++;
-  });
-
-  const championCheckbox = document.getElementById(`champion-${season}`);
-  if (championCheckbox) {
-    totalTitles = championCheckbox.checked ? 1 : 0;
-  }
-
-  animateCount(seasonStatsContainer.querySelector("#total-races"), parseInt(seasonStatsContainer.querySelector("#total-races")?.textContent) || 0, totalRaces, 1000);
-  animateCount(seasonStatsContainer.querySelector("#total-wins"), parseInt(seasonStatsContainer.querySelector("#total-wins")?.textContent) || 0, totalWins, 1000);
-  animateCount(seasonStatsContainer.querySelector("#total-podiums"), parseInt(seasonStatsContainer.querySelector("#total-podiums")?.textContent) || 0, totalPodiums, 1000);
-  animateCount(seasonStatsContainer.querySelector("#total-poles"), parseInt(seasonStatsContainer.querySelector("#total-poles")?.textContent) || 0, totalPoles, 1000);
-  animateCount(seasonStatsContainer.querySelector("#total-fastest-laps"), parseInt(seasonStatsContainer.querySelector("#total-fastest-laps")?.textContent) || 0, totalFastestLaps, 1000);
-  animateCount(seasonStatsContainer.querySelector("#total-hattricks"), parseInt(seasonStatsContainer.querySelector("#total-hattricks")?.textContent) || 0, totalHattricks, 1000);
-  animateCount(seasonStatsContainer.querySelector("#total-grand-slams"), parseInt(seasonStatsContainer.querySelector("#total-grand-slams")?.textContent) || 0, totalGrandSlams, 1000);
-  animateCount(seasonStatsContainer.querySelector("#total-titles"), parseInt(seasonStatsContainer.querySelector("#total-titles")?.textContent) || 0, totalTitles, 1000);
-
-  const racesPossible = season === "2023" ? 22 : 24;
-  animateCount(seasonStatsContainer.querySelector("#races-percentage"), parseFloat(seasonStatsContainer.querySelector("#races-percentage")?.textContent.replace(',', '.')) || 0, totalRaces > 0 ? (totalRaces / racesPossible) * 100 : 0, 1000, true);
-  animateCount(seasonStatsContainer.querySelector("#wins-percentage"), parseFloat(seasonStatsContainer.querySelector("#wins-percentage")?.textContent.replace(',', '.')) || 0, totalRaces > 0 ? (totalWins / totalRaces) * 100 : 0, 1000, true);
-  animateCount(seasonStatsContainer.querySelector("#podiums-percentage"), parseFloat(seasonStatsContainer.querySelector("#podiums-percentage")?.textContent.replace(',', '.')) || 0, totalRaces > 0 ? (totalPodiums / totalRaces) * 100 : 0, 1000, true);
-  animateCount(seasonStatsContainer.querySelector("#poles-percentage"), parseFloat(seasonStatsContainer.querySelector("#poles-percentage")?.textContent.replace(',', '.')) || 0, totalRaces > 0 ? (totalPoles / totalRaces) * 100 : 0, 1000, true);
-  animateCount(seasonStatsContainer.querySelector("#fastest-laps-percentage"), parseFloat(seasonStatsContainer.querySelector("#fastest-laps-percentage")?.textContent.replace(',', '.')) || 0, totalRaces > 0 ? (totalFastestLaps / totalRaces) * 100 : 0, 1000, true);
-  animateCount(seasonStatsContainer.querySelector("#hattricks-percentage"), parseFloat(seasonStatsContainer.querySelector("#hattricks-percentage")?.textContent.replace(',', '.')) || 0, totalRaces > 0 ? (totalHattricks / totalRaces) * 100 : 0, 1000, true);
-  animateCount(seasonStatsContainer.querySelector("#grand-slams-percentage"), parseFloat(seasonStatsContainer.querySelector("#grand-slams-percentage")?.textContent.replace(',', '.')) || 0, totalRaces > 0 ? (totalGrandSlams / totalRaces) * 100 : 0, 1000, true);
-  animateCount(seasonStatsContainer.querySelector("#titles-percentage"), parseFloat(seasonStatsContainer.querySelector("#titles-percentage")?.textContent.replace(',', '.')) || 0, totalTitles > 0 ? 100 : 0, 1000, true);
-
-  updateRecordsList({
-    "Vitórias em uma Temporada": totalWins > 19 ? totalWins : 0,
-    "Vitórias Consecutivas": maxConsecutiveWins > 10 ? maxConsecutiveWins : 0
-  }, season);
-
-  updateOverallStats();
-}
-
----
-
-### Correção de `updateOverallStats`
-
-```javascript
-// Atualizar estatísticas gerais
-async function updateOverallStats() {
-  const seasons = ["2023", "2024"];
-  let overallTotalRaces = 0;
-  let overallTotalWins = 0;
-  let overallTotalPodiums = 0;
-  let overallTotalPoles = 0;
-  let overallTotalFastestLaps = 0;
-  let overallTotalHattricks = 0;
-  let overallTotalGrandSlams = 0;
-  let overallTotalTitles = 0;
-  let maxConsecutiveWins = 0;
-  let consecutiveWins = 0;
-
-  for (const season of seasons) {
-    const rows = document.querySelectorAll(`#race-table-${season} tr`);
-    rows.forEach(row => {
-      const positionInput = row.querySelector(".position-input");
-      const poleCheckbox = row.querySelector(".pole-checkbox");
-      const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
-      const grandSlamCheckbox = row.querySelector(".grand-slam-checkbox");
-
-      if (!positionInput || !poleCheckbox || !fastestLapCheckbox || !grandSlamCheckbox) return;
-
-      // **CORREÇÃO APLICADA AQUI:** Incrementa overallTotalRaces para cada linha de corrida válida
-      overallTotalRaces++;
-
-      const position = parseInt(positionInput.value);
-
-      if (!isNaN(position) && position >= 1 && position <= 20) {
-        if (position === 1) {
-          overallTotalWins++;
-          consecutiveWins++;
-          maxConsecutiveWins = Math.max(maxConsecutiveWins, consecutiveWins);
-        } else {
-          consecutiveWins = 0;
-        }
-        if (position >= 1 && position <= 3) overallTotalPodiums++;
-      }
-      if (poleCheckbox.checked) overallTotalPoles++;
-      if (fastestLapCheckbox.checked) overallTotalFastestLaps++;
-      if (position === 1 && poleCheckbox.checked && fastestLapCheckbox.checked) overallTotalHattricks++;
-      if (grandSlamCheckbox.checked) overallTotalGrandSlams++;
-    });
-
-    try {
-      const championDoc = await db.collection("champions").doc(`champion-${season}`).get();
-      if (championDoc.exists && championDoc.data().isChampion) overallTotalTitles++;
-    } catch (error) {
-      console.error(`Erro ao carregar status de campeão para ${season}:`, error);
-    }
-  }
-
-  animateCount(document.getElementById("overall-total-races"), parseInt(document.getElementById("overall-total-races")?.textContent) || 0, overallTotalRaces, 1000);
-  animateCount(document.getElementById("overall-total-wins"), parseInt(document.getElementById("overall-total-wins")?.textContent) || 0, overallTotalWins, 1000);
-  animateCount(document.getElementById("overall-total-podiums"), parseInt(document.getElementById("overall-total-podiums")?.textContent) || 0, overallTotalPodiums, 1000);
-  animateCount(document.getElementById("overall-total-poles"), parseInt(document.getElementById("overall-total-poles")?.textContent) || 0, overallTotalPoles, 1000);
-  animateCount(document.getElementById("overall-total-fastest-laps"), parseInt(document.getElementById("overall-total-fastest-laps")?.textContent) || 0, overallTotalFastestLaps, 1000);
-  animateCount(document.getElementById("overall-total-hattricks"), parseInt(document.getElementById("overall-total-hattricks")?.textContent) || 0, overallTotalHattricks, 1000);
-  animateCount(document.getElementById("overall-total-grand-slams"), parseInt(document.getElementById("overall-total-grand-slams")?.textContent) || 0, overallTotalGrandSlams, 1000);
-  animateCount(document.getElementById("overall-total-titles"), parseInt(document.getElementById("overall-total-titles")?.textContent) || 0, overallTotalTitles, 1000);
-
-  const totalPossibleRaces = 22 + 24;
-  animateCount(document.getElementById("overall-races-percentage"), parseFloat(document.getElementById("overall-races-percentage")?.textContent.replace(',', '.')) || 0, overallTotalRaces > 0 ? (overallTotalRaces / totalPossibleRaces) * 100 : 0, 1000, true);
-  animateCount(document.getElementById("overall-wins-percentage"), parseFloat(document.getElementById("overall-wins-percentage")?.textContent.replace(',', '.')) || 0, overallTotalRaces > 0 ? (overallTotalWins / overallTotalRaces) * 100 : 0, 1000, true);
-  animateCount(document.getElementById("overall-podiums-percentage"), parseFloat(document.getElementById("overall-podiums-percentage")?.textContent.replace(',', '.')) || 0, overallTotalRaces > 0 ? (overallTotalPodiums / overallTotalRaces) * 100 : 0, 1000, true);
-  animateCount(document.getElementById("overall-poles-percentage"), parseFloat(document.getElementById("overall-poles-percentage")?.textContent.replace(',', '.')) || 0, overallTotalRaces > 0 ? (overallTotalPoles / overallTotalRaces) * 100 : 0, 1000, true);
-  animateCount(document.getElementById("overall-fastest-laps-percentage"), parseFloat(document.getElementById("overall-fastest-laps-percentage")?.textContent.replace(',', '.')) || 0, overallTotalRaces > 0 ? (overallTotalFastestLaps / overallTotalRaces) * 100 : 0, 1000, true);
-  animateCount(document.getElementById("overall-hattricks-percentage"), parseFloat(document.getElementById("overall-hattricks-percentage")?.textContent.replace(',', '.')) || 0, overallTotalRaces > 0 ? (overallTotalHattricks / overallTotalRaces) * 100 : 0, 1000, true);
-  animateCount(document.getElementById("overall-grand-slams-percentage"), parseFloat(document.getElementById("overall-grand-slams-percentage")?.textContent.replace(',', '.')) || 0, overallTotalRaces > 0 ? (overallTotalGrandSlams / overallTotalRaces) * 100 : 0, 1000, true);
-  animateCount(document.getElementById("overall-titles-percentage"), parseFloat(document.getElementById("overall-titles-percentage")?.textContent.replace(',', '.')) || 0, overallTotalTitles > 0 ? (overallTotalTitles / 2) * 100 : 0, 1000, true);
-
-  updateRecordsList({
-    "Títulos Mundiais": overallTotalTitles > 7 ? overallTotalTitles : 0,
-    "Vitórias": overallTotalWins > 105 ? overallTotalWins : 0,
-    "Pódios": overallTotalPodiums > 202 ? overallTotalPodiums : 0,
-    "Pole Positions": overallTotalPoles > 104 ? overallTotalPoles : 0,
-    "Voltas Mais Rápidas": overallTotalFastestLaps > 77 ? overallTotalFastestLaps : 0,
-    "Hat-Tricks": overallTotalHattricks > 22 ? overallTotalHattricks : 0,
-    "Grand Slams": overallTotalGrandSlams > 8 ? overallTotalGrandSlams : 0,
-    "Corridas Disputadas": overallTotalRaces > 356 ? overallTotalRaces : 0,
-    "Vitórias Consecutivas": maxConsecutiveWins > 10 ? maxConsecutiveWins : 0
-  });
-}
-
-// Atualizar lista de recordes
-function updateRecordsList(records, season = null) {
-  const recordsList = document.getElementById("records-list");
-  if (!recordsList) return;
-
-  recordsList.innerHTML = "";
-
-  Object.entries(records).forEach(([title, value]) => {
-    if (value > 0) {
-      const recordItem = document.createElement("div");
-      recordItem.classList.add("record-item");
-
-      const recordNumber = document.createElement("span");
-      recordNumber.classList.add("record-number");
-      recordNumber.textContent = value;
-
-      const recordTitle = document.createElement("span");
-      recordTitle.classList.add("record-title");
-      recordTitle.textContent = season ? `${title} (${season})` : title;
-
-      recordItem.appendChild(recordNumber);
-      recordItem.appendChild(recordTitle);
-      recordsList.appendChild(recordItem);
-    }
-  });
-}
-
-// Alternar entre temporadas
-document.getElementById("btn-2023")?.addEventListener("click", () => {
-  const season2023 = document.getElementById("season-2023");
-  const season2024 = document.getElementById("season-2024");
-  const btn2023 = document.getElementById("btn-2023");
-  const btn2024 = document.getElementById("btn-2024");
-  if (season2023 && season2024 && btn2023 && btn2024) {
-    season2023.classList.remove("hidden");
-    season2024.classList.add("hidden");
-    btn2023.classList.add("active");
-    btn2024.classList.remove("active");
-    updateStats("2023");
-  }
-});
-
-document.getElementById("btn-2024")?.addEventListener("click", () => {
-  const season2023 = document.getElementById("season-2023");
-  const season2024 = document.getElementById("season-2024");
-  const btn2023 = document.getElementById("btn-2023");
-  const btn2024 = document.getElementById("btn-2024");
-  if (season2023 && season2024 && btn2023 && btn2024) {
-    season2024.classList.remove("hidden");
-    season2023.classList.add("hidden");
-    btn2024.classList.add("active");
-    btn2023.classList.remove("active");
-    updateStats("2024");
-  }
-});
-
-// Salvar alterações ao clicar no botão
-document.getElementById("save-button")?.addEventListener("click", saveAllChanges);
-
-// Mostrar estatísticas de uma corrida específica no modal
-function showRaceStats(raceName) {
-  const modal = document.getElementById("modal");
-  const modalTitle = document.getElementById("modal-title");
-  const modalWins = document.getElementById("modal-wins");
-  const modalPodiums = document.getElementById("modal-podiums");
-  const modalPoles = document.getElementById("modal-poles");
-  const modalFastestLaps = document.getElementById("modal-fastest-laps");
-  const modalHattricks = document.getElementById("modal-hattricks");
-  const modalGrandSlams = document.getElementById("modal-grand-slams");
-
-  if (!modal || !modalTitle || !modalWins || !modalPodiums || !modalPoles || !modalFastestLaps || !modalHattricks || !modalGrandSlams) return;
-
-  modalTitle.textContent = `Estatísticas da Corrida: ${raceName}`;
-  let wins = 0, podiums = 0, poles = 0, fastestLaps = 0, hattricks = 0, grandSlams = 0;
-
-  ["2023", "2024"].forEach(season => {
-    const row = document.querySelector(`#race-table-${season} tr[data-race="${raceName}"]`);
-    if (row) {
-      const positionInput = row.querySelector(".position-input");
-      const poleCheckbox = row.querySelector(".pole-checkbox");
-      const fastestLapCheckbox = row.querySelector(".fastest-lap-checkbox");
-      const grandSlamCheckbox = row.querySelector(".grand-slam-checkbox");
-
-      if (!positionInput || !poleCheckbox || !fastestLapCheckbox || !grandSlamCheckbox) return;
-
-      const position = parseInt(positionInput.value) || 0;
-      const pole = poleCheckbox.checked;
-      const fastestLap = fastestLapCheckbox.checked;
-      const grandSlam = grandSlamCheckbox.checked;
-
-      if (position === 1) wins++;
-      if (position >= 1 && position <= 3) podiums++;
-      if (pole) poles++;
-      if (fastestLap) fastestLaps++;
-      if (position === 1 && pole && fastestLap) hattricks++;
-      if (grandSlam) grandSlams++;
-    }
-  });
-
-  modalWins.textContent = wins;
-  modalPodiums.textContent = podiums;
-  modalPoles.textContent = poles;
-  modalFastestLaps.textContent = fastestLaps;
-  modalHattricks.textContent = hattricks;
-  modalGrandSlams.textContent = grandSlams;
-
-  modal.classList.remove("hidden");
-  modal.classList.add("show");
-}
-
-// Evento de clique nas linhas das tabelas
-document.querySelectorAll("#race-table-2023 tr, #race-table-2024 tr").forEach(row => {
-  row.addEventListener("click", (event) => {
-    if (event.target.tagName !== "INPUT" && event.target.tagName !== "BUTTON") {
-      const raceName = row.getAttribute("data-race");
-      if (raceName) showRaceStats(raceName);
-    }
-  });
-});
-
-// Fechar o modal
-document.querySelector(".close-modal")?.addEventListener("click", () => {
-  const modal = document.getElementById("modal");
-  if (modal) {
-    modal.classList.remove("show");
-    modal.classList.add("hidden");
-  }
-});
-
-// Atualizar estatísticas ao alterar status de campeão
-document.querySelectorAll(".champion-checkbox").forEach(checkbox => {
-  checkbox.addEventListener("change", async (event) => {
-    const season = event.target.id.split("-")[1];
-    await saveChampionStatus(season, event.target.checked);
-    updateStats(season);
-  });
-});
-
-// Inicialização
-document.addEventListener("DOMContentLoaded", () => {
-  loadData();
+// Opcional: listener para o modal de mensagem (clicar fora fecha)
+document.getElementById('message-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'message-modal') {
+        closeModal();
+    }
 });
