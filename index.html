@@ -3,550 +3,593 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fernando Lapa - Temporadas 2023 e 2024</title>
-    <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="index.css">
+    <title>Estatísticas de Fernando Lapa - Fórmula 1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background: linear-gradient(135deg, #0d0d1a, #1c2526);
+            color: #e0e0e0;
+            margin: 0;
+            padding: 40px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            animation: fadeIn 1.2s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h1 {
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            color: #ff1744;
+            text-shadow: 0 0 20px rgba(255, 23, 68, 0.8), 0 0 40px rgba(255, 23, 68, 0.4);
+            font-size: 3em;
+            margin-bottom: 50px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .form-container {
+            background: #1a1a2e;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 23, 68, 0.2);
+            margin-bottom: 50px;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .form-container:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(255, 23, 68, 0.3);
+        }
+        .form-container h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #00e5ff;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+            margin-bottom: 20 Zawpx;
+        }
+        .form-container select, .form-container input[type="number"] {
+            padding: 15px;
+            margin: 10px 5px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            background: #2a2a3a;
+            color: #e0e0e0;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+        .form-container select:focus, .form-container input[type="number"]:focus {
+            background: #3a3a4a;
+            box-shadow: 0 0 10px rgba(255, 23, 68, 0.5);
+            outline: none;
+        }
+        .form-container label {
+            margin: 0 15px;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #b0b0b0;
+        }
+        .form-container button {
+            background: linear-gradient(45deg, #ff1744, #ff4d4f);
+            color: #fff;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+        }
+        .form-container button:hover {
+            background: linear-gradient(45deg, #d81b60, #e91e63);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 23, 68, 0.7);
+        }
+        .table-container {
+            background: #1a1a2e;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            margin-bottom: 50px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #e0e0e0;
+        }
+        th, td {
+            padding: 20px;
+            text-align: left;
+            border-bottom: 1px solid #2a2a3a;
+        }
+        th {
+            background: linear-gradient(45deg, #ff1744, #ff4d4foo);
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        tr:nth-child(even) {
+            background: #2a2a3a;
+        }
+        tr:hover {
+            background: #3a3a4a;
+            transition: background 0.3s;
+        }
+        .flag {
+            width: 32px;
+            vertical-align: middle;
+            margin-right: 12px;
+            border-radius: 4px;
+        }
+        .delete-btn {
+            background: linear-gradient(45deg, #d81b60, #e91e63);
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .delete-btn:hover {
+            background: linear-gradient(45deg, #b71c1c, #d32f2f);
+            transform: scale(1.05);
+        }
+        .delete-btn i {
+            margin-right: 5px;
+        }
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        .stats-card {
+            background: #1a1a2e;
+            color: #e0e0e0;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(0, 229, 255, 0.2);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .stats-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(0, 229, 255, 0.3);
+        }
+        .stats-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: #00e5ff;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+            margin-top: 0;
+            font-size: 1.8em;
+            text-transform: uppercase;
+        }
+        .stats-card p {
+            margin: 10px 0;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .stats-card p i {
+            color: #ff1744;
+        }
+        @media (max-width: 768px) {
+            .form-container select, .form-container input[type="number"] {
+                width: 100%;
+                margin: 10px 0;
+            }
+            .form-container label {
+                display: block;
+                margin: 10px 0;
+            }
+            .form-container button {
+                width: 100%;
+            }
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2em;
+            }
+            .form-container, .stats-card {
+                padding: 20px;
+            }
+            th, td {
+                padding: 15px;
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <canvas id="particles"></canvas>
-    <header>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg" alt="Fórmula 1 Logo" class="logo-f1">
-        <h1>Fernando Lapa <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Flag_of_Brazil.svg" alt="Bandeira do Brasil" class="flag-br"></h1>
-        <p>Piloto Brasileiro de Fórmula 1</p>
-    </header>
-
-    <main>
-        <h2 class="overall-stats-title">Estatísticas Gerais de Todas as Temporadas</h2>
-        <div class="stats">
-            <div class="stat-box">
-                <h3 id="overall-total-races">0</h3>
-                <p>Corridas</p>
-                <div class="percentage" id="overall-races-percentage">0,00%</div>
-            </div>
-            <div class="stat-box">
-                <h3 id="overall-total-wins">0</h3>
-                <p>Vitórias</p>
-                <div class="percentage" id="overall-wins-percentage">0,00%</div>
-            </div>
-            <div class="stat-box">
-                <h3 id="overall-total-podiums">0</h3>
-                <p>Pódios</p>
-                <div class="percentage" id="overall-podiums-percentage">0,00%</div>
-            </div>
-            <div class="stat-box">
-                <h3 id="overall-total-poles">0</h3>
-                <p>Pole Positions</p>
-                <div class="percentage" id="overall-poles-percentage">0,00%</div>
-            </div>
-            <div class="stat-box">
-                <h3 id="overall-total-fastest-laps">0</h3>
-                <p>Volta Mais Rápida</p>
-                <div class="percentage" id="overall-fastest-laps-percentage">0,00%</div>
-            </div>
-            <div class="stat-box">
-                <h3 id="overall-total-hattricks">0</h3>
-                <p>Hat-Tricks</p>
-                <div class="percentage" id="overall-hattricks-percentage">0,00%</div>
-            </div>
-            <div class="stat-box">
-                <h3 id="overall-total-grand-slams">0</h3>
-                <p>Grand Slams</p>
-                <div class="percentage" id="overall-grand-slams-percentage">0,00%</div>
-            </div>
-            <div class="stat-box">
-                <h3 id="overall-total-titles">0</h3>
-                <p>Títulos Mundiais</p>
-                <div class="percentage" id="overall-titles-percentage">0,00%</div>
-            </div>
+    <div class="container">
+        <h1>Estatísticas de Fernando Lapa - Fórmula 1</h1>
+        <div class="form-container">
+            <h2><i class="fas fa-flag-checkered"></i> Adicionar Resultado de Corrida</h2>
+            <select id="temporada">
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+            </select>
+            <select id="grandePremio"></select>
+            <input type="number" id="posicao" placeholder="Posição (1-20)" min="1" max="20">
+            <label><input type="checkbox" id="pole"> <i class="fas fa-tachometer-alt"></i> Pole Position</label>
+            <label><input type="checkbox" id="voltaMaisRapida"> <i class="fas fa-stopwatch"></i> Volta Mais Rápida</label>
+            <label><input type="checkbox" id="grandSlam"> <i class="fas fa-trophy"></i> Grand Slam</label>
+            <input type="number" id="titulos" placeholder="Títulos Mundiais (Manual)" min="0">
+            <button id="adicionarResultadoBtn"><i class="fas fa-plus-circle"></i> Adicionar Resultado</button>
         </div>
-
-        <div class="season-buttons">
-            <button id="btn-2023">2023</button>
-            <button id="btn-2024" class="active">2024</button>
-        </div>
-
-        <div class="save-button-container">
-            <button id="save-button">Salvar Alterações</button>
-        </div>
-
-        <div id="season-2023" class="hidden">
-            <h2>Corridas de 2023</h2>
+        <h2><i class="fas fa-list"></i> Resultados das Corridas</h2>
+        <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>Corrida 🏁</th>
+                        <th>Temporada</th>
+                        <th>Grande Prêmio</th>
+                        <th>Data</th>
                         <th>Posição</th>
                         <th>Pole</th>
                         <th>Volta Mais Rápida</th>
                         <th>Grand Slam</th>
+                        <th>Ação</th>
                     </tr>
                 </thead>
-                <tbody id="race-table-2023">
-                    <tr data-race="Bahrein">
-                        <td><span class="race-name"><span>🇧🇭</span> Bahrein</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Arábia Saudita">
-                        <td><span class="race-name"><span>🇸🇦</span> Arábia Saudita</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Austrália">
-                        <td><span class="race-name"><span>🇦🇺</span> Austrália</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Azerbaijão">
-                        <td><span class="race-name"><span>🇦🇿</span> Azerbaijão</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Miami">
-                        <td><span class="race-name"><span>🇺🇸</span> Miami</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Mônaco">
-                        <td><span class="race-name"><span>🇲🇨</span> Mônaco</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Espanha">
-                        <td><span class="race-name"><span>🇪🇸</span> Espanha</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Canadá">
-                        <td><span class="race-name"><span>🇨🇦</span> Canadá</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Áustria">
-                        <td><span class="race-name"><span>🇦🇹</span> Áustria</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Grã-Bretanha">
-                        <td><span class="race-name"><span>🇬🇧</span> Grã-Bretanha</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Hungria">
-                        <td><span class="race-name"><span>🇭🇺</span> Hungria</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Bélgica">
-                        <td><span class="race-name"><span>🇧🇪</span> Bélgica</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Países Baixos">
-                        <td><span class="race-name"><span>🇳🇱</span> Países Baixos</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Itália">
-                        <td><span class="race-name"><span>🇮🇹</span> Itália</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Singapura">
-                        <td><span class="race-name"><span>🇸🇬</span> Singapura</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Japão">
-                        <td><span class="race-name"><span>🇯🇵</span> Japão</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Catar">
-                        <td><span class="race-name"><span>🇶🇦</span> Catar</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Estados Unidos">
-                        <td><span class="race-name"><span>🇺🇸</span> Estados Unidos</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="México">
-                        <td><span class="race-name"><span>🇲🇽</span> México</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Brasil">
-                        <td><span class="race-name"><span>🇧🇷</span> Brasil</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Las Vegas">
-                        <td><span class="race-name"><span>🇺🇸</span> Las Vegas</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Abu Dhabi">
-                        <td><span class="race-name"><span>🇦🇪</span> Abu Dhabi</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                </tbody>
+                <tbody id="resultadosBody"></tbody>
             </table>
-            <div class="champion-section">
-                <label for="champion-2023">Campeão em 2023?</label>
-                <input type="checkbox" id="champion-2023" class="champion-checkbox">
-            </div>
-            <h2>Estatísticas da Temporada 2023</h2>
-            <div class="stats">
-                <div class="stat-box">
-                    <h3 id="total-races">0</h3>
-                    <p>Corridas</p>
-                    <div class="percentage" id="races-percentage">0,00%</div>
-                </div>
-                <div class="stat-box">
-                    <h3 id="total-wins">0</h3>
-                    <p>Vitórias</p>
-                    <div class="percentage" id="wins-percentage">0,00%</div>
-                </div>
-                <div class="stat-box">
-                    <h3 id="total-podiums">0</h3>
-                    <p>Pódios</p>
-                    <div class="percentage" id="podiums-percentage">0,00%</div>
-                </div>
-                <div class="stat-box">
-                    <h3 id="total-poles">0</h3>
-                    <p>Pole Positions</p>
-                    <div class="percentage" id="poles-percentage">0,00%</div>
-                </div>
-                <div class="stat-box">
-                    <h3 id="total-fastest-laps">0</h3>
-                    <p>Volta Mais Rápida</p>
-                    <div class="percentage" id="fastest-laps-percentage">0,00%</div>
-                </div>
-                <div class="stat-box">
-                    <h3 id="total-hattricks">0</h3>
-                    <p>Hat-Tricks</p>
-                    <div class="percentage" id="hattricks-percentage">0,00%</div>
-                </div>
-                <div class="stat-box">
-                    <h3 id="total-grand-slams">0</h3>
-                    <p>Grand Slams</p>
-                    <div class="percentage" id="grand-slams-percentage">0,00%</div>
-                </div>
-                <div class="stat-box">
-                    <h3 id="total-titles">0</h3>
-                    <p>Títulos Mundiais</p>
-                    <div class="percentage" id="titles-percentage">0,00%</div>
-                </div>
-            </div>
         </div>
-
-        <div id="season-2024">
-            <h2>Corridas de 2024</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Corrida 🏁</th>
-                        <th>Posição</th>
-                        <th>Pole</th>
-                        <th>Volta Mais Rápida</th>
-                        <th>Grand Slam</th>
-                    </tr>
-                </thead>
-                <tbody id="race-table-2024">
-                    <tr data-race="Bahrein">
-                        <td><span class="race-name"><span>🇧🇭</span> Bahrein</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Arábia Saudita">
-                        <td><span class="race-name"><span>🇸🇦</span> Arábia Saudita</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Austrália">
-                        <td><span class="race-name"><span>🇦🇺</span> Austrália</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Japão">
-                        <td><span class="race-name"><span>🇯🇵</span> Japão</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="China">
-                        <td><span class="race-name"><span>🇨🇳</span> China</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Miami">
-                        <td><span class="race-name"><span>🇺🇸</span> Miami</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Emilia-Romagna">
-                        <td><span class="race-name"><span>🇮🇹</span> Emilia-Romagna</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Mônaco">
-                        <td><span class="race-name"><span>🇲🇨</span> Mônaco</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Canadá">
-                        <td><span class="race-name"><span>🇨🇦</span> Canadá</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Espanha">
-                        <td><span class="race-name"><span>🇪🇸</span> Espanha</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Áustria">
-                        <td><span class="race-name"><span>🇦🇹</span> Áustria</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Grã-Bretanha">
-                        <td><span class="race-name"><span>🇬🇧</span> Grã-Bretanha</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Hungria">
-                        <td><span class="race-name"><span>🇭🇺</span> Hungria</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Bélgica">
-                        <td><span class="race-name"><span>🇧🇪</span> Bélgica</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Países Baixos">
-                        <td><span class="race-name"><span>🇳🇱</span> Países Baixos</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Itália">
-                        <td><span class="race-name"><span>🇮🇹</span> Itália</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Azerbaijão">
-                        <td><span class="race-name"><span>🇦🇿</span> Azerbaijão</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Singapura">
-                        <td><span class="race-name"><span>🇸🇬</span> Singapura</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Estados Unidos">
-                        <td><span class="race-name"><span>🇺🇸</span> Estados Unidos</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="México">
-                        <td><span class="race-name"><span>🇲🇽</span> México</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Brasil">
-                        <td><span class="race-name"><span>🇧🇷</span> Brasil</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Las Vegas">
-                        <td><span class="race-name"><span>🇺🇸</span> Las Vegas</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Catar">
-                        <td><span class="race-name"><span>🇶🇦</span> Catar</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                    <tr data-race="Abu Dhabi">
-                        <td><span class="race-name"><span>🇦🇪</span> Abu Dhabi</span></td>
-                        <td><input type="number" min="1" max="20" placeholder="Pos" class="position-input"></td>
-                        <td><input type="checkbox" class="pole-checkbox"></td>
-                        <td><input type="checkbox" class="fastest-lap-checkbox"></td>
-                        <td><input type="checkbox" class="grand-slam-checkbox"></td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="champion-section">
-                <label for="champion-2024">Campeão em 2024?</label>
-                <input type="checkbox" id="champion-2024" class="champion-checkbox">
-            </div>
-            <h2>Estatísticas da Temporada 2024</h2>
-            <div class="stats">
-                <div class="stat-box">
-                    <h3 id="total-races">0</h3>
-                    <p>Corridas</p>
-                    <div class="percentage" id="races-percentage">0,00%</div>
-                </div>
-                <div class="stat-box">
-                    <h3 id="total-wins">0</h3>
-                    <p>Vitórias</p>
-                    <div class="percentage" id="wins-percentage">0,00%</div>
-                </div>
-                <div class="stat-box">
-                    <h3 id="total-podiums">0</h3>
-                    <p>Pódios</p>
-                    <div class="percentage" id="podiums-percentage">0,00%</div>
-                </div>
-                <div class="stat-box">
-                    <h3 id="total-poles">0</h3>
-                    <p>Pole Positions</p>
-                    <div class="percentage" id="poles-percentage">0,00%</div>
-                </div>
-                <div class="stat-box">
-                    <h3 id="total-fastest-laps">0</h3>
-                    <p>Volta Mais Rápida</p>
-                    <div class="percentage" id="fastest-laps-percentage">0,00%</div>
-                </div>
-                <div class="stat-box">
-                    <h3 id="total-hattricks">0</h3>
-                    <p>Hat-Tricks</p>
-                    <div class="percentage" id="hattricks-percentage">0,00%</div>
-                </div>
-                <div class="stat-box">
-                    <h3 id="total-grand-slams">0</h3>
-                    <p>Grand Slams</p>
-                    <div class="percentage" id="grand-slams-percentage">0,00%</div>
-                </div>
-                <div class="stat-box">
-                    <h3 id="total-titles">0</h3>
-                    <p>Títulos Mundiais</p>
-                    <div class="percentage" id="titles-percentage">0,00%</div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <footer>
-        <div id="broken-records">
-            <h3>Recordes do Piloto</h3>
-            <div id="records-list"></div>
-        </div>
-        <p>© 2023-2024 Fernando Lapa - Todos os direitos reservados.</p>
-    </footer>
-
-    <div id="modal" class="modal hidden">
-        <div class="modal-content">
-            <button class="close-modal">×</button>
-            <h3 id="modal-title">Estatísticas Consolidadas</h3>
-            <div class="summary" id="modal-summary">
-                <div><strong>Vitórias:</strong> <span id="modal-wins">0</span></div>
-                <div><strong>Pódios:</strong> <span id="modal-podiums">0</span></div>
-                <div><strong>Pole Positions:</strong> <span id="modal-poles">0</span></div>
-                <div><strong>Volta Mais Rápida:</strong> <span id="modal-fastest-laps">0</span></div>
-                <div><strong>Hat-Tricks:</strong> <span id="modal-hattricks">0</span></div>
-                <div><strong>Grand Slams:</strong> <span id="modal-grand-slams">0</span></div>
-            </div>
+        <h2><i class="fas fa-chart-bar"></i> Estatísticas</h2>
+        <div class="stats-container">
+            <div class="stats-card" id="stats2023"></div>
+            <div class="stats-card" id="stats2024"></div>
+            <div class="stats-card" id="carreiraStats"></div>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
-    <script src="index.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const firebaseConfig = {
+                apiKey: "AIzaSyAuutbwYf0ZHatqPGFJCweAmWHq84x9zac",
+                authDomain: "formula-1-4d935.firebaseapp.com",
+                projectId: "formula-1-4d935",
+                storageBucket: "formula-1-4d935.firebasestorage.app",
+                messagingSenderId: "451569681777",
+                appId: "1:451569681777:web:4bfcc9d590d480965c22d0",
+                measurementId: "G-2JTBM17G1T"
+            };
+
+            let db;
+            try {
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.firestore();
+                console.log("Firebase inicializado com sucesso.");
+            } catch (error) {
+                console.error("Erro ao inicializar Firebase:", error);
+                alert("Erro ao conectar com o banco de dados. Verifique o console.");
+            }
+
+            const countryFlags = {
+                "Grande Prêmio do Bahrein": "https://flagcdn.com/w20/bh.png",
+                "Grande Prêmio da Arábia Saudita": "https://flagcdn.com/w20/sa.png",
+                "Grande Prêmio da Austrália": "https://flagcdn.com/w20/au.png",
+                "Grande Prêmio do Azerbaijão": "https://flagcdn.com/w20/az.png",
+                "Grande Prêmio de Miami": "https://flagcdn.com/w20/us.png",
+                "Grande Prêmio de Mônaco": "https://flagcdn.com/w20/mc.png",
+                "Grande Prêmio da Espanha": "https://flagcdn.com/w20/es.png",
+                "Grande Prêmio do Canadá": "https://flagcdn.com/w20/ca.png",
+                "Grande Prêmio da Áustria": "https://flagcdn.com/w20/at.png",
+                "Grande Prêmio da Grã-Bretanha": "https://flagcdn.com/w20/gb.png",
+                "Grande Prêmio da Hungria": "https://flagcdn.com/w20/hu.png",
+                "Grande Prêmio da Bélgica": "https://flagcdn.com/w20/be.png",
+                "Grande Prêmio dos Países Baixos": "https://flagcdn.com/w20/nl.png",
+                "Grande Prêmio da Itália": "https://flagcdn.com/w20/it.png",
+                "Grande Prêmio de Singapura": "https://flagcdn.com/w20/sg.png",
+                "Grande Prêmio do Japão": "https://flagcdn.com/w20/jp.png",
+                "Grande Prêmio do Catar": "https://flagcdn.com/w20/qa.png",
+                "Grande Prêmio dos Estados Unidos": "https://flagcdn.com/w20/us.png",
+                "Grande Prêmio do México": "https://flagcdn.com/w20/mx.png",
+                "Grande Prêmio de São Paulo": "https://flagcdn.com/w20/br.png",
+                "Grande Prêmio de Las Vegas": "https://flagcdn.com/w20/us.png",
+                "Grande Prêmio de Abu Dhabi": "https://flagcdn.com/w20/ae.png",
+                "Grande Prêmio da China": "https://flagcdn.com/w20/cn.png",
+                "Grande Prêmio da Emília-Romanha": "https://flagcdn.com/w20/it.png"
+            };
+
+            const corridas = {
+                "2023": [
+                    { nome: "Grande Prêmio do Bahrein", data: "2023-03-05" },
+                    { nome: "Grande Prêmio da Arábia Saudita", data: "2023-03-19" },
+                    { nome: "Grande Prêmio da Austrália", data: "2023-04-02" },
+                    { nome: "Grande Prêmio do Azerbaijão", data: "2023-04-30" },
+                    { nome: "Grande Prêmio de Miami", data: "2023-05-07" },
+                    { nome: "Grande Prêmio de Mônaco", data: "2023-05-28" },
+                    { nome: "Grande Prêmio da Espanha", data: "2023-06-04" },
+                    { nome: "Grande Prêmio do Canadá", data: "2023-06-18" },
+                    { nome: "Grande Prêmio da Áustria", data: "2023-07-02" },
+                    { nome: "Grande Prêmio da Grã-Bretanha", data: "2023-07-09" },
+                    { nome: "Grande Prêmio da Hungria", data: "2023-07-23" },
+                    { nome: "Grande Prêmio da Bélgica", data: "2023-07-30" },
+                    { nome: "Grande Prêmio dos Países Baixos", data: "2023-08-27" },
+                    { nome: "Grande Prêmio da Itália", data: "2023-09-03" },
+                    { nome: "Grande Prêmio de Singapura", data: "2023-09-17" },
+                    { nome: "Grande Prêmio do Japão", data: "2023-09-24" },
+                    { nome: "Grande Prêmio do Catar", data: "2023-10-08" },
+                    { nome: "Grande Prêmio dos Estados Unidos", data: "2023-10-22" },
+                    { nome: "Grande Prêmio do México", data: "2023-10-29" },
+                    { nome: "Grande Prêmio de São Paulo", data: "2023-11-05" },
+                    { nome: "Grande Prêmio de Las Vegas", data: "2023-11-18" },
+                    { nome: "Grande Prêmio de Abu Dhabi", data: "2023-11-26" }
+                ],
+                "2024": [
+                    { nome: "Grande Prêmio do Bahrein", data: "2024-03-02" },
+                    { nome: "Grande Prêmio da Arábia Saudita", data: "2024-03-09" },
+                    { nome: "Grande Prêmio da Austrália", data: "2024-03-24" },
+                    { nome: "Grande Prêmio do Japão", data: "2024-04-07" },
+                    { nome: "Grande Prêmio da China", data: "2024-04-21" },
+                    { nome: "Grande Prêmio de Miami", data: "2024-05-05" },
+                    { nome: "Grande Prêmio da Emília-Romanha", data: "2024-05-19" },
+                    { nome: "Grande Prêmio de Mônaco", data: "2024-05-26" },
+                    { nome: "Grande Prêmio do Canadá", data: "2024-06-09" },
+                    { nome: "Grande Prêmio da Espanha", data: "2024-06-23" },
+                    { nome: "Grande Prêmio da Áustria", data: "2024-06-30" },
+                    { nome: "Grande Prêmio da Grã-Bretanha", data: "2024-07-07" },
+                    { nome: "Grande Prêmio da Hungria", data: "2024-07-21" },
+                    { nome: "Grande Prêmio da Bélgica", data: "2024-07-28" },
+                    { nome: "Grande Prêmio dos Países Baixos", data: "2024-08-25" },
+                    { nome: "Grande Prêmio da Itália", data: "2024-09-01" },
+                    { nome: "Grande Prêmio do Azerbaijão", data: "2024-09-15" },
+                    { nome: "Grande Prêmio de Singapura", data: "2024-09-22" },
+                    { nome: "Grande Prêmio dos Estados Unidos", data: "2024-10-20" },
+                    { nome: "Grande Prêmio do México", data: "2024-10-27" },
+                    { nome: "Grande Prêmio de São Paulo", data: "2024-11-03" },
+                    { nome: "Grande Prêmio de Las Vegas", data: "2024-11-23" },
+                    { nome: "Grande Prêmio do Catar", data: "2024-12-01" },
+                    { nome: "Grande Prêmio de Abu Dhabi", data: "2024-12-08" }
+                ]
+            };
+
+            const temporadaSelect = document.getElementById("temporada");
+            const grandePremioSelect = document.getElementById("grandePremio");
+
+            function preencherGrandesPremios() {
+                const temporada = temporadaSelect.value;
+                grandePremioSelect.innerHTML = '<option value="">Selecione um Grande Prêmio</option>';
+                if (corridas[temporada]) {
+                    corridas[temporada].forEach(corrida => {
+                        const option = document.createElement("option");
+                        option.value = corrida.nome;
+                        option.textContent = corrida.nome;
+                        grandePremioSelect.appendChild(option);
+                    });
+                } else {
+                    console.error(`Temporada ${temporada} não encontrada.`);
+                    alert("Erro: Temporada não encontrada.");
+                }
+            }
+
+            temporadaSelect.addEventListener("change", preencherGrandesPremios);
+            preencherGrandesPremios();
+
+            const adicionarResultadoBtn = document.getElementById("adicionarResultadoBtn");
+            adicionarResultadoBtn.addEventListener("click", adicionarResultado);
+
+            async function adicionarResultado() {
+                const temporada = temporadaSelect.value;
+                const grandePremio = grandePremioSelect.value;
+                const posicao = parseInt(document.getElementById("posicao").value);
+                let pole = document.getElementById("pole").checked;
+                let voltaMaisRapida = document.getElementById("voltaMaisRapida").checked;
+                let grandSlam = document.getElementById("grandSlam").checked;
+                const titulos = parseInt(document.getElementById("titulos").value) || 0;
+
+                if (!temporada || !grandePremio) {
+                    alert("Selecione uma temporada e um Grande Prêmio.");
+                    return;
+                }
+                if (!posicao || posicao < 1 || posicao > 20) {
+                    alert("Insira uma posição válida (1 a 20).");
+                    return;
+                }
+
+                if (posicao === 1) {
+                    pole = true;
+                    voltaMaisRapida = true;
+                }
+
+                if (grandSlam && (posicao !== 1 || !pole || !voltaMaisRapida)) {
+                    alert("Grand Slam requer 1º lugar, pole position e volta mais rápida.");
+                    return;
+                }
+
+                const dadosCorrida = {
+                    temporada,
+                    grandePremio,
+                    data: corridas[temporada].find(c => c.nome === grandePremio).data,
+                    posicao,
+                    pole,
+                    voltaMaisRapida,
+                    grandSlam
+                };
+
+                if (!db) {
+                    alert("Erro: Banco de dados não inicializado.");
+                    return;
+                }
+
+                try {
+                    await db.collection("corridas").doc(`${temporada}_${grandePremio}`).set(dadosCorrida);
+                    await atualizarEstatisticas(temporada, titulos);
+                    alert("Resultado adicionado com sucesso!");
+                    carregarResultados();
+                    document.getElementById("posicao").value = "";
+                    document.getElementById("pole").checked = false;
+                    document.getElementById("voltaMaisRapida").checked = false;
+                    document.getElementById("grandSlam").checked = false;
+                    document.getElementById("titulos").value = "";
+                } catch (error) {
+                    console.error("Erro ao adicionar resultado:", error);
+                    alert("Erro ao adicionar resultado.");
+                }
+            }
+
+            async function excluirResultado(temporada, grandePremio) {
+                if (!db) return;
+                if (confirm(`Deseja excluir o resultado de ${grandePremio} (${temporada})?`)) {
+                    try {
+                        await db.collection("corridas").doc(`${temporada}_${grandePremio}`).delete();
+                        await atualizarEstatisticas(temporada, 0);
+                        alert("Resultado excluído com sucesso!");
+                        carregarResultados();
+                    } catch (error) {
+                        console.error("Erro ao excluir resultado:", error);
+                        alert("Erro ao excluir resultado.");
+                    }
+                }
+            }
+
+            async function atualizarEstatisticas(temporada, titulos) {
+                if (!db) return;
+
+                const corridasSnapshot = await db.collection("corridas").where("temporada", "==", temporada).get();
+                let estatisticas = {
+                    corridas: 0,
+                    vitorias: 0,
+                    podios: 0,
+                    poles: 0,
+                    voltasMaisRapidas: 0,
+                    hatTricks: 0,
+                    grandSlams: 0,
+                    titulos
+                };
+
+                corridasSnapshot.forEach(doc => {
+                    const dados = doc.data();
+                    estatisticas.corridas++;
+                    if (dados.posicao === 1) estatisticas.vitorias++;
+                    if (dados.posicao <= 3 && dados.posicao >= 1) estatisticas.podios++;
+                    if (dados.pole) estatisticas.poles++;
+                    if (dados.voltaMaisRapida) estatisticas.voltasMaisRapidas++;
+                    if (dados.posicao === 1 && dados.pole && dados.voltaMaisRapida) estatisticas.hatTricks++;
+                    if (dados.grandSlam) estatisticas.grandSlams++;
+                });
+
+                await db.collection("estatisticas").doc(`temporada_${temporada}`).set(estatisticas);
+
+                const todasCorridas = await db.collection("corridas").get();
+                let estatisticasCarreira = {
+                    corridas: 0,
+                    vitorias: 0,
+                    podios: 0,
+                    poles: 0,
+                    voltasMaisRapidas: 0,
+                    hatTricks: 0,
+                    grandSlams: 0,
+                    titulos: 0
+                };
+
+                todasCorridas.forEach(doc => {
+                    const dados = doc.data();
+                    estatisticasCarreira.corridas++;
+                    if (dados.posicao === 1) estatisticasCarreira.vitorias++;
+                    if (dados.posicao <= 3 && dados.posicao >= 1) estatisticasCarreira.podios++;
+                    if (dados.pole) estatisticasCarreira.poles++;
+                    if (dados.voltaMaisRapida) estatisticasCarreira.voltasMaisRapidas++;
+                    if (dados.posicao === 1 && dados.pole && dados.voltaMaisRapida) estatisticasCarreira.hatTricks++;
+                    if (dados.grandSlam) estatisticasCarreira.grandSlams++;
+                });
+
+                const temporadas = ["2023", "2024"];
+                for (const temp of temporadas) {
+                    const temporadaDoc = await db.collection("estatisticas").doc(`temporada_${temp}`).get();
+                    if (temporadaDoc.exists) {
+                        estatisticasCarreira.titulos += temporadaDoc.data().titulos || 0;
+                    }
+                }
+
+                await db.collection("estatisticas").doc("carreira").set(estatisticasCarreira);
+            }
+
+            async function carregarResultados() {
+                if (!db) return;
+                const resultadosBody = document.getElementById("resultadosBody");
+                resultadosBody.innerHTML = "";
+                const corridasSnapshot = await db.collection("corridas").orderBy("data").get();
+                corridasSnapshot.forEach(doc => {
+                    const dados = doc.data();
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${dados.temporada}</td>
+                        <td><img src="${countryFlags[dados.grandePremio] || ''}" class="flag" alt="Flag"> ${dados.grandePremio}</td>
+                        <td>${dados.data}</td>
+                        <td>${dados.posicao}</td>
+                        <td>${dados.pole ? "Sim" : "Não"}</td>
+                        <td>${dados.voltaMaisRapida ? "Sim" : "Não"}</td>
+                        <td>${dados.grandSlam ? "Sim" : "Não"}</td>
+                        <td><button class="delete-btn"><i class="fas fa-trash"></i> Excluir</button></td>
+                    `;
+                    resultadosBody.appendChild(row);
+                    const deleteBtn = row.querySelector(".delete-btn");
+                    deleteBtn.addEventListener("click", () => excluirResultado(dados.temporada, dados.grandePremio));
+                });
+
+                for (const temporada of ["2023", "2024"]) {
+                    const statsDoc = await db.collection("estatisticas").doc(`temporada_${temporada}`).get();
+                    const statsDiv = document.getElementById(`stats${temporada}`);
+                    if (statsDoc.exists) {
+                        const stats = statsDoc.data();
+                        statsDiv.innerHTML = `
+                            <h3>Temporada ${temporada}</h3>
+                            <p><i class="fas fa-flag-checkered"></i> Corridas: ${stats.corridas}</p>
+                            <p><i class="fas fa-trophy"></i> Vitórias: ${stats.vitorias}</p>
+                            <p><i class="fas fa-podium"></i> Pódios: ${stats.podios}</p>
+                            <p><i class="fas fa-tachometer-alt"></i> Poles: ${stats.poles}</p>
+                            <p><i class="fas fa-stopwatch"></i> Voltas Mais Rápidas: ${stats.voltasMaisRapidas}</p>
+                            <p><i class="fas fa-medal"></i> Hat-tricks: ${stats.hatTricks}</p>
+                            <p><i class="fas fa-crown"></i> Grand Slams: ${stats.grandSlams}</p>
+                            <p><i class="fas fa-award"></i> Títulos: ${stats.titulos}</p>
+                        `;
+                    } else {
+                        statsDiv.innerHTML = `<h3>Temporada ${temporada}</h3><p>Sem dados disponíveis.</p>`;
+                    }
+                }
+
+                const carreiraDoc = await db.collection("estatisticas").doc("carreira").get();
+                const carreiraStatsDiv = document.getElementById("carreiraStats");
+                if (carreiraDoc.exists) {
+                    const stats = carreiraDoc.data();
+                    carreiraStatsDiv.innerHTML = `
+                        <h3>Carreira</h3>
+                        <p><i class="fas fa-flag-checkered"></i> Corridas: ${stats.corridas}</p>
+                        <p><i class="fas fa-trophy"></i> Vitórias: ${stats.vitorias}</p>
+                        <p><i class="fas fa-podium"></i> Pódios: ${stats.podios}</p>
+                        <p><i class="fas fa-tachometer-alt"></i> Poles: ${stats.poles}</p>
+                        <p><i class="fas fa-stopwatch"></i> Voltas Mais Rápidas: ${stats.voltasMaisRapidas}</p>
+                        <p><i class="fas fa-medal"></i> Hat-tricks: ${stats.hatTricks}</p>
+                        <p><i class="fas fa-crown"></i> Grand Slams: ${stats.grandSlams}</p>
+                        <p><i class="fas fa-award"></i> Títulos: ${stats.titulos}</p>
+                    `;
+                } else {
+                    carreiraStatsDiv.innerHTML = "<h3>Carreira</h3><p>Sem dados disponíveis.</p>";
+                }
+            }
+
+            carregarResultados();
+        });
+    </script>
 </body>
 </html>
