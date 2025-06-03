@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -763,6 +764,11 @@
 
             carregarResultados();
         });
+
+        const corridasSnapshot = await db.collection("corridas")
+    .where("temporada", "==", "2023")
+    .orderBy("data")
+    .get();
     </script>
 </body>
 </html>
