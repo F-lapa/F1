@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Estilos mantidos iguais ao original */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -497,14 +496,14 @@
                 const temporada = temporadaSelect.value;
                 grandePremioSelect.innerHTML = '<option value="">Selecione um Grande Prêmio</option>';
                 if (corridas[temporada]) {
-                    corridas[tempo].forEach(corrida => {
+                    corridas[temporada].forEach(corrida => {
                         const option = document.createElement("option");
                         option.value = corrida.nome;
                         option.textContent = corrida.nome;
                         grandePremioSelect.appendChild(option);
                     });
                 } else {
-                    console.error("Erro: Temporada ${temporada} não encontrada.");
+                    console.error(`Erro: Temporada ${temporada} não encontrada.`);
                     alert("Erro ao carregar os Grandes Prêmios. Verifique o console.");
                 }
                 carregarResultados();
@@ -521,7 +520,7 @@
                 const grandePremio = grandePremioSelect.value;
                 const posicao = parseInt(document.getElementById("posicao").value);
                 let pole = document.getElementById("pole").checked;
-                let voltaMaisRapida = document.getElementById("voltaMaisRapida.checked;
+                let voltaMaisRapida = document.getElementById("voltaMaisRapida").checked;
                 let grandSlam = document.getElementById("grandSlam").checked;
                 const titulos = parseInt(document.getElementById("titulos").value) || 0;
 
@@ -571,12 +570,19 @@
                     document.getElementById("titulos").value = "";
                 } catch (error) {
                     console.error("Erro ao adicionar resultado:", error);
-                    alert("Erro ao adicionar resultado. Verifique o console para mais detalhes.");
+                    if (error.message.includes("Missing or insufficient permissions")) {
+                        alert("Erro: Permissões insuficientes para adicionar resultados. Verifique as regras de segurança no Firebase Console.");
+                    } else {
+                        alert("Erro ao adicionar resultado: " + error.message);
+                    }
                 }
             }
 
             async function excluirResultado(temporada, grandePremio) {
-                if (!db) return;
+                if (!db) {
+                    alert("Erro: Banco de dados não inicializado.");
+                    return;
+                }
                 if (confirm(`Deseja excluir o resultado de ${grandePremio} (${temporada})?`)) {
                     try {
                         await db.collection("corridas").doc(`${temporada}_${grandePremio}`).delete();
@@ -585,88 +591,104 @@
                         carregarResultados();
                     } catch (error) {
                         console.error("Erro ao excluir resultado:", error);
-                        alert("Erro ao excluir resultado. Verifique o console para mais detalhes.");
+                        if (error.message.includes("Missing or insufficient permissions")) {
+                            alert("Erro: Permissões insuficientes para excluir resultados. Verifique as regras de segurança no Firebase Console.");
+                        } else {
+                            alert("Erro ao excluir resultado: " + error.message);
+                        }
                     }
                 }
             }
 
             async function atualizarEstatisticas(temporada, titulos) {
-                if (!db) return;
-
-                const corridasSnapshot = await db.collection("corridas").where("temporada", "==", temporada).get();
-                let estatisticas = {
-                    corridas: 0,
-                    vitorias: 0,
-                    podios: 0,
-                    poles: 0,
-                    voltasMaisRapidas: 0,
-                    hatTricks: 0,
-                    grandSlams: 0,
-                    titulos
-                };
-
-                corridasSnapshot.forEach(doc => {
-                    const dados = doc.data();
-                    estatisticas.corridas++;
-                    if (dados.posicao === 1) estatisticas.vitorias++;
-                    if (dados.posicao <= 3 && dados.posicao >= 1) estatisticas.podios++;
-                    if (dados.pole) estatisticas.poles++;
-                    if (dados.voltaMaisRapida) estatisticas.voltasMaisRapidas++;
-                    if (dados.posicao === 1 && dados.pole && dados.voltaMaisRapida) estatisticas.hatTricks++;
-                    if (dados.grandSlam) estatisticas.grandSlams++;
-                });
-
-                await db.collection("estatisticas").doc(`temporada_${temporada}`).set(estatistica);
-                const todasCorridas = await db.collection("corridas").get();
-                let estatísticasCarreira = {
-                    corridas: 0,
-                    pontos: 0,
-                    vitorias: 0,
-                    podios: 0,
-                    poles: 0,
-                    voltasMaisRapidas: 0,
-                    hatTricks: 0,
-                    grandSlams: 0,
-                    titulos: 0,
-                };
-
-                todasCorridas.forEach(doc => {
-                    const dados = doc.data();
-                    estatísticasCarreira.corridas++;
-                    if (dados.posicao === 1) estatísticasCarreira.vitorias++;
-                    if (dados.posicao <= 3 && dados.posicao >= 1) estatísticasCarreira.podios++;
-                    if (dados.pole) estatísticasCarreira.poles++;
-                    if (dados.voltaMaisRapida) estatísticasCarreira.voltasMaisRapidas++;
-                    if (dados.posicao === 1 && dados.pole && dados.voltaMaisRapida) estatísticasCarreira.hatTricks++;
-                    if (dados.grandSlam) estatísticasCarreira.grandSlams++;
-                });
-
-                const temporadas = ["2023", "2024"];
-                for (const temp of temporadas) {
-                    const temporadaDoc = await db.collection("estatísticas").doc(`temporada_${temp}`).get();
-                    if (temporadaDoc.exists) {
-                        estatísticasCarreira.titulos += temporadaDoc.data().titulos || 0;
-                    }
+                if (!db) {
+                    alert("Erro: Banco de dados não inicializado.");
+                    return;
                 }
 
-                await db.collection("estatísticas").doc("carreira").set(estatísticasCarreira);
+                try {
+                    const corridasSnapshot = await db.collection("corridas").where("temporada", "==", temporada).get();
+                    let estatisticas = {
+                        corridas: 0,
+                        vitorias: 0,
+                        podios: 0,
+                        poles: 0,
+                        voltasMaisRapidas: 0,
+                        hatTricks: 0,
+                        grandSlams: 0,
+                        titulos
+                    };
+
+                    corridasSnapshot.forEach(doc => {
+                        const dados = doc.data();
+                        estatisticas.corridas++;
+                        if (dados.posicao === 1) estatisticas.vitorias++;
+                        if (dados.posicao <= 3 && dados.posicao >= 1) estatisticas.podios++;
+                        if (dados.pole) estatisticas.poles++;
+                        if (dados.voltaMaisRapida) estatisticas.voltasMaisRapidas++;
+                        if (dados.posicao === 1 && dados.pole && dados.voltaMaisRapida) estatisticas.hatTricks++;
+                        if (dados.grandSlam) estatisticas.grandSlams++;
+                    });
+
+                    await db.collection("estatisticas").doc(`temporada_${temporada}`).set(estatisticas);
+
+                    const todasCorridas = await db.collection("corridas").get();
+                    let estatisticasCarreira = {
+                        corridas: 0,
+                        vitorias: 0,
+                        podios: 0,
+                        poles: 0,
+                        voltasMaisRapidas: 0,
+                        hatTricks: 0,
+                        grandSlams: 0,
+                        titulos: 0
+                    };
+
+                    todasCorridas.forEach(doc => {
+                        const dados = doc.data();
+                        estatisticasCarreira.corridas++;
+                        if (dados.posicao === 1) estatisticasCarreira.vitorias++;
+                        if (dados.posicao <= 3 && dados.posicao >= 1) estatisticasCarreira.podios++;
+                        if (dados.pole) estatisticasCarreira.poles++;
+                        if (dados.voltaMaisRapida) estatisticasCarreira.voltasMaisRapidas++;
+                        if (dados.posicao === 1 && dados.pole && dados.voltaMaisRapida) estatisticasCarreira.hatTricks++;
+                        if (dados.grandSlam) estatisticasCarreira.grandSlams++;
+                    });
+
+                    const temporadas = ["2023", "2024"];
+                    for (const temp of temporadas) {
+                        const temporadaDoc = await db.collection("estatisticas").doc(`temporada_${temp}`).get();
+                        if (temporadaDoc.exists) {
+                            estatisticasCarreira.titulos += temporadaDoc.data().titulos || 0;
+                        }
+                    }
+
+                    await db.collection("estatisticas").doc("carreira").set(estatisticasCarreira);
+                } catch (error) {
+                    console.error("Erro ao atualizar estatísticas:", error);
+                    if (error.message.includes("Missing or insufficient permissions")) {
+                        alert("Erro: Permissões insuficientes para atualizar estatísticas. Verifique as regras de segurança no Firebase Console.");
+                    } else {
+                        alert("Erro ao atualizar estatísticas: " + error.message);
+                    }
+                }
             }
 
             async function carregarResultados() {
                 if (!db) {
-                    alert("Erro: Banco de dados não inicializado!");
+                    alert("Erro: Banco de dados não inicializado.");
                     return;
                 }
 
                 const temporada = temporadaSelect.value;
                 const resultadosBody = document.getElementById("resultadosBody");
-                resultadosBody.innerHTML = "<tr><td colspan="8">Carregando...</td></tr>";
+                resultadosBody.innerHTML = '<tr><td colspan="8">Carregando...</td></tr>';
 
                 try {
                     const corridasSnapshot = await db.collection("corridas")
-                    .where("temporada", "==", temporada)
-                    .orderBy("data")
-                    .get();
+                        .where("temporada", "==", temporada)
+                        .orderBy("data")
+                        .get();
 
                     resultadosBody.innerHTML = "";
                     corridasSnapshot.forEach(doc => {
@@ -674,7 +696,7 @@
                         const row = document.createElement("tr");
                         row.innerHTML = `
                             <td>${dados.temporada}</td>
-                            <td><img src="${countryFlags[dados.grandePremio]}" class="flag" alt="Flag"> ${dados.grandePremio}</td>
+                            <td><img src="${countryFlags[dados.grandePremio] || ''}" class="flag" alt="Flag"> ${dados.grandePremio}</td>
                             <td>${dados.data}</td>
                             <td>${dados.posicao}</td>
                             <td>${dados.pole ? "Sim" : "Não"}</td>
@@ -687,9 +709,9 @@
                         deleteBtn.addEventListener("click", () => excluirResultado(dados.temporada, dados.grandePremio));
                     });
 
-                    const statsDoc = await db.collection("estatísticas").doc(`temporada_${temporada}`).get();
+                    const statsDoc = await db.collection("estatisticas").doc(`temporada_${temporada}`).get();
                     const statsDiv = document.getElementById("statsTemporada");
-                    if (statsDiv.exists) {
+                    if (statsDoc.exists) {
                         const stats = statsDoc.data();
                         statsDiv.innerHTML = `
                             <h3>Temporada ${temporada}</h3>
@@ -706,7 +728,7 @@
                         statsDiv.innerHTML = `<h3>Temporada ${temporada}</h3><p>Sem dados disponíveis.</p>`;
                     }
 
-                    const carreiraDoc = await db.collection("estatísticas").doc("carreira").get();
+                    const carreiraDoc = await db.collection("estatisticas").doc("carreira").get();
                     const carreiraStatsDiv = document.getElementById("carreiraStats");
                     if (carreiraDoc.exists) {
                         const stats = carreiraDoc.data();
@@ -731,7 +753,7 @@
                     } else if (error.message.includes("Missing or insufficient permissions")) {
                         alert("Erro: Permissões insuficientes para carregar resultados. Verifique as regras de segurança no Firebase Console.");
                     } else {
-                        alert("Erro ao carregar resultados. Verifique o console para mais detalhes.");
+                        alert("Erro ao carregar resultados: " + error.message);
                     }
                     resultadosBody.innerHTML = '<tr><td colspan="8">Erro ao carregar resultados.</td></tr>';
                 }
