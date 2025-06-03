@@ -570,7 +570,7 @@
                     document.getElementById("titulos").value = "";
                 } catch (error) {
                     console.error("Erro ao adicionar resultado:", error);
-                    alert("Erro ao adicionar resultado.");
+                    alert("Erro ao adicionar resultado. Verifique o console para mais detalhes.");
                 }
             }
 
@@ -584,7 +584,7 @@
                         carregarResultados();
                     } catch (error) {
                         console.error("Erro ao excluir resultado:", error);
-                        alert("Erro ao excluir resultado.");
+                        alert("Erro ao excluir resultado. Verifique o console para mais detalhes.");
                     }
                 }
             }
@@ -652,69 +652,85 @@
             }
 
             async function carregarResultados() {
-                if (!db) return;
-                const temporada = temporadaSelect.value;
-                const resultadosBody = document.getElementById("resultadosBody");
-                resultadosBody.innerHTML = "";
-                const corridasSnapshot = await db.collection("corridas")
-                    .where("temporada", "==", temporada)
-                    .orderBy("data")
-                    .get();
-                
-                corridasSnapshot.forEach(doc => {
-                    const dados = doc.data();
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td>${dados.temporada}</td>
-                        <td><img src="${countryFlags[dados.grandePremio] || ''}" class="flag" alt="Flag"> ${dados.grandePremio}</td>
-                        <td>${dados.data}</td>
-                        <td>${dados.posicao}</td>
-                        <td>${dados.pole ? "Sim" : "Não"}</td>
-                        <td>${dados.voltaMaisRapida ? "Sim" : "Não"}</td>
-                        <td>${dados.grandSlam ? "Sim" : "Não"}</td>
-                        <td><button class="delete-btn"><i class="fas fa-trash"></i> Excluir</button></td>
-                    `;
-                    resultadosBody.appendChild(row);
-                    const deleteBtn = row.querySelector(".delete-btn");
-                    deleteBtn.addEventListener("click", () => excluirResultado(dados.temporada, dados.grandePremio));
-                });
-
-                const statsDoc = await db.collection("estatisticas").doc(`temporada_${temporada}`).get();
-                const statsDiv = document.getElementById("statsTemporada");
-                if (statsDoc.exists) {
-                    const stats = statsDoc.data();
-                    statsDiv.innerHTML = `
-                        <h3>Temporada ${temporada}</h3>
-                        <p><i class="fas fa-flag-checkered"></i> Corridas: ${stats.corridas}</p>
-                        <p><i class="fas fa-trophy"></i> Vitórias: ${stats.vitorias}</p>
-                        <p><i class="fas fa-podium"></i> Pódios: ${stats.podios}</p>
-                        <p><i class="fas fa-tachometer-alt"></i> Poles: ${stats.poles}</p>
-                        <p><i class="fas fa-stopwatch"></i> Voltas Mais Rápidas: ${stats.voltasMaisRapidas}</p>
-                        <p><i class="fas fa-medal"></i> Hat-tricks: ${stats.hatTricks}</p>
-                        <p><i class="fas fa-crown"></i> Grand Slams: ${stats.grandSlams}</p>
-                        <p><i class="fas fa-award"></i> Títulos: ${stats.titulos}</p>
-                    `;
-                } else {
-                    statsDiv.innerHTML = `<h3>Temporada ${temporada}</h3><p>Sem dados disponíveis.</p>`;
+                if (!db) {
+                    alert("Erro: Banco de dados não inicializado.");
+                    return;
                 }
 
-                const carreiraDoc = await db.collection("estatisticas").doc("carreira").get();
-                const carreiraStatsDiv = document.getElementById("carreiraStats");
-                if (carreiraDoc.exists) {
-                    const stats = carreiraDoc.data();
-                    carreiraStatsDiv.innerHTML = `
-                        <h3>Carreira</h3>
-                        <p><i class="fas fa-flag-checkered"></i> Corridas: ${stats.corridas}</p>
-                        <p><i class="fas fa-trophy"></i> Vitórias: ${stats.vitorias}</p>
-                        <p><i class="fas fa-podium"></i> Pódios: ${stats.podios}</p>
-                        <p><i class="fas fa-tachometer-alt"></i> Poles: ${stats.poles}</p>
-                        <p><i class="fas fa-stopwatch"></i> Voltas Mais Rápidas: ${stats.voltasMaisRapidas}</p>
-                        <p><i class="fas fa-medal"></i> Hat-tricks: ${stats.hatTricks}</p>
-                        <p><i class="fas fa-crown"></i> Grand Slams: ${stats.grandSlams}</p>
-                        <p><i class="fas fa-award"></i> Títulos: ${stats.titulos}</p>
-                    `;
-                } else {
-                    carreiraStatsDiv.innerHTML = "<h3>Carreira</h3><p>Sem dados disponíveis.</p>";
+                const temporada = temporadaSelect.value;
+                const resultadosBody = document.getElementById("resultadosBody");
+                resultadosBody.innerHTML = '<tr><td colspan="8">Carregando...</td></tr>';
+
+                try {
+                    const corridasSnapshot = await db.collection("corridas")
+                        .where("temporada", "==", temporada)
+                        .orderBy("data")
+                        .get();
+
+                    resultadosBody.innerHTML = "";
+                    corridasSnapshot.forEach(doc => {
+                        const dados = doc.data();
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td>${dados.temporada}</td>
+                            <td><img src="${countryFlags[dados.grandePremio] || ''}" class="flag" alt="Flag"> ${dados.grandePremio}</td>
+                            <td>${dados.data}</td>
+                            <td>${dados.posicao}</td>
+                            <td>${dados.pole ? "Sim" : "Não"}</td>
+                            <td>${dados.voltaMaisRapida ? "Sim" : "Não"}</td>
+                            <td>${dados.grandSlam ? "Sim" : "Não"}</td>
+                            <td><button class="delete-btn"><i class="fas fa-trash"></i> Excluir</button></td>
+                        `;
+                        resultadosBody.appendChild(row);
+                        const deleteBtn = row.querySelector(".delete-btn");
+                        deleteBtn.addEventListener("click", () => excluirResultado(dados.temporada, dados.grandePremio));
+                    });
+
+                    const statsDoc = await db.collection("estatisticas").doc(`temporada_${temporada}`).get();
+                    const statsDiv = document.getElementById("statsTemporada");
+                    if (statsDoc.exists) {
+                        const stats = statsDoc.data();
+                        statsDiv.innerHTML = `
+                            <h3>Temporada ${temporada}</h3>
+                            <p><i class="fas fa-flag-checkered"></i> Corridas: ${stats.corridas}</p>
+                            <p><i class="fas fa-trophy"></i> Vitórias: ${stats.vitorias}</p>
+                            <p><i class="fas fa-podium"></i> Pódios: ${stats.podios}</p>
+                            <p><i class="fas fa-tachometer-alt"></i> Poles: ${stats.poles}</p>
+                            <p><i class="fas fa-stopwatch"></i> Voltas Mais Rápidas: ${stats.voltasMaisRapidas}</p>
+                            <p><i class="fas fa-medal"></i> Hat-tricks: ${stats.hatTricks}</p>
+                            <p><i class="fas fa-crown"></i> Grand Slams: ${stats.grandSlams}</p>
+                            <p><i class="fas fa-award"></i> Títulos: ${stats.titulos}</p>
+                        `;
+                    } else {
+                        statsDiv.innerHTML = `<h3>Temporada ${temporada}</h3><p>Sem dados disponíveis.</p>`;
+                    }
+
+                    const carreiraDoc = await db.collection("estatisticas").doc("carreira").get();
+                    const carreiraStatsDiv = document.getElementById("carreiraStats");
+                    if (carreiraDoc.exists) {
+                        const stats = carreiraDoc.data();
+                        carreiraStatsDiv.innerHTML = `
+                            <h3>Carreira</h3>
+                            <p><i class="fas fa-flag-checkered"></i> Corridas: ${stats.corridas}</p>
+                            <p><i class="fas fa-trophy"></i> Vitórias: ${stats.vitorias}</p>
+                            <p><i class="fas fa-podium"></i> Pódios: ${stats.podios}</p>
+                            <p><i class="fas fa-tachometer-alt"></i> Poles: ${stats.poles}</p>
+                            <p><i class="fas fa-stopwatch"></i> Voltas Mais Rápidas: ${stats.voltasMaisRapidas}</p>
+                            <p><i class="fas fa-medal"></i> Hat-tricks: ${stats.hatTricks}</p>
+                            <p><i class="fas fa-crown"></i> Grand Slams: ${stats.grandSlams}</p>
+                            <p><i class="fas fa-award"></i> Títulos: ${stats.titulos}</p>
+                        `;
+                    } else {
+                        carreiraStatsDiv.innerHTML = "<h3>Carreira</h3><p>Sem dados disponíveis.</p>";
+                    }
+                } catch (error) {
+                    console.error("Erro ao carregar resultados:", error);
+                    if (error.message.includes("The query requires an index")) {
+                        alert("Erro: É necessário criar um índice no Firestore. Acesse o link fornecido no console ou vá até o Firebase Console > Firestore > Indexes e crie um índice composto para 'temporada' (ascendente) e 'data' (ascendente) na coleção 'corridas'.");
+                    } else {
+                        alert("Erro ao carregar resultados. Verifique o console para mais detalhes.");
+                    }
+                    resultadosBody.innerHTML = '<tr><td colspan="8">Erro ao carregar resultados.</td></tr>';
                 }
             }
 
