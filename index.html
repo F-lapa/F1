@@ -570,12 +570,19 @@
                     document.getElementById("titulos").value = "";
                 } catch (error) {
                     console.error("Erro ao adicionar resultado:", error);
-                    alert("Erro ao adicionar resultado. Verifique o console para mais detalhes.");
+                    if (error.message.includes("Missing or insufficient permissions")) {
+                        alert("Erro: Permissões insuficientes para adicionar resultados. Verifique as regras de segurança no Firebase Console.");
+                    } else {
+                        alert("Erro ao adicionar resultado. Verifique o console para mais detalhes.");
+                    }
                 }
             }
 
             async function excluirResultado(temporada, grandePremio) {
-                if (!db) return;
+                if (!db) {
+                    alert("Erro: Banco de dados não inicializado.");
+                    return;
+                }
                 if (confirm(`Deseja excluir o resultado de ${grandePremio} (${temporada})?`)) {
                     try {
                         await db.collection("corridas").doc(`${temporada}_${grandePremio}`).delete();
@@ -584,71 +591,87 @@
                         carregarResultados();
                     } catch (error) {
                         console.error("Erro ao excluir resultado:", error);
-                        alert("Erro ao excluir resultado. Verifique o console para mais detalhes.");
+                        if (error.message.includes("Missing or insufficient permissions")) {
+                            alert("Erro: Permissões insuficientes para excluir resultados. Verifique as regras de segurança no Firebase Console.");
+                        } else {
+                            alert("Erro ao excluir resultado. Verifique o console para mais detalhes.");
+                        }
                     }
                 }
             }
 
             async function atualizarEstatisticas(temporada, titulos) {
-                if (!db) return;
-
-                const corridasSnapshot = await db.collection("corridas").where("temporada", "==", temporada).get();
-                let estatisticas = {
-                    corridas: 0,
-                    vitorias: 0,
-                    podios: 0,
-                    poles: 0,
-                    voltasMaisRapidas: 0,
-                    hatTricks: 0,
-                    grandSlams: 0,
-                    titulos
-                };
-
-                corridasSnapshot.forEach(doc => {
-                    const dados = doc.data();
-                    estatisticas.corridas++;
-                    if (dados.posicao === 1) estatisticas.vitorias++;
-                    if (dados.posicao <= 3 && dados.posicao >= 1) estatisticas.podios++;
-                    if (dados.pole) estatisticas.poles++;
-                    if (dados.voltaMaisRapida) estatisticas.voltasMaisRapidas++;
-                    if (dados.posicao === 1 && dados.pole && dados.voltaMaisRapida) estatisticas.hatTricks++;
-                    if (dados.grandSlam) estatisticas.grandSlams++;
-                });
-
-                await db.collection("estatisticas").doc(`temporada_${temporada}`).set(estatisticas);
-
-                const todasCorridas = await db.collection("corridas").get();
-                let estatisticasCarreira = {
-                    corridas: 0,
-                    vitorias: 0,
-                    podios: 0,
-                    poles: 0,
-                    voltasMaisRapidas: 0,
-                    hatTricks: 0,
-                    grandSlams: 0,
-                    titulos: 0
-                };
-
-                todasCorridas.forEach(doc => {
-                    const dados = doc.data();
-                    estatisticasCarreira.corridas++;
-                    if (dados.posicao === 1) estatisticasCarreira.vitorias++;
-                    if (dados.posicao <= 3 && dados.posicao >= 1) estatisticasCarreira.podios++;
-                    if (dados.pole) estatisticasCarreira.poles++;
-                    if (dados.voltaMaisRapida) estatisticasCarreira.voltasMaisRapidas++;
-                    if (dados.posicao === 1 && dados.pole && dados.voltaMaisRapida) estatisticasCarreira.hatTricks++;
-                    if (dados.grandSlam) estatisticasCarreira.grandSlams++;
-                });
-
-                const temporadas = ["2023", "2024"];
-                for (const temp of temporadas) {
-                    const temporadaDoc = await db.collection("estatisticas").doc(`temporada_${temp}`).get();
-                    if (temporadaDoc.exists) {
-                        estatisticasCarreira.titulos += temporadaDoc.data().titulos || 0;
-                    }
+                if (!db) {
+                    alert("Erro: Banco de dados não inicializado.");
+                    return;
                 }
 
-                await db.collection("estatisticas").doc("carreira").set(estatisticasCarreira);
+                try {
+                    const corridasSnapshot = await db.collection("corridas").where("temporada", "==", temporada).get();
+                    let estatisticas = {
+                        corridas: 0,
+                        vitorias: 0,
+                        podios: 0,
+                        poles: 0,
+                        voltasMaisRapidas: 0,
+                        hatTricks: 0,
+                        grandSlams: 0,
+                        titulos
+                    };
+
+                    corridasSnapshot.forEach(doc => {
+                        const dados = doc.data();
+                        estatisticas.corridas++;
+                        if (dados.posicao === 1) estatisticas.vitorias++;
+                        if (dados.posicao <= 3 && dados.posicao >= 1) estatisticas.podios++;
+                        if (dados.pole) estatisticas.poles++;
+                        if (dados.voltaMaisRapida) estatisticas.voltasMaisRapidas++;
+                        if (dados.posicao === 1 && dados.pole && dados.voltaMaisRapida) estatisticas.hatTricks++;
+                        if (dados.grandSlam) estatisticas.grandSlams++;
+                    });
+
+                    await db.collection("estatisticas").doc(`temporada_${temporada}`).set(estatisticas);
+
+                    const todasCorridas = await db.collection("corridas").get();
+                    let estatisticasCarreira = {
+                        corridas: 0,
+                        vitorias: 0,
+                        podios: 0,
+                        poles: 0,
+                        voltasMaisRapidas: 0,
+                        hatTricks: 0,
+                        grandSlams: 0,
+                        titulos: 0
+                    };
+
+                    todasCorridas.forEach(doc => {
+                        const dados = doc.data();
+                        estatisticasCarreira.corridas++;
+                        if (dados.posicao === 1) estatisticasCarreira.vitorias++;
+                        if (dados.posicao <= 3 && dados.posicao >= 1) estatisticasCarreira.podios++;
+                        if (dados.pole) estatisticasCarreira.poles++;
+                        if (dados.voltaMaisRapida) estatisticasCarreira.voltasMaisRapidas++;
+                        if (dados.posicao === 1 && dados.pole && dados.voltaMaisRapida) estatisticasCarreira.hatTricks++;
+                        if (dados.grandSlam) estatisticasCarreira.grandSlams++;
+                    });
+
+                    const temporadas = ["2023", "2024"];
+                    for (const temp of temporadas) {
+                        const temporadaDoc = await db.collection("estatisticas").doc(`temporada_${temp}`).get();
+                        if (temporadaDoc.exists) {
+                            estatisticasCarreira.titulos += temporadaDoc.data().titulos || 0;
+                        }
+                    }
+
+                    await db.collection("estatisticas").doc("carreira").set(estatisticasCarreira);
+                } catch (error) {
+                    console.error("Erro ao atualizar estatísticas:", error);
+                    if (error.message.includes("Missing or insufficient permissions")) {
+                        alert("Erro: Permissões insuficientes para atualizar estatísticas. Verifique as regras de segurança no Firebase Console.");
+                    } else {
+                        alert("Erro ao atualizar estatísticas. Verifique o console para mais detalhes.");
+                    }
+                }
             }
 
             async function carregarResultados() {
@@ -662,6 +685,8 @@
                 resultadosBody.innerHTML = '<tr><td colspan="8">Carregando...</td></tr>';
 
                 try {
+                    // NOTA: Esta consulta exige um índice composto no Firestore para os campos 'temporada' (ascendente) e 'data' (ascendente) na coleção 'corridas'.
+                    // Caso o erro "The query requires an index" apareça, crie o índice usando o link fornecido no console ou no Firebase Console > Firestore > Indexes.
                     const corridasSnapshot = await db.collection("corridas")
                         .where("temporada", "==", temporada)
                         .orderBy("data")
@@ -727,6 +752,8 @@
                     console.error("Erro ao carregar resultados:", error);
                     if (error.message.includes("The query requires an index")) {
                         alert("Erro: É necessário criar um índice no Firestore. Acesse o link fornecido no console ou vá até o Firebase Console > Firestore > Indexes e crie um índice composto para 'temporada' (ascendente) e 'data' (ascendente) na coleção 'corridas'.");
+                    } else if (error.message.includes("Missing or insufficient permissions")) {
+                        alert("Erro: Permissões insuficientes para carregar resultados. Verifique as regras de segurança no Firebase Console.");
                     } else {
                         alert("Erro ao carregar resultados. Verifique o console para mais detalhes.");
                     }
