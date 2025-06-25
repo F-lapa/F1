@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fernando Lapa - F1</title>
+    <title>Estatísticas de F. Lapa - F1</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="https://www.formula1.com/favicon.ico" type="image/x-icon">
     <style>
         * {
             box-sizing: border-box;
@@ -15,7 +16,7 @@
 
         body {
             font-family: 'Roboto Mono', monospace;
-            background: #1a1a1a;
+            background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'), #0a121f;
             color: #ffffff;
             min-height: 100vh;
             display: flex;
@@ -33,7 +34,7 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            background: linear-gradient(135deg, rgba(10, 18, 31, 0.8), rgba(28, 37, 38, 0.8));
         }
 
         .container {
@@ -48,152 +49,111 @@
             text-align: center;
             font-family: 'Orbitron', sans-serif;
             font-weight: 900;
-            color: #ff1a1a;
-            text-shadow: 0 0 25px rgba(255, 26, 26, 0.9), 0 0 50px rgba(255, 26, 26, 0.5);
-            font-size: 3.8em;
+            color: #ff3a3a;
+            text-shadow: 0 0 20px rgba(255, 58, 58, 0.8);
+            font-size: 4em;
             margin-bottom: 60px;
-            letter-spacing: 5px;
+            letter-spacing: 6px;
             text-transform: uppercase;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 20px;
-            animation: neonPulse 2s ease-in-out infinite alternate;
+            animation: neonPulse 1.5s ease-in-out infinite alternate;
         }
 
         @keyframes neonPulse {
-            from { text-shadow: 0 0 15px rgba(255, 26, 26, 0.7), 0 0 30px rgba(255, 26, 26, 0.4); }
-            to { text-shadow: 0 0 25px rgba(255, 26, 26, 1), 0 0 50px rgba(255, 26, 26, 0.6); }
+            from { text-shadow: 0 0 10px rgba(255, 58, 58, 0.7); }
+            to { text-shadow: 0 0 20px rgba(255, 58, 58, 1); }
         }
 
-        .flag-br {
-            width: 40px;
+        .flag-br, .f1-logo {
+            width: 50px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            transition: transform 0.3s ease;
         }
 
-        .flag-br:hover {
+        .flag-br:hover, .f1-logo:hover {
             transform: scale(1.2) rotate(5deg);
         }
 
-        .f1-logo {
-            width: 80px;
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.7));
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-        }
-
-        .f1-logo:hover {
-            transform: scale(1.2) rotate(-5deg);
-        }
-
         .form-container {
-            background: linear-gradient(145deg, rgba(20, 20, 30, 0.95), rgba(40, 40, 50, 0.95));
+            background: linear-gradient(145deg, rgba(15, 20, 30, 0.95), rgba(35, 40, 50, 0.95));
             padding: 40px;
-            border-radius: 25px;
-            box-shadow: 0 15px 60px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(255, 26, 26, 0.5);
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8);
             margin-bottom: 60px;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(12px);
-            animation: slideIn 1s ease-out;
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 2px solid #ff3a3a;
         }
 
         .form-container:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95), inset 0 0 25px rgba(255, 26, 26, 0.6);
+            transform: translateY(-8px);
         }
 
         .form-container h2 {
             font-family: 'Orbitron', sans-serif;
-            color: #00e6e6;
-            text-shadow: 0 0 15px rgba(0, 230, 230, 0.8);
+            color: #00e0e0;
+            font-size: 2.2em;
             margin-bottom: 30px;
-            font-size: 2em;
             text-transform: uppercase;
             letter-spacing: 3px;
         }
 
         .form-container select, .form-container input[type="number"] {
             width: 100%;
-            padding: 16px;
-            margin: 15px 0;
-            border: 2px solid rgba(255, 26, 26, 0.3);
-            border-radius: 12px;
-            font-size: 16px;
-            background: rgba(30, 30, 40 cushion: 0.9);
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #ff3a3a;
+            border-radius: 10px;
+            background: rgba(28, 37, 38, 0.9);
             color: #ffffff;
+            font-size: 1.1em;
             transition: all 0.3s ease;
         }
 
         .form-container select:focus, .form-container input[type="number"]:focus {
-            border-color: #ff1a1a;
-            background: rgba(40, 40, 50, 0.95);
-            box-shadow: 0 0 15px rgba(255, 26, 26, 0.7);
-            transform: scale(1.03);
+            border-color: #00e0e0;
+            box-shadow: 0 0 15px rgba(0, 224, 224, 0.7);
         }
 
         .form-container label {
-            margin: 15px 0;
-            font-size: 16px;
+            font-size: 1.1em;
             display: flex;
             align-items: center;
-            gap: 12px;
-            color: #d0d0d0;
-            transition: color 0.3s ease;
-        }
-
-        .form-container label:hover {
-            color: #ffffff;
+            gap: 10px;
+            color: #cccccc;
+            margin: 10px 0;
         }
 
         .form-container button {
-            background: linear-gradient(45deg, #ff1a1a, #ff4d4d);
+            background: linear-gradient(45deg, #ff3a3a, #ff6b6b);
             color: #ffffff;
             border: none;
-            padding: 16px 40px;
-            border-radius: 12px;
+            padding: 15px 40px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 1.1em;
             font-weight: 700;
             text-transform: uppercase;
-            transition: all 0.4s ease;
             width: 100%;
             margin-top: 20px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(255, 26, 26, 0.5);
-        }
-
-        .form-container button::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: 0.6s;
-        }
-
-        .form-container button:hover::after {
-            left: 100%;
+            transition: all 0.3s ease;
         }
 
         .form-container button:hover {
-            background: linear-gradient(45deg, #cc0000, #ff3333);
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(255, 26, 26, 0.8);
+            background: linear-gradient(45deg, #e60000, #ff4d4d);
+            box-shadow: 0 0 20px rgba(255, 58, 58, 0.8);
         }
 
         .table-container {
-            background: linear-gradient(145deg, rgba(20, 20, 30, 0.95), rgba(40, 40, 50, 0.95));
-            border-radius: 25px;
+            background: linear-gradient(145deg, rgba(15, 20, 30, 0.95), rgba(35, 40, 50, 0.95));
+            border-radius: 20px;
             overflow-x: auto;
-            box-shadow: 0 15px 60px rgba(0, 0, 0, 0.9);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8);
             margin-bottom: 60px;
-            backdrop-filter: blur(12px);
-            animation: slideIn 1.2s ease-out 0.2s;
-            border: 2px solid #ff1a1a;
+            border: 2px solid #ff3a3a;
         }
 
         table {
@@ -203,84 +163,50 @@
         }
 
         th, td {
-            padding: 20px;
+            padding: 18px;
             text-align: left;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            font-size: 16px;
+            font-size: 1.1em;
         }
 
         th {
-            background: linear-gradient(45deg, #ff1a1a, #ff4d4d);
-            color: #ffffff;
+            background: linear-gradient(45deg, #ff3a3a, #ff6b6b);
             font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
 
-        tr {
-            cursor: pointer;
-            transition: all 0.4s ease;
-        }
-
         tr:nth-child(even) {
-            background: rgba(40, 40, 50, 0.7);
+            background: rgba(28, 37, 38, 0.7);
         }
 
         tr:hover {
-            background: linear-gradient(90deg, rgba(255, 26, 26, 0.2), rgba(0, 230, 230, 0.2));
+            background: rgba(255, 58, 58, 0.3);
             transform: translateX(10px);
-        }
-
-        tr:first-child td:nth-child(4) {
-            background: linear-gradient(45deg, #ffd700, #ffaa00);
-            color: #000;
-            font-weight: bold;
-        }
-
-        tr:nth-child(2) td:nth-child(4) {
-            background: linear-gradient(45deg, #c0c0c0, #a0a0a0);
-            color: #000;
-        }
-
-        tr:nth-child(3) td:nth-child(4) {
-            background: linear-gradient(45deg, #cd7f32, #b87333);
-            color: #000;
+            transition: all 0.3s ease;
         }
 
         .flag {
-            width: 32px;
+            width: 30px;
             vertical-align: middle;
-            margin-right: 12px;
-            border-radius: 8px;
-            box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-            transition: transform 0.4s ease;
-        }
-
-        .flag:hover {
-            transform: scale(1.2);
+            margin-right: 10px;
+            border-radius: 5px;
         }
 
         .delete-btn {
-            background: linear-gradient(45deg, #cc0000, #ff3333);
+            background: linear-gradient(45deg, #e60000, #ff4d4d);
             color: #ffffff;
             border: none;
-            padding: 12px 16px;
-            border-radius: 10px;
+            padding: 10px 15px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 14px;
-            font-weight: 700;
-            transition: all 0.4s ease;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
         }
 
         .delete-btn:hover {
-            background: linear-gradient(45deg, #aa0000, #cc0000);
-            transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(255, 26, 26, 0.8);
-        }
-
-        .delete-btn i {
-            margin-right: 8px;
+            background: linear-gradient(45deg, #cc0000, #e60000);
+            box-shadow: 0 0 15px rgba(255, 58, 58, 0.7);
         }
 
         .stats-container {
@@ -291,79 +217,40 @@
         }
 
         .stats-card {
-            background: linear-gradient(145deg, rgba(20, 20, 30, 0.95), rgba(40, 40, 50, 0.95));
-            color: #ffffff;
+            background: linear-gradient(145deg, rgba(15, 20, 30, 0.95), rgba(35, 40, 50, 0.95));
             padding: 40px;
-            border-radius: 25px;
-            box-shadow: 0 15px 60px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(0, 230, 230, 0.5);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(12px);
-            animation: slideIn 1.4s ease-out 0.4s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stats-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 26, 26, 0.2) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .stats-card:hover::before {
-            opacity: 1;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8);
+            transition: transform 0.3s ease;
+            border: 2px solid #00e0e0;
         }
 
         .stats-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95), inset 0 0 25px rgba(0, 230, 230, 0.6);
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            transform: translateY(-8px);
         }
 
         .stats-card h3 {
             font-family: 'Orbitron', sans-serif;
-            color: #00e6e6;
-            text-shadow: 0 0 15px rgba(0, 230, 230, 0.8);
-            margin-bottom: 25px;
+            color: #00e0e0;
             font-size: 2em;
+            margin-bottom: 25px;
             text-transform: uppercase;
-            letter-spacing: 3px;
         }
 
         .stats-card p {
             margin: 15px 0;
-            font-size: 1.3em;
+            font-size: 1.2em;
             display: flex;
             align-items: center;
-            gap: 12px;
-            transition: color 0.3s ease, transform 0.3s ease;
+            gap: 10px;
         }
 
-        .stats-card p:hover {
-            color: #ff1a1a;
-            transform: translateX(5px);
+        .stats-card p span.percentage {
+            color: #00e0e0;
+            margin-left: 10px;
+            font-weight: 700;
         }
 
-        .stats-card p i {
-            color: #ff1a1a;
-            font-size: 1.5em;
-            transition: transform 0.4s ease;
-        }
-
-        .stats-card p:hover i {
-            transform: scale(1.3);
-        }
-
-        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -375,77 +262,33 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
-            animation: fadeInModal 0.5s ease-out;
-        }
-
-        @keyframes fadeInModal {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
 
         .modal-content {
-            background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'), linear-gradient(145deg, #1a1a1a, #2a2a2a);
+            background: linear-gradient(145deg, rgba(15, 20, 30, 0.95), rgba(35, 40, 50, 0.95));
             padding: 40px;
-            border-radius: 25px;
-            box-shadow: 0 15px 60px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(255, 26, 26, 0.5);
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8);
             max-width: 600px;
             width: 90%;
             text-align: center;
-            position: relative;
-            backdrop-filter: blur(12px);
-            animation: accelerateIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            border: 2px solid #ff1a1a;
-            overflow: hidden;
-        }
-
-        .modal-content::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255, 26, 26, 0.2) 50%, transparent);
-            animation: ledFlash 3s infinite;
-            pointer-events: none;
-        }
-
-        @keyframes ledFlash {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
-        }
-
-        @keyframes accelerateIn {
-            from { transform: scale(0.8) translateY(50px); opacity: 0; }
-            to { transform: scale(1) translateY(0); opacity: 1; }
+            border: 2px solid #ff3a3a;
         }
 
         .modal-content h3 {
             font-family: 'Orbitron', sans-serif;
-            color: #00e6e6;
-            text-shadow: 0 0 15px rgba(0, 230, 230, 0.8);
-            font-size: 2.2em;
+            color: #00e0e0;
+            font-size: 2em;
             margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 15px;
-            position: relative;
-            z-index: 1;
-            animation: ledBlink 1.5s infinite;
-        }
-
-        @keyframes ledBlink {
-            0%, 100% { text-shadow: 0 0 15px rgba(0, 230, 230, 0.8); }
-            50% { text-shadow: 0 0 25px rgba(0, 230, 230, 1); }
         }
 
         .modal-content .gp-flag {
-            width: 80px;
-            border-radius: 12px;
-            box-shadow: 0 0 15px rgba(255, 26, 26, 0.7);
+            width: 70px;
+            border-radius: 10px;
             animation: waveFlag 2s ease-in-out infinite;
         }
 
@@ -454,106 +297,45 @@
             50% { transform: rotate(5deg); }
         }
 
-        .modal-content .stats-list {
-            display: grid;
-            gap: 15px;
-            margin-top: 20px;
-            position: relative;
-            z-index: 1;
-        }
-
         .modal-content .stats-list p {
-            background: linear-gradient(145deg, rgba(40, 40, 50, 0.95), rgba(60, 60, 70, 0.95));
+            background: rgba(28, 37, 38, 0.7);
             padding: 10px;
-            border-radius: 10px;
-            font-size: 1.4em;
+            border-radius: 8px;
+            font-size: 1.2em;
+            margin: 10px 0;
             display: flex;
             align-items: center;
-            gap: 12px;
-            color: #ffffff;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 26, 26, 0.3);
-        }
-
-        .modal-content .stats-list p:hover {
-            color: #ff1a1a;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(255, 26, 26, 0.5);
-        }
-
-        .modal-content .stats-list p i {
-            color: #ff1a1a;
-            font-size: 1.6em;
-            transition: transform 0.4s ease;
-        }
-
-        .modal-content .stats-list p:hover i {
-            transform: rotate(360deg);
+            gap: 10px;
         }
 
         .close-btn {
             position: absolute;
             top: 15px;
             right: 15px;
-            background: linear-gradient(45deg, #333, #555);
-            color: #ff1a1a;
-            border: 2px solid #ff1a1a;
-            width: 40px;
-            height: 40px;
+            background: #333;
+            color: #ff3a3a;
+            border: 1px solid #ff3a3a;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.4s ease;
-            box-shadow: 0 0 10px rgba(255, 26, 26, 0.5);
-        }
-
-        .close-btn:hover {
-            background: linear-gradient(45deg, #222, #444);
-            transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(255, 26, 26, 0.8);
         }
 
         @media (max-width: 768px) {
-            body {
-                padding: 30px;
-            }
-
             h1 {
                 font-size: 3em;
-                margin-bottom: 50px;
-            }
-
-            .flag-br {
-                width: 36px;
-            }
-
-            .f1-logo {
-                width: 70px;
             }
 
             .form-container, .stats-card {
                 padding: 30px;
             }
 
-            .form-container select, .form-container input[type="number"] {
-                font-size: 15px;
-            }
-
-            .form-container label {
-                font-size: 15px;
-            }
-
-            .form-container button {
-                font-size: 15px;
-                padding: 14px;
-            }
-
             th, td {
-                padding: 15px;
-                font-size: 14px;
+                padding: 12px;
+                font-size: 1em;
             }
 
             .stats-container {
@@ -563,86 +345,19 @@
             .modal-content {
                 padding: 30px;
             }
-
-            .modal-content .gp-flag {
-                width: 60px;
-            }
-
-            .modal-content h3 {
-                font-size: 1.8em;
-            }
-
-            .modal-content .stats-list p {
-                font-size: 1.2em;
-            }
         }
 
         @media (max-width: 480px) {
             h1 {
                 font-size: 2.5em;
-                margin-bottom: 40px;
-            }
-
-            .flag-br {
-                width: 32px;
-            }
-
-            .f1-logo {
-                width: 60px;
-            }
-
-            .form-container, .stats-card {
-                padding: 25px;
             }
 
             .form-container h2, .stats-card h3 {
                 font-size: 1.8em;
             }
 
-            th, td {
-                padding: 12px;
-                font-size: 13px;
-            }
-
-            .flag {
-                width: 28px;
-            }
-
-            .delete-btn {
-                padding: 10px 14px;
-                font-size: 13px;
-            }
-
-            .modal-content {
-                padding: 20px;
-                width: 95%;
-            }
-
             .modal-content .gp-flag {
                 width: 50px;
-            }
-
-            .modal-content h3 {
-                font-size: 1.6em;
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .modal-content .stats-list p {
-                font-size: 1.1em;
-                padding: 8px;
-            }
-
-            .modal-content .stats-list {
-                grid-template-columns: 1fr;
-            }
-
-            .close-btn {
-                top: 10px;
-                right: 10px;
-                width: 35px;
-                height: 35px;
-                font-size: 16px;
             }
         }
     </style>
@@ -652,7 +367,7 @@
     <div class="container">
         <h1>
             <img src="https://flagcdn.com/w20/br.png" class="flag-br" alt="Bandeira do Brasil">
-            Fernando Lapa - F1
+            Estatísticas de F. Lapa - F1
             <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg" class="f1-logo" alt="Fórmula 1 Logo">
         </h1>
         <div class="form-container">
@@ -694,7 +409,6 @@
         </div>
     </div>
 
-    <!-- Modal for GP Stats -->
     <div id="gpModal" class="modal">
         <div class="modal-content">
             <button class="close-btn"><i class="fas fa-times"></i></button>
@@ -705,21 +419,21 @@
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script>
         particlesJS('particles-js', {
             particles: {
-                number: { value: 80, density: { enable: true, value_area: 800 } },
-                color: { value: ['#ff1a1a', '#00e6e6'] },
-                shape: { type: 'circle', stroke: { width: 0, color: '#000000' } },
-                opacity: { value: 0.5, random: true, anim: { enable: true, speed: 1, opacity_min: 0.1 } },
-                size: { value: 3, random: true, anim: { enable: true, speed: 4, size_min: 0.3 } },
+                number: { value: 120, density: { enable: true, value_area: 800 } },
+                color: { value: ['#ff3a3a', '#00e0e0', '#ffd700'] },
+                shape: { type: ['circle', 'triangle'], stroke: { width: 0 } },
+                opacity: { value: 0.7, random: true },
+                size: { value: 4, random: true },
                 line_linked: { enable: false },
-                move: { enable: true, speed: 6, direction: 'none', random: true, straight: false, out_mode: 'out' }
+                move: { enable: true, speed: 2.5, direction: 'none', random: true }
             },
             interactivity: {
                 detect_on: 'canvas',
-                events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' }, resize: true },
+                events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } },
                 modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 4 } }
             },
             retina_detect: true
@@ -845,7 +559,7 @@
                     });
                 } else {
                     console.error(`Erro: temporada ${temporada} não encontrada.`);
-                    alert("Erro ao carregar os Grandes Prêmios. Verifique o console.");
+                    alert("Erro ao carregar os Grandes Prêmios.");
                 }
                 carregarResultados();
             }
@@ -894,7 +608,7 @@
                     posicao,
                     pole,
                     voltaMaisRapida,
-                    grandSlam,
+                    grandSlam
                 };
 
                 if (!db) {
@@ -911,12 +625,7 @@
                     limparFormulario();
                 } catch (error) {
                     console.error("Erro ao adicionar resultado:", error);
-                    if (error.message.includes("Missing or insufficient permissions")) {
-                        alert("Erro: Permissões insuficientes para adicionar resultados. Verifique as permissões no Firestore Console.");
-                    } else {
-                        alert("Erro ao adicionar resultado: " + error.message);
-                    }
-                    limparFormulario();
+                    alert("Erro ao adicionar resultado: " + error.message);
                 }
             }
 
@@ -941,11 +650,7 @@
                         carregarResultados();
                     } catch (error) {
                         console.error("Erro ao excluir resultado:", error);
-                        if (error.message.includes("Missing or insufficient permissions")) {
-                            alert("Erro: Permissões insuficientes para excluir resultados. Verifique as permissões no Firestore Console.");
-                        } else {
-                            alert("Erro ao excluir resultado: " + error.message);
-                        }
+                        alert("Erro ao excluir resultado: " + error.message);
                     }
                 }
             }
@@ -957,6 +662,7 @@
                 }
 
                 try {
+                    // Estatísticas da temporada
                     const corridasSnapshot = await db.collection("corridas").where("temporada", "==", temporada).get();
                     let estatisticas = {
                         corridas: 0,
@@ -966,7 +672,7 @@
                         voltasMaisRapidas: 0,
                         hatTricks: 0,
                         grandSlams: 0,
-                        titulos,
+                        titulos
                     };
 
                     corridasSnapshot.forEach(doc => {
@@ -980,8 +686,18 @@
                         if (dados.grandSlam) estatisticas.grandSlams++;
                     });
 
-                    await db.collection("estatisticas").doc(`temporada_${temporada}`).set(estatisticas);
+                    // Cálculo das porcentagens com verificação de divisão por zero
+                    estatisticas.vitoriasPct = estatisticas.corridas > 0 ? ((estatisticas.vitorias / estatisticas.corridas) * 100).toFixed(1) : "0.0";
+                    estatisticas.podiosPct = estatisticas.corridas > 0 ? ((estatisticas.podios / estatisticas.corridas) * 100).toFixed(1) : "0.0";
+                    estatisticas.polesPct = estatisticas.corridas > 0 ? ((estatisticas.poles / estatisticas.corridas) * 100).toFixed(1) : "0.0";
+                    estatisticas.voltasMaisRapidasPct = estatisticas.corridas > 0 ? ((estatisticas.voltasMaisRapidas / estatisticas.corridas) * 100).toFixed(1) : "0.0";
+                    estatisticas.hatTricksPct = estatisticas.corridas > 0 ? ((estatisticas.hatTricks / estatisticas.corridas) * 100).toFixed(1) : "0.0";
+                    estatisticas.grandSlamsPct = estatisticas.corridas > 0 ? ((estatisticas.grandSlams / estatisticas.corridas) * 100).toFixed(1) : "0.0";
+                    estatisticas.titulosPct = estatisticas.titulos > 0 ? ((estatisticas.titulos / 2) * 100).toFixed(1) : "0.0"; // Baseado em 2 temporadas
 
+                    await db.collection("estatisticas").doc(`temporada_${temporada}`).set(estatisticas, { merge: true });
+
+                    // Estatísticas da carreira
                     const todasCorridas = await db.collection("corridas").get();
                     let estatisticasCarreira = {
                         corridas: 0,
@@ -991,7 +707,7 @@
                         voltasMaisRapidas: 0,
                         hatTricks: 0,
                         grandSlams: 0,
-                        titulos: 0,
+                        titulos: 0
                     };
 
                     todasCorridas.forEach(doc => {
@@ -1013,14 +729,19 @@
                         }
                     }
 
-                    await db.collection("estatisticas").doc("carreira").set(estatisticasCarreira);
+                    // Cálculo das porcentagens da carreira
+                    estatisticasCarreira.vitoriasPct = estatisticasCarreira.corridas > 0 ? ((estatisticasCarreira.vitorias / estatisticasCarreira.corridas) * 100).toFixed(1) : "0.0";
+                    estatisticasCarreira.podiosPct = estatisticasCarreira.corridas > 0 ? ((estatisticasCarreira.podios / estatisticasCarreira.corridas) * 100).toFixed(1) : "0.0";
+                    estatisticasCarreira.polesPct = estatisticasCarreira.corridas > 0 ? ((estatisticasCarreira.poles / estatisticasCarreira.corridas) * 100).toFixed(1) : "0.0";
+                    estatisticasCarreira.voltasMaisRapidasPct = estatisticasCarreira.corridas > 0 ? ((estatisticasCarreira.voltasMaisRapidas / estatisticasCarreira.corridas) * 100).toFixed(1) : "0.0";
+                    estatisticasCarreira.hatTricksPct = estatisticasCarreira.corridas > 0 ? ((estatisticasCarreira.hatTricks / estatisticasCarreira.corridas) * 100).toFixed(1) : "0.0";
+                    estatisticasCarreira.grandSlamsPct = estatisticasCarreira.corridas > 0 ? ((estatisticasCarreira.grandSlams / estatisticasCarreira.corridas) * 100).toFixed(1) : "0.0";
+                    estatisticasCarreira.titulosPct = estatisticasCarreira.titulos > 0 ? ((estatisticasCarreira.titulos / 2) * 100).toFixed(1) : "0.0";
+
+                    await db.collection("estatisticas").doc("carreira").set(estatisticasCarreira, { merge: true });
                 } catch (error) {
                     console.error("Erro ao atualizar estatísticas:", error);
-                    if (error.message.includes("Missing or insufficient permissions")) {
-                        alert("Erro: Permissões insuficientes para atualizar estatísticas. Verifique as permissões no Firestore Console.");
-                    } else {
-                        alert("Erro ao atualizar estatísticas: " + error.message);
-                    }
+                    alert("Erro ao atualizar estatísticas: " + error.message);
                 }
             }
 
@@ -1039,7 +760,7 @@
                         poles: 0,
                         voltasMaisRapidas: 0,
                         hatTricks: 0,
-                        grandSlams: 0,
+                        grandSlams: 0
                     };
 
                     corridasSnapshot.forEach(doc => {
@@ -1053,17 +774,25 @@
                         if (dados.grandSlam) stats.grandSlams++;
                     });
 
+                    // Cálculo das porcentagens para o modal
+                    stats.vitoriasPct = stats.corridas > 0 ? ((stats.vitorias / stats.corridas) * 100).toFixed(1) : "0.0";
+                    stats.podiosPct = stats.corridas > 0 ? ((stats.podios / stats.corridas) * 100).toFixed(1) : "0.0";
+                    stats.polesPct = stats.corridas > 0 ? ((stats.poles / stats.corridas) * 100).toFixed(1) : "0.0";
+                    stats.voltasMaisRapidasPct = stats.corridas > 0 ? ((stats.voltasMaisRapidas / stats.corridas) * 100).toFixed(1) : "0.0";
+                    stats.hatTricksPct = stats.corridas > 0 ? ((stats.hatTricks / stats.corridas) * 100).toFixed(1) : "0.0";
+                    stats.grandSlamsPct = stats.corridas > 0 ? ((stats.grandSlams / stats.corridas) * 100).toFixed(1) : "0.0";
+
                     modalTitle.innerHTML = countryFlags[grandePremio]
                         ? `<img src="${countryFlags[grandePremio]}" class="gp-flag" alt="Bandeira do GP"> ${grandePremio}`
                         : grandePremio;
                     modalStats.innerHTML = `
                         <p><i class="fas fa-flag-checkered"></i> Corridas: ${stats.corridas}</p>
-                        <p><i class="fas fa-trophy"></i> Vitórias: ${stats.vitorias}</p>
-                        <p><i class="fas fa-star"></i> Pódios: ${stats.podios}</p>
-                        <p><i class="fas fa-tachometer-alt"></i> Pole Positions: ${stats.poles}</p>
-                        <p><i class="fas fa-stopwatch"></i> Voltas Mais Rápidas: ${stats.voltasMaisRapidas}</p>
-                        <p><i class="fas fa-medal"></i> Hat-tricks: ${stats.hatTricks}</p>
-                        <p><i class="fas fa-crown"></i> Grand Slams: ${stats.grandSlams}</p>
+                        <p><i class="fas fa-trophy"></i> Vitórias: ${stats.vitorias} <span class="percentage">(${stats.vitoriasPct}%)</span></p>
+                        <p><i class="fas fa-star"></i> Pódios: ${stats.podios} <span class="percentage">(${stats.podiosPct}%)</span></p>
+                        <p><i class="fas fa-tachometer-alt"></i> Pole Positions: ${stats.poles} <span class="percentage">(${stats.polesPct}%)</span></p>
+                        <p><i class="fas fa-stopwatch"></i> Voltas Mais Rápidas: ${stats.voltasMaisRapidas} <span class="percentage">(${stats.voltasMaisRapidasPct}%)</span></p>
+                        <p><i class="fas fa-medal"></i> Hat-tricks: ${stats.hatTricks} <span class="percentage">(${stats.hatTricksPct}%)</span></p>
+                        <p><i class="fas fa-crown"></i> Grand Slams: ${stats.grandSlams} <span class="percentage">(${stats.grandSlamsPct}%)</span></p>
                     `;
                     modal.style.display = "flex";
                 } catch (error) {
@@ -1128,45 +857,39 @@
                         statsDiv.innerHTML = `
                             <h3>Temporada ${temporada}</h3>
                             <p><i class="fas fa-flag-checkered"></i> Corridas: ${stats.corridas}</p>
-                            <p><i class="fas fa-trophy"></i> Vitórias: ${stats.vitorias}</p>
-                            <p><i class="fas fa-star"></i> Pódios: ${stats.podios}</p>
-                            <p><i class="fas fa-tachometer-alt"></i> Pole Positions: ${stats.poles}</p>
-                            <p><i class="fas fa-stopwatch"></i> Voltas Mais Rápidas: ${stats.voltasMaisRapidas}</p>
-                            <p><i class="fas fa-medal"></i> Hat-tricks: ${stats.hatTricks}</p>
-                            <p><i class="fas fa-crown"></i> Grand Slams: ${stats.grandSlams}</p>
-                            <p><i class="fas fa-award"></i> Títulos: ${stats.titulos}</p>
+                            <p><i class="fas fa-trophy"></i> Vitórias: ${stats.vitorias} <span class="percentage">(${stats.vitoriasPct}%)</span></p>
+                            <p><i class="fas fa-star"></i> Pódios: ${stats.podios} <span class="percentage">(${stats.podiosPct}%)</span></p>
+                            <p><i class="fas fa-tachometer-alt"></i> Pole Positions: ${stats.poles} <span class="percentage">(${stats.polesPct}%)</span></p>
+                            <p><i class="fas fa-stopwatch"></i> Voltas Mais Rápidas: ${stats.voltasMaisRapidas} <span class="percentage">(${stats.voltasMaisRapidasPct}%)</span></p>
+                            <p><i class="fas fa-medal"></i> Hat-tricks: ${stats.hatTricks} <span class="percentage">(${stats.hatTricksPct}%)</span></p>
+                            <p><i class="fas fa-crown"></i> Grand Slams: ${stats.grandSlams} <span class="percentage">(${stats.grandSlamsPct}%)</span></p>
+                            <p><i class="fas fa-award"></i> Título Máximo: ${stats.titulos} <span class="percentage">(${stats.titulosPct}%)</span></p>
                         `;
                     } else {
                         statsDiv.innerHTML = `<h3>Temporada ${temporada}</h3><p>Sem dados disponíveis.</p>`;
                     }
 
                     const carreiraDoc = await db.collection("estatisticas").doc("carreira").get();
-                    const carreiraStatsDiv = document.getElementById("carreiraStats");
+                    const carreiraStatsCarreiraDiv = document.getElementById("carreiraStats");
                     if (carreiraDoc.exists) {
                         const stats = carreiraDoc.data();
-                        carreiraStatsDiv.innerHTML = `
+                        carreiraStatsCarreiraDiv.innerHTML = `
                             <h3>Carreira</h3>
                             <p><i class="fas fa-flag-checkered"></i> Corridas: ${stats.corridas}</p>
-                            <p><i class="fas fa-trophy"></i> Vitórias: ${stats.vitorias}</p>
-                            <p><i class="fas fa-star"></i> Pódios: ${stats.podios}</p>
-                            <p><i class="fas fa-tachometer-alt"></i> Pole Positions: ${stats.poles}</p>
-                            <p><i class="fas fa-stopwatch"></i> Voltas Mais Rápidas: ${stats.voltasMaisRapidas}</p>
-                            <p><i class="fas fa-medal"></i> Hat-tricks: ${stats.hatTricks}</p>
-                            <p><i class="fas fa-crown"></i> Grand Slams: ${stats.grandSlams}</p>
-                            <p><i class="fas fa-award"></i> Títulos Mundiais: ${stats.titulos}</p>
+                            <p><i class="fas fa-trophy"></i> Vitórias: ${stats.vitorias} <span class="percentage">(${stats.vitoriasPct}%)</span></p>
+                            <p><i class="fas fa-star"></i> Pódios: ${stats.podios} <span class="percentage">(${stats.podiosPct}%)</span></p>
+                            <p><i class="fas fa-tachometer-alt"></i> Pole Positions: ${stats.poles} <span class="percentage">(${stats.polesPct}%)</span></p>
+                            <p><i class="fas fa-stopwatch"></i> Voltas Mais Rápidas: ${stats.voltasMaisRapidas} <span class="percentage">(${stats.voltasMaisRapidasPct}%)</span></p>
+                            <p><i class="fas fa-medal"></i> Hat-tricks: ${stats.hatTricks} <span class="percentage">(${stats.hatTricksPct}%)</span></p>
+                            <p><i class="fas fa-crown"></i> Grand Slams: ${stats.grandSlams} <span class="percentage">(${stats.grandSlamsPct}%)</span></p>
+                            <p><i class="fas fa-award"></i> Títulos Máximos: ${stats.titulos} <span class="percentage">(${stats.titulosPct}%)</span></p>
                         `;
                     } else {
-                        carreiraStatsDiv.innerHTML = "<h3>Carreira</h3><p>Sem dados disponíveis.</p>";
+                        carreiraStatsCarreiraDiv.innerHTML = "<h3>Carreira</h3><p>Sem dados disponíveis.</p>";
                     }
                 } catch (error) {
                     console.error("Erro ao carregar resultados:", error);
-                    if (error.message.includes("The query requires an index")) {
-                        alert("Erro: É necessário criar um índice no Firestore. Acesse o Firebase Console > Firestore > Índices e crie um índice composto para 'temporada' (ascendente) e 'data' (ascendente) na coleção 'corridas'.");
-                    } else if (error.message.includes("Missing or insufficient permissions")) {
-                        alert("Erro: Permissões insuficientes para carregar resultados. Verifique as permissões no Firestore Console.");
-                    } else {
-                        alert("Erro ao carregar resultados: " + error.message);
-                    }
+                    alert("Erro ao carregar resultados: " + error.message);
                     resultadosBody.innerHTML = '<tr><td colspan="8">Erro ao carregar resultados.</td></tr>';
                 }
             }
