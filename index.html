@@ -204,12 +204,34 @@
             z-index: 1;
         }
 
-        td:nth-child(4).podium::before {
+        td:nth-child(4).podium-gold::before {
             content: '\f091';
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             margin-right: 5px;
             color: #ffd700;
+        }
+
+        td:nth-child(4).podium-silver::before {
+            content: '\f091';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-right: 5px;
+            color: #c0c0c0;
+        }
+
+        td:nth-child(4).podium-bronze::before {
+            content: '\f091';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-right: 5px;
+            color: #cd7f32;
+        }
+
+        td:nth-child(4).not-completed {
+            font-style: italic;
+            background: rgba(102, 102, 102, 0.3);
+            color: #cccccc;
         }
 
         tr:hover td:nth-child(4) {
@@ -540,7 +562,7 @@
                 <option value="2024" selected>2024</option>
             </select>
             <select id="grandePremio"></select>
-            <input type="number" id="posicao" placeholder="Posição (1-20)" min="1" max="20">
+            <input type="number" id="posicao" placeholder="Posição (1-20 ou deixe vazio para N/C)" min="1" max="20">
             <label><input type="checkbox" id="pole"> <i class="fas fa-tachometer-alt"></i> Pole Position</label>
             <label><input type="checkbox" id="voltaMaisRapida"> <i class="fas fa-stopwatch"></i> Volta Mais Rápida</label>
             <label><input type="checkbox" id="grandSlam"> <i class="fas fa-trophy"></i> Grand Slam</label>
@@ -736,7 +758,8 @@
             async function adicionarResultado() {
                 const temporada = temporadaSelect.value;
                 const grandePremio = grandePremioSelect.value;
-                const posicao = parseInt(document.getElementById("posicao").value);
+                const posicaoInput = document.getElementById("posicao").value;
+                const posicao = posicaoInput ? parseInt(posicaoInput) : "N/C";
                 let pole = document.getElementById("pole").checked;
                 let voltaMaisRapida = document.getElementById("voltaMaisRapida").checked;
                 let grandSlam = document.getElementById("grandSlam").checked;
@@ -747,8 +770,9 @@
                     limparFormulario();
                     return;
                 }
-                if (!posicao || posicao < 1 || posicao > 20) {
-                    alert("Insira uma posição válida (1 a 20).");
+
+                if (posicao !== "N/C" && (!Number.isInteger(posicao) || posicao < 1 || posicao > 20)) {
+                    alert("Insira uma posição válida (1 a 20) ou deixe vazio para 'Não Completou'.");
                     limparFormulario();
                     return;
                 }
@@ -985,13 +1009,22 @@
                     resultadosBody.innerHTML = "";
                     corridasSnapshot.forEach(doc => {
                         const dados = doc.data();
-                        const isPodium = dados.posicao <= 3 && dados.posicao >= 1 ? 'podium' : '';
+                        let posicaoClass = '';
+                        if (dados.posicao === 1) {
+                            posicaoClass = 'podium-gold';
+                        } else if (dados.posicao === 2) {
+                            posicaoClass = 'podium-silver';
+                        } else if (dados.posicao === 3) {
+                            posicaoClass = 'podium-bronze';
+                        } else if (dados.posicao === "N/C") {
+                            posicaoClass = 'not-completed';
+                        }
                         const row = document.createElement("tr");
                         row.innerHTML = `
                             <td>${dados.temporada}</td>
                             <td><img src="${countryFlags[dados.grandePremio] || ''}" class="flag" alt="Bandeira"> ${dados.grandePremio}</td>
                             <td>${dados.data}</td>
-                            <td class="${isPodium}">${dados.posicao}</td>
+                            <td class="${posicaoClass}">${dados.posicao}</td>
                             <td>${dados.pole ? "Sim" : "Não"}</td>
                             <td>${dados.voltaMaisRapida ? "Sim" : "Não"}</td>
                             <td>${dados.grandSlam ? "Sim" : "Não"}</td>
