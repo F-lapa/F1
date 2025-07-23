@@ -4,601 +4,222 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estatísticas de F. Lapa - F1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="https://www.formula1.com/favicon.ico" type="image/x-icon">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        :root {
+            --primary-color: #e10600;
+            --secondary-color: #00d4ff;
+            --background-dark: #101010;
+            --surface-color: #1a1a1a;
+            --text-color: #f5f5f5;
+            --text-muted: #a0a0a0;
+            --border-color: rgba(255, 255, 255, 0.1);
         }
-
-        body {
-            font-family: 'Roboto Mono', monospace;
-            background: linear-gradient(135deg, #1a1a2e, #0f0f1f);
-            color: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { 
+            font-family: 'Roboto Mono', monospace; 
+            background-color: var(--background-dark);
+            color: var(--text-color); 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; 
+            padding: 20px;
             overflow-x: hidden;
-            position: relative;
         }
-
-        #particles-js {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: linear-gradient(135deg, rgba(26, 26, 46, 0.75), rgba(15, 15, 31, 0.75));
-        }
-
-        .container {
-            max-width: 1000px;
-            width: 100%;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-            padding: 10px;
-        }
-
-        h1 {
-            text-align: center;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            color: #ff2d55;
-            text-shadow: 0 0 8px rgba(255, 45, 85, 0.7), 0 0 15px rgba(255, 45, 85, 0.4);
-            font-size: 2.8rem;
-            margin: 15px 0 30px;
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            animation: neonGlow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes neonGlow {
-            from { text-shadow: 0 0 6px rgba(255, 45, 85, 0.6), 0 0 12px rgba(255, 45, 85, 0.3); }
-            to { text-shadow: 0 0 10px rgba(255, 45, 85, 0.8), 0 0 20px rgba(255, 45, 85, 0.5); }
-        }
-
-        .flag-br, .f1-logo {
-            width: 32px;
-            border-radius: 4px;
-            transition: transform 0.3s ease, filter 0.3s ease;
-        }
-
-        .flag-br:hover, .f1-logo:hover {
-            transform: scale(1.15) rotate(2deg);
-            filter: brightness(1.3) drop-shadow(0 0 4px rgba(255, 45, 85, 0.4));
-        }
-
-        .form-container {
-            background: linear-gradient(145deg, rgba(30, 30, 50, 0.9), rgba(50, 50, 70, 0.9));
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+        #particles-js { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        .container { max-width: 1200px; width: 100%; margin: 0 auto; position: relative; z-index: 1; padding: 10px; }
+        h1 { text-align: center; font-family: 'Orbitron', sans-serif; font-weight: 900; color: var(--text-color); text-shadow: 0 0 15px rgba(225, 6, 0, 0.5); font-size: 2.2rem; margin-bottom: 30px; letter-spacing: 2.5px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 15px; }
+        .f1-logo { width: 80px; filter: drop-shadow(0 0 5px #fff); }
+        h2 { font-family: 'Orbitron', sans-serif; color: var(--text-color); font-size: 1.5rem; margin: 40px 0 20px 0; text-transform: uppercase; letter-spacing: 1.2px; text-align: left; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid var(--primary-color); padding-bottom: 8px; }
+        
+        .card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             margin-bottom: 25px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 45, 85, 0.3);
         }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5); }
 
-        .form-container:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(255, 45, 85, 0.25);
-        }
-
-        .form-container h2 {
-            font-family: 'Orbitron', sans-serif;
-            color: #00d4ff;
-            font-size: 1.6rem;
+        .form-container h3, .stats-card h3 { font-family: 'Orbitron', sans-serif; color: var(--text-color); font-size: 1.3rem; margin-top:0; margin-bottom: 20px; text-transform: uppercase; text-align: center; display: flex; align-items: center; justify-content: center; gap: 12px; border-bottom: none; padding-bottom: 0;}
+        select, input[type="number"] { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #333; border-radius: 5px; background: #222; color: var(--text-color); font-size: 1rem; transition: all 0.3s ease; }
+        select:focus, input[type="number"]:focus { border-color: var(--primary-color); box-shadow: 0 0 10px rgba(225, 6, 0, 0.4); outline: none; }
+        .form-container label { font-size: 1rem; display: flex; align-items: center; gap: 8px; color: var(--text-muted); margin: 10px 0; }
+        button { background: var(--primary-color); color: #fff; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 700; text-transform: uppercase; width: 100%; margin-top: 15px; transition: all 0.3s ease; box-shadow: 0 0 15px rgba(225, 6, 0, 0.3); }
+        button:hover { background: #fff; color: var(--primary-color); box-shadow: 0 0 25px rgba(225, 6, 0, 0.6); transform: scale(1.02) translateY(-2px); }
+        
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; color: var(--text-color); min-width: 600px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; vertical-align: middle; }
+        th { background: none; border-bottom-width: 2px; color: var(--text-muted); font-family: 'Orbitron', sans-serif; text-transform: uppercase; }
+        tr { transition: background-color 0.3s ease; }
+        tr.clickable:hover { background-color: rgba(255, 255, 255, 0.05); cursor: pointer; }
+        .posicao-col { font-size: 1.2rem; font-weight: 700; text-align: center; width: 100px; }
+        .posicao-col.podium-gold { color: #ffd700; } .posicao-col.podium-silver { color: #c0c0c0; } .posicao-col.podium-bronze { color: #cd7f32; }
+        .posicao-col.not-completed { font-style: italic; color: #666; }
+        .flag { width: 25px; margin-right: 10px; border-radius: 3px; }
+        .delete-btn { background: none; border: 1px solid #444; color: #888; padding: 5px 10px; font-size: 0.9rem; width: auto; margin: 0; border-radius: 5px; transition: all 0.3s ease; }
+        .delete-btn:hover { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+        
+        .stats-card p, .stats-card li { margin: 12px 0; font-size: 1rem; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; }
+        .stats-card p:last-child, .stats-card li:last-child { border-bottom: none; }
+        .stats-card p .value, .stats-card li .value { margin-left: auto; font-weight: 700; text-align: right; }
+        .stats-card ul { list-style: none; padding: 0;}
+        .team-logo { height: 25px; max-width: 100px; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));}
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px; }
+        
+        .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
+        .tab-button { background: transparent; border: 1px solid #444; color: var(--text-muted); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: 'Orbitron', sans-serif; font-size: 1rem; text-transform: uppercase; transition: all 0.3s ease; }
+        .tab-button:hover { background-color: #222; color: #fff; transform: translateY(-3px); }
+        .tab-button.active { background-color: var(--primary-color); color: #fff; border-color: var(--primary-color); box-shadow: 0 0 15px rgba(225, 6, 0, 0.4); }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.8s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .records-list { list-style: none; padding: 0; }
+        .records-list li { background: rgba(0, 0, 0, 0.2); padding: 12px; margin-bottom: 8px; border-radius: 5px; border-left: 4px solid var(--primary-color); font-size: 1rem; }
+        .records-list li strong { color: var(--secondary-color); }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 10, 16, 0.7); z-index: 1000; justify-content: center; align-items: center; padding: 10px; backdrop-filter: blur(8px); }
+        .modal-content { animation: modalEnter 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; }
+        @keyframes modalEnter { from { opacity: 0; transform: scale(0.8) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        #gpStats p { animation: itemFadeInUp 0.5s both; }
+        #gpStats p:nth-child(1) { animation-delay: 0.2s; } #gpStats p:nth-child(2) { animation-delay: 0.25s; } #gpStats p:nth-child(3) { animation-delay: 0.3s; } #gpStats p:nth-child(4) { animation-delay: 0.35s; } #gpStats p:nth-child(5) { animation-delay: 0.4s; } #gpStats p:nth-child(6) { animation-delay: 0.45s; }
+        @keyframes itemFadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
             margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
+            border-bottom: 1px solid var(--border-color);
         }
-
-        .form-container select, .form-container input[type="number"] {
-            width: 100%;
-            padding: 8px;
-            margin: 5px 0;
-            border: 1px solid #ff2d55;
-            border-radius: 5px;
-            background: rgba(20, 20, 40, 0.9);
-            color: #ffffff;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-container select:focus, .form-container input[type="number"]:focus {
-            border-color: #00d4ff;
-            box-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
-            outline: none;
-        }
-
-        .form-container label {
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            color: #e0e0e0;
-            margin: 5px 0;
-        }
-
-        .form-container button {
-            background: linear-gradient(45deg, #ff2d55, #ff6b8b);
-            color: #ffffff;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            width: 100%;
-            margin-top: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .form-container button:hover {
-            background: linear-gradient(45deg, #e60039, #ff4d6d);
-            box-shadow: 0 0 10px rgba(255, 45, 85, 0.5);
-            transform: scale(1.02);
-        }
-
-        h2 {
+        .modal-content #gpTitle {
+            margin: 0;
             font-family: 'Orbitron', sans-serif;
-            color: #00d4ff;
-            font-size: 1.4rem;
-            margin: 15px 0;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            text-align: center;
+            font-size: 1.3rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .table-container {
-            background: linear-gradient(145deg, rgba(30, 30, 50, 0.9), rgba(50, 50, 70, 0.9));
-            border-radius: 10px;
-            overflow-x: auto;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-            margin-bottom: 25px;
-            border: 1px solid rgba(255, 45, 85, 0.3);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            color: #ffffff;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.9rem;
-        }
-
-        th:nth-child(4), td:nth-child(4) {
-            font-size: 1.1rem;
-            font-weight: 700;
-            border: 2px solid #ff2d55;
-            background: rgba(255, 45, 85, 0.3);
-            text-align: center;
-            position: sticky;
-            left: 0;
-            z-index: 1;
-        }
-
-        td:nth-child(4).podium-gold::before {
-            content: '\f091';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            margin-right: 5px;
-            color: #ffd700;
-        }
-
-        td:nth-child(4).podium-silver::before {
-            content: '\f091';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            margin-right: 5px;
-            color: #c0c0c0;
-        }
-
-        td:nth-child(4).podium-bronze::before {
-            content: '\f091';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            margin-right: 5px;
-            color: #cd7f32;
-        }
-
-        td:nth-child(4).not-completed {
-            font-style: italic;
-            background: rgba(102, 102, 102, 0.3);
-            color: #cccccc;
-        }
-
-        tr:hover td:nth-child(4) {
-            animation: pulsePosition 1s ease-in-out infinite;
-        }
-
-        @keyframes pulsePosition {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        th {
-            background: linear-gradient(45deg, #ff2d55, #ff6b8b);
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 700;
-        }
-
-        tr:nth-child(even) {
-            background: rgba(20, 20, 40, 0.4);
-        }
-
-        tr:hover {
-            background: rgba(255, 45, 85, 0.15);
-            transform: translateX(2px);
-            transition: all 0.3s ease;
-        }
-
-        .flag {
-            width: 20px;
-            vertical-align: middle;
-            margin-right: 5px;
-            border-radius: 3px;
-            transition: transform 0.3s ease;
-        }
-
-        .flag:hover {
-            transform: scale(1.15);
-        }
-
-        .delete-btn {
-            background: linear-gradient(45deg, #e60039, #ff4d6d);
-            color: #ffffff;
-            border: none;
-            padding: 6px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
-        }
-
-        .delete-btn:hover {
-            background: linear-gradient(45deg, #cc0033, #e60039);
-            box-shadow: 0 0 8px rgba(255, 45, 85, 0.4);
-            transform: scale(1.05);
-        }
-
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 12px;
-            margin-bottom: 25px;
         }
-
-        .stats-card {
-            background: linear-gradient(145deg, rgba(30, 30, 50, 0.9), rgba(50, 50, 70, 0.9));
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid rgba(0, 212, 255, 0.3);
-        }
-
-        .stats-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.25);
-        }
-
-        .stats-card h3 {
-            font-family: 'Orbitron', sans-serif;
-            color: #00d4ff;
-            font-size: 1.4rem;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            text-align: center;
-        }
-
-        .stats-card p {
-            margin: 8px 0;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .stats-card p span.percentage {
-            color: #00d4ff;
-            margin-left: 5px;
-            font-weight: 600;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-        }
-
-        .modal-content {
-            background: linear-gradient(145deg, rgba(30, 30, 50, 0.9), rgba(50, 50, 70, 0.9));
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            border: 1px solid rgba(255, 45, 85, 0.3);
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateY(-15px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .modal-content h3 {
-            font-family: 'Orbitron', sans-serif;
-            color: #00d4ff;
-            font-size: 1.4rem;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .modal-content .gp-flag {
-            width: 45px;
-            border-radius: 5px;
-            animation: waveFlag 2s ease-in-out infinite;
-        }
-
-        @keyframes waveFlag {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(2deg); }
-        }
-
-        .modal-content .stats-list p {
-            background: rgba(20, 20, 40, 0.4);
-            padding: 6px;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            margin: 5px 0;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
         .close-btn {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: rgba(40, 40, 60, 0.8);
-            color: #ff2d55;
-            border: 1px solid #ff2d55;
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
+            background: transparent;
+            color: #888;
+            border: none;
+            font-size: 1.8rem;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             transition: all 0.3s ease;
+            padding: 0;
+            line-height: 1;
         }
-
-        .close-btn:hover {
-            background: #ff2d55;
-            color: #ffffff;
-            box-shadow: 0 0 6px rgba(255, 45, 85, 0.5);
-        }
-
-        /* Media Queries para Responsividade */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
-                gap: 6px;
-            }
-
-            .flag-br, .f1-logo {
-                width: 28px;
-            }
-
-            .form-container, .stats-card {
-                padding: 15px;
-            }
-
-            .form-container h2, .stats-card h3, h2 {
-                font-size: 1.3rem;
-            }
-
-            th, td {
-                padding: 8px;
-                font-size: 0.85rem;
-            }
-
-            th:nth-child(4), td:nth-child(4) {
-                font-size: 0.95rem;
-            }
-
-            .delete-btn {
-                padding: 5px 8px;
-                font-size: 0.8rem;
-            }
-
-            .stats-container {
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-
-            .modal-content {
-                padding: 15px;
-                max-width: 80%;
-            }
-
-            .modal-content .gp-flag {
-                width: 35px;
-            }
-
-            .modal-content h3 {
-                font-size: 1.3rem;
-            }
-
-            .table-container {
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
-            }
-
-            th:nth-child(4), td:nth-child(4) {
-                position: sticky;
-                left: 0;
-                z-index: 1;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.6rem;
-                flex-direction: column;
-                gap: 5px;
-                margin: 10px 0 20px;
-            }
-
-            .flag-br, .f1-logo {
-                width: 22px;
-            }
-
-            .form-container h2, .stats-card h3, h2 {
-                font-size: 1.1rem;
-            }
-
-            .form-container select, .form-container input[type="number"], .form-container button {
-                font-size: 0.8rem;
-                padding: 6px;
-            }
-
-            .form-container label {
-                font-size: 0.8rem;
-            }
-
-            th, td {
-                padding: 6px;
-                font-size: 0.75rem;
-            }
-
-            th:nth-child(4), td:nth-child(4) {
-                font-size: 0.85rem;
-            }
-
-            .delete-btn {
-                padding: 4px 6px;
-                font-size: 0.75rem;
-            }
-
-            .modal-content {
-                padding: 10px;
-                max-width: 80%;
-            }
-
-            .modal-content .gp-flag {
-                width: 30px;
-            }
-
-            .modal-content h3 {
-                font-size: 1.1rem;
-            }
-
-            .modal-content .stats-list p {
-                font-size: 0.8rem;
-            }
-
-            .container {
-                padding: 8px;
-            }
-        }
+        .close-btn:hover { color: var(--primary-color); transform: rotate(90deg) scale(1.1); }
+        
+        @media (max-width: 900px) { .info-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { h1 {font-size: 1.8rem;} .tab-button { font-size: 0.9rem; padding: 8px 15px; } body { padding: 10px; } }
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
     <div class="container">
-        <h1>
-            <img src="https://flagcdn.com/w20/br.png" class="flag-br" alt="Bandeira do Brasil">
-            Estatísticas de F. Lapa - F1
-            <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg" class="f1-logo" alt="Fórmula 1 Logo">
-        </h1>
-        <div class="form-container">
-            <h2><i class="fas fa-flag-checkered"></i> Adicionar Resultado de Corrida</h2>
-            <select id="temporada">
-                <option value="2023">2023</option>
-                <option value="2024" selected>2024</option>
-            </select>
-            <select id="grandePremio"></select>
-            <input type="number" id="posicao" placeholder="Posição (1-20 ou deixe vazio para N/C)" min="1" max="20">
-            <label><input type="checkbox" id="pole"> <i class="fas fa-tachometer-alt"></i> Pole Position</label>
-            <label><input type="checkbox" id="voltaMaisRapida"> <i class="fas fa-stopwatch"></i> Volta Mais Rápida</label>
-            <label><input type="checkbox" id="grandSlam"> <i class="fas fa-trophy"></i> Grand Slam</label>
-            <input type="number" id="titulos" placeholder="Títulos Mundiais (Manual)" min="0">
-            <button id="adicionarResultadoBtn"><i class="fas fa-plus-circle"></i> Adicionar Resultado</button>
+        <h1><img src="https://www.formula1.com/etc/designs/fom-website/images/f1_logo.svg" class="f1-logo" alt="Fórmula 1 Logo"></h1>
+        <div class="tabs">
+            <button class="tab-button active" data-tab="temporadas"><i class="fas fa-calendar-alt"></i> Temporadas</button>
+            <button class="tab-button" data-tab="info"><i class="fas fa-user"></i> Informações</button>
+            <button class="tab-button" data-tab="equipes"><i class="fas fa-users"></i> Equipes</button>
+            <button class="tab-button" data-tab="recordes"><i class="fas fa-trophy"></i> Recordes</button>
         </div>
-        <h2><i class="fas fa-list"></i> Resultados das Corridas</h2>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Temporada</th>
-                        <th>Grande Prêmio</th>
-                        <th>Data</th>
-                        <th>Posição</th>
-                        <th>Pole</th>
-                        <th>Volta Mais Rápida</th>
-                        <th>Grand Slam</th>
-                        <th>Ação</th>
-                    </tr>
-                </thead>
-                <tbody id="resultadosBody"></tbody>
-            </table>
+
+        <div id="info" class="tab-content card">
+            <div class="info-grid">
+                <div id="ficha-tecnica-container"></div>
+                <div>
+                    <h2><i class="fas fa-chart-bar"></i> Resumo Estatístico</h2>
+                    <select id="stats-selector"></select>
+                    <div id="info-display-card" class="stats-card" style="margin-top: 15px; border: none; padding: 0; box-shadow: none;"></div>
+                </div>
+            </div>
         </div>
-        <h2><i class="fas fa-chart-bar"></i> Estatísticas</h2>
-        <div class="stats-container">
-            <div class="stats-card" id="statsTemporada"></div>
-            <div class="stats-card" id="carreiraStats"></div>
+
+        <div id="temporadas" class="tab-content active">
+             <div class="form-container card">
+                <h3><i class="fas fa-plus-circle"></i> Adicionar Resultado</h3>
+                <select id="temporada"></select>
+                <select id="grandePremio"></select>
+                <input type="number" id="posicao" placeholder="Posição (1-20 ou deixe vazio para N/C)" min="1" max="20">
+                <label><input type="checkbox" id="pole"> <i class="fas fa-tachometer-alt"></i> Pole Position</label>
+                <label><input type="checkbox" id="voltaMaisRapida"> <i class="fas fa-stopwatch"></i> Volta Mais Rápida</label>
+                <label><input type="checkbox" id="grandSlam"> <i class="fas fa-trophy"></i> Grand Slam</label>
+                <input type="number" id="titulos" placeholder="Títulos Mundiais (Opcional)" min="0">
+                <button id="adicionarResultadoBtn">Adicionar Resultado</button>
+            </div>
+            <h2><i class="fas fa-list-ol"></i> Resultados da Temporada</h2>
+            <div class="table-container card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Grande Prêmio</th>
+                            <th class="posicao-col">Pos.</th>
+                            <th>Pole</th>
+                            <th>V. Rápida</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultadosBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="equipes" class="tab-content">
+            <h2><i class="fas fa-shield-alt"></i> Desempenho por Equipe</h2>
+            <div id="team-stats-container" class="info-grid"></div>
+        </div>
+
+        <div id="recordes" class="tab-content">
+             <h2><i class="fas fa-crown"></i> Maiores Recordes da F1</h2>
+            <div class="card">
+                 <ol class="records-list">
+                    <li><strong>Mais títulos mundiais:</strong> 7 (Michael Schumacher, Lewis Hamilton)</li>
+                    <li><strong>Mais vitórias:</strong> 103 (Lewis Hamilton)</li>
+                    <li><strong>Mais pole positions:</strong> 104 (Lewis Hamilton)</li>
+                    <li><strong>Mais pódios:</strong> 197 (Lewis Hamilton)</li>
+                    <li><strong>Mais voltas mais rápidas:</strong> 77 (Michael Schumacher)</li>
+                    <li><strong>Mais Grand Slams:</strong> 8 (Jim Clark)</li>
+                    <li><strong>Mais Hat-Tricks:</strong> 22 (Michael Schumacher)</li>
+                    <li><strong>Maior número de corridas disputadas:</strong> 400+ (Fernando Alonso)</li>
+                    <li><strong>Mais vitórias consecutivas:</strong> 10 (Max Verstappen, 2023)</li>
+                    <li><strong>Mais vitórias em uma única temporada:</strong> 19 (Max Verstappen, 2023)</li>
+                    <li><strong>Maior % de vitórias na carreira:</strong> 32.26% (Juan Manuel Fangio)</li>
+                    <li><strong>Campeão mundial mais jovem:</strong> Sebastian Vettel (23 anos, 134 dias)</li>
+                    <li><strong>Campeão mundial mais velho:</strong> Juan Manuel Fangio (46 anos, 41 dias)</li>
+                    <li><strong>Vencedor de GP mais jovem:</strong> Max Verstappen (18 anos, 228 dias)</li>
+                    <li><strong>Pole position mais jovem:</strong> Sebastian Vettel (21 anos, 72 dias)</li>
+                    <li><strong>Mais pontos na carreira:</strong> 4639.5 (Lewis Hamilton)</li>
+                    <li><strong>Mais temp. com pelo menos uma vitória:</strong> 15 (Lewis Hamilton)</li>
+                    <li><strong>Mais pódios consecutivos:</strong> 19 (Michael Schumacher)</li>
+                    <li><strong>Mais corridas na zona de pontuação:</strong> 48 (Lewis Hamilton)</li>
+                    <li><strong>Mais vitórias no mesmo GP:</strong> 8 (Lewis Hamilton, Michael Schumacher)</li>
+                </ol>
+            </div>
         </div>
     </div>
 
     <div id="gpModal" class="modal">
-        <div class="modal-content">
-            <button class="close-btn"><i class="fas fa-times"></i></button>
-            <h3 id="gpTitle"></h3>
-            <div class="stats-list" id="gpStats"></div>
+        <div class="modal-content card">
+            <div class="modal-header">
+                <h3 id="gpTitle"></h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div id="gpStats" class="stats-card" style="border: none; padding: 0; box-shadow: none;"></div>
         </div>
     </div>
 
@@ -606,487 +227,251 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script>
-        particlesJS('particles-js', {
-            particles: {
-                number: { value: 100, density: { enable: true, value_area: 800 } },
-                color: { value: ['#ff2d55', '#00d4ff', '#ffd700'] },
-                shape: { type: ['circle', 'triangle'], stroke: { width: 0 } },
-                opacity: { value: 0.5, random: true },
-                size: { value: 2.5, random: true },
-                line_linked: { enable: false },
-                move: { enable: true, speed: 1.5, direction: 'none', random: true }
-            },
-            interactivity: {
-                detect_on: 'canvas',
-                events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } },
-                modes: { repulse: { distance: 70, duration: 0.3 }, push: { particles_nb: 2 } }
-            },
-            retina_detect: true
-        });
+        particlesJS('particles-js', {"particles":{"number":{"value":50,"density":{"enable":true,"value_area":800}},"color":{"value":"#ffffff"},"shape":{"type":"circle"},"opacity":{"value":0.2,"random":true},"size":{"value":3,"random":true},"line_linked":{"enable":false},"move":{"enable":true,"speed":1,"direction":"none","random":true,"straight":false,"out_mode":"out"}},"interactivity":{"detect_on":"canvas","events":{"onhover":{"enable":false},"onclick":{"enable":false}}},"retina_detect":true});
 
         document.addEventListener("DOMContentLoaded", () => {
-            const firebaseConfig = {
-                apiKey: "AIzaSyA0OlEixa0paaC8w5vwXr3d8bdXHsTsk6Q",
-                authDomain: "formula1-7ddf0.firebaseapp.com",
-                projectId: "formula1-7ddf0",
-                storageBucket: "formula1-7ddf0.firebasestorage.app",
-                messagingSenderId: "1033180811650",
-                appId: "1:1033180811650:web:9e315520430b36e4e8ff9b",
-                measurementId: "G-Q8LEND18DW"
-            };
+            const tabs = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.addEventListener('click', () => { tabs.forEach(item => item.classList.remove('active')); tabContents.forEach(content => content.classList.remove('active')); tab.classList.add('active'); document.getElementById(tab.dataset.tab).classList.add('active'); }));
 
+            const firebaseConfig = { apiKey: "AIzaSyA0OlEixa0paaC8w5vwXr3d8bdXHsTsk6Q", authDomain: "formula1-7ddf0.firebaseapp.com", projectId: "formula1-7ddf0", storageBucket: "formula1-7ddf0.firebasestorage.app", messagingSenderId: "1033180811650", appId: "1:1033180811650:web:9e315520430b36e4e8ff9b", measurementId: "G-Q8LEND18DW" };
             let db;
-            try {
-                firebase.initializeApp(firebaseConfig);
-                db = firebase.firestore();
-                console.log("Firebase inicializado com sucesso.");
-            } catch (error) {
-                console.error("Erro ao inicializar Firebase:", error);
-                alert("Erro ao conectar com o banco de dados. Verifique o console.");
-            }
+            try { firebase.initializeApp(firebaseConfig); db = firebase.firestore(); } catch (error) { console.error("Erro ao inicializar Firebase:", error); }
 
-            const countryFlags = {
-                "Grande Prêmio do Bahrein": "https://flagcdn.com/w20/bh.png",
-                "Grande Prêmio da Arábia Saudita": "https://flagcdn.com/w20/sa.png",
-                "Grande Prêmio da Austrália": "https://flagcdn.com/w20/au.png",
-                "Grande Prêmio do Azerbaijão": "https://flagcdn.com/w20/az.png",
-                "Grande Prêmio de Miami": "https://flagcdn.com/w20/us.png",
-                "Grande Prêmio de Mônaco": "https://flagcdn.com/w20/mc.png",
-                "Grande Prêmio da Espanha": "https://flagcdn.com/w20/es.png",
-                "Grande Prêmio do Canadá": "https://flagcdn.com/w20/ca.png",
-                "Grande Prêmio da Áustria": "https://flagcdn.com/w20/at.png",
-                "Grande Prêmio da Grã-Bretanha": "https://flagcdn.com/w20/gb.png",
-                "Grande Prêmio da Hungria": "https://flagcdn.com/w20/hu.png",
-                "Grande Prêmio da Bélgica": "https://flagcdn.com/w20/be.png",
-                "Grande Prêmio dos Países Baixos": "https://flagcdn.com/w20/nl.png",
-                "Grande Prêmio da Itália": "https://flagcdn.com/w20/it.png",
-                "Grande Prêmio de Singapura": "https://flagcdn.com/w20/sg.png",
-                "Grande Prêmio do Japão": "https://flagcdn.com/w20/jp.png",
-                "Grande Prêmio do Catar": "https://flagcdn.com/w20/qa.png",
-                "Grande Prêmio dos Estados Unidos": "https://flagcdn.com/w20/us.png",
-                "Grande Prêmio do México": "https://flagcdn.com/w20/mx.png",
-                "Grande Prêmio de São Paulo": "https://flagcdn.com/w20/br.png",
-                "Grande Prêmio de Las Vegas": "https://flagcdn.com/w20/us.png",
-                "Grande Prêmio de Abu Dhabi": "https://flagcdn.com/w20/ae.png",
-                "Grande Prêmio da China": "https://flagcdn.com/w20/cn.png",
-                "Grande Prêmio da Emília-Romanha": "https://flagcdn.com/w20/it.png"
-            };
-
+            const countryFlags = { "Bahrein": "bh", "Arábia Saudita": "sa", "Austrália": "au", "Japão": "jp", "China": "cn", "Miami": "us", "Emília-Romanha": "it", "Mônaco": "mc", "Canadá": "ca", "Espanha": "es", "Áustria": "at", "Grã-Bretanha": "gb", "Hungria": "hu", "Bélgica": "be", "Países Baixos": "nl", "Itália": "it", "Azerbaijão": "az", "Singapura": "sg", "Estados Unidos": "us", "México": "mx", "São Paulo": "br", "Las Vegas": "us", "Catar": "qa", "Abu Dhabi": "ae" };
             const corridas = {
-                "2023": [
-                    { nome: "Grande Prêmio do Bahrein", data: "2023-03-05" },
-                    { nome: "Grande Prêmio da Arábia Saudita", data: "2023-03-19" },
-                    { nome: "Grande Prêmio da Austrália", data: "2023-04-02" },
-                    { nome: "Grande Prêmio do Azerbaijão", data: "2023-04-30" },
-                    { nome: "Grande Prêmio de Miami", data: "2023-05-07" },
-                    { nome: "Grande Prêmio de Mônaco", data: "2023-05-28" },
-                    { nome: "Grande Prêmio da Espanha", data: "2023-06-04" },
-                    { nome: "Grande Prêmio do Canadá", data: "2023-06-18" },
-                    { nome: "Grande Prêmio da Áustria", data: "2023-07-02" },
-                    { nome: "Grande Prêmio da Grã-Bretanha", data: "2023-07-09" },
-                    { nome: "Grande Prêmio da Hungria", data: "2023-07-23" },
-                    { nome: "Grande Prêmio da Bélgica", data: "2023-07-30" },
-                    { nome: "Grande Prêmio dos Países Baixos", data: "2023-08-27" },
-                    { nome: "Grande Prêmio da Itália", data: "2023-09-03" },
-                    { nome: "Grande Prêmio de Singapura", data: "2023-09-17" },
-                    { nome: "Grande Prêmio do Japão", data: "2023-09-24" },
-                    { nome: "Grande Prêmio do Catar", data: "2023-10-08" },
-                    { nome: "Grande Prêmio dos Estados Unidos", data: "2023-10-22" },
-                    { nome: "Grande Prêmio do México", data: "2023-10-29" },
-                    { nome: "Grande Prêmio de São Paulo", data: "2023-11-05" },
-                    { nome: "Grande Prêmio de Las Vegas", data: "2023-11-18" },
-                    { nome: "Grande Prêmio de Abu Dhabi", data: "2023-11-26" }
-                ],
-                "2024": [
-                    { nome: "Grande Prêmio do Bahrein", data: "2024-03-02" },
-                    { nome: "Grande Prêmio da Arábia Saudita", data: "2024-03-09" },
-                    { nome: "Grande Prêmio da Austrália", data: "2024-03-24" },
-                    { nome: "Grande Prêmio do Japão", data: "2024-04-07" },
-                    { nome: "Grande Prêmio da China", data: "2024-04-21" },
-                    { nome: "Grande Prêmio de Miami", data: "2024-05-05" },
-                    { nome: "Grande Prêmio da Emília-Romanha", data: "2024-05-19" },
-                    { nome: "Grande Prêmio de Mônaco", data: "2024-05-26" },
-                    { nome: "Grande Prêmio do Canadá", data: "2024-06-09" },
-                    { nome: "Grande Prêmio da Espanha", data: "2024-06-23" },
-                    { nome: "Grande Prêmio da Áustria", data: "2024-06-30" },
-                    { nome: "Grande Prêmio da Grã-Bretanha", data: "2024-07-07" },
-                    { nome: "Grande Prêmio da Hungria", data: "2024-07-21" },
-                    { nome: "Grande Prêmio da Bélgica", data: "2024-07-28" },
-                    { nome: "Grande Prêmio dos Países Baixos", data: "2024-08-25" },
-                    { nome: "Grande Prêmio da Itália", data: "2024-09-01" },
-                    { nome: "Grande Prêmio do Azerbaijão", data: "2024-09-15" },
-                    { nome: "Grande Prêmio de Singapura", data: "2024-09-22" },
-                    { nome: "Grande Prêmio dos Estados Unidos", data: "2024-10-20" },
-                    { nome: "Grande Prêmio do México", data: "2024-10-27" },
-                    { nome: "Grande Prêmio de São Paulo", data: "2024-11-03" },
-                    { nome: "Grande Prêmio de Las Vegas", data: "2024-11-23" },
-                    { nome: "Grande Prêmio do Catar", data: "2024-12-01" },
-                    { nome: "Grande Prêmio de Abu Dhabi", data: "2024-12-08" }
-                ]
+                "2024": [ { data: "2024-03-02", nome: "Grande Prêmio do Bahrein" }, { data: "2024-03-09", nome: "Grande Prêmio da Arábia Saudita" }, { data: "2024-03-24", nome: "Grande Prêmio da Austrália" }, { data: "2024-04-07", nome: "Grande Prêmio do Japão" }, { data: "2024-04-21", nome: "Grande Prêmio da China" }, { data: "2024-05-05", nome: "Grande Prêmio de Miami" }, { data: "2024-05-19", nome: "Grande Prêmio da Emília-Romanha" }, { data: "2024-05-26", nome: "Grande Prêmio de Mônaco" }, { data: "2024-06-09", nome: "Grande Prêmio do Canadá" }, { data: "2024-06-23", nome: "Grande Prêmio da Espanha" }, { data: "2024-06-30", nome: "Grande Prêmio da Áustria" }, { data: "2024-07-07", nome: "Grande Prêmio da Grã-Bretanha" }, { data: "2024-07-21", nome: "Grande Prêmio da Hungria" }, { data: "2024-07-28", nome: "Grande Prêmio da Bélgica" }, { data: "2024-08-25", nome: "Grande Prêmio dos Países Baixos" }, { data: "2024-09-01", nome: "Grande Prêmio da Itália" }, { data: "2024-09-15", nome: "Grande Prêmio do Azerbaijão" }, { data: "2024-09-22", nome: "Grande Prêmio de Singapura" }, { data: "2024-10-20", nome: "Grande Prêmio dos Estados Unidos" }, { data: "2024-10-27", nome: "Grande Prêmio do México" }, { data: "2024-11-03", nome: "Grande Prêmio de São Paulo" }, { data: "2024-11-23", nome: "Grande Prêmio de Las Vegas" }, { data: "2024-12-01", nome: "Grande Prêmio do Catar" }, { data: "2024-12-08", nome: "Grande Prêmio de Abu Dhabi" } ],
+                "2023": [ { data: "2023-03-05", nome: "Grande Prêmio do Bahrein" }, { data: "2023-03-19", nome: "Grande Prêmio da Arábia Saudita" }, { data: "2023-04-02", nome: "Grande Prêmio da Austrália" }, { data: "2023-04-30", nome: "Grande Prêmio do Azerbaijão" }, { data: "2023-05-07", nome: "Grande Prêmio de Miami" }, { data: "2023-05-28", nome: "Grande Prêmio de Mônaco" }, { data: "2023-06-04", nome: "Grande Prêmio da Espanha" }, { data: "2023-06-18", nome: "Grande Prêmio do Canadá" }, { data: "2023-07-02", nome: "Grande Prêmio da Áustria" }, { data: "2023-07-09", nome: "Grande Prêmio da Grã-Bretanha" }, { data: "2023-07-23", nome: "Grande Prêmio da Hungria" }, { data: "2023-07-30", nome: "Grande Prêmio da Bélgica" }, { data: "2023-08-27", nome: "Grande Prêmio dos Países Baixos" }, { data: "2023-09-03", nome: "Grande Prêmio da Itália" }, { data: "2023-09-17", nome: "Grande Prêmio de Singapura" }, { data: "2023-09-24", nome: "Grande Prêmio do Japão" }, { data: "2023-10-08", nome: "Grande Prêmio do Catar" }, { data: "2023-10-22", nome: "Grande Prêmio dos Estados Unidos" }, { data: "2023-10-29", nome: "Grande Prêmio do México" }, { data: "2023-11-05", nome: "Grande Prêmio de São Paulo" }, { data: "2023-11-18", nome: "Grande Prêmio de Las Vegas" }, { data: "2023-11-26", nome: "Grande Prêmio de Abu Dhabi" } ]
+            };
+            
+            const teamData = { 
+                "2023": { name: "Alpine", logo: "https://upload.wikimedia.org/wikipedia/en/b/b3/Alpine_F1_Team_Logo_2023.png" }, 
+                "2024": { name: "Mercedes", logo: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Mercedes-AMG_Petronas_F1_Team_logo.png" }
             };
 
-            const temporadaSelect = document.getElementById("temporada");
-            const grandePremioSelect = document.getElementById("grandePremio");
-            const modal = document.getElementById("gpModal");
-            const modalTitle = document.getElementById("gpTitle");
-            const modalStats = document.getElementById("gpStats");
-            const closeBtn = document.querySelector(".close-btn");
+            const temporadaSelect = document.getElementById("temporada"), grandePremioSelect = document.getElementById("grandePremio"), adicionarResultadoBtn = document.getElementById("adicionarResultadoBtn"), statsSelector = document.getElementById('stats-selector'), infoDisplayCard = document.getElementById('info-display-card'), fichaTecnicaContainer = document.getElementById('ficha-tecnica-container'), teamStatsContainer = document.getElementById('team-stats-container'), resultadosBody = document.getElementById("resultadosBody"), gpModal = document.getElementById('gpModal'), gpTitle = document.getElementById('gpTitle'), gpStats = document.getElementById('gpStats'), closeBtn = document.querySelector('.close-btn');
 
-            function preencherGrandesPremios() {
-                const temporada = temporadaSelect.value;
-                grandePremioSelect.innerHTML = '<option value="">Selecione um Grande Prêmio</option>';
-                if (corridas[temporada]) {
-                    corridas[temporada].forEach(corrida => {
-                        const option = document.createElement("option");
-                        option.value = corrida.nome;
-                        option.textContent = corrida.nome;
-                        grandePremioSelect.appendChild(option);
-                    });
-                } else {
-                    console.error(`Erro: temporada ${temporada} não encontrada.`);
-                    alert("Erro ao carregar os Grandes Prêmios.");
-                }
-                carregarResultados();
+            function calculateAge(birthDateString) { const [day, month, year] = birthDateString.split('/'); const birthDate = new Date(+year, +month - 1, +day); const today = new Date(); let age = today.getFullYear() - birthDate.getFullYear(); const m = today.getMonth() - birthDate.getMonth(); if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--; return age; }
+            
+            // --- FUNÇÃO CORRIGIDA ---
+            function displayFichaTecnica() { 
+                const pilotInfo = { name: "Fernando Lapa", nationality: "Brasileiro", birthDate: "18/02/2005", birthPlace: "Florianópolis, SC" }; 
+                // CORREÇÃO: Removido o logo da equipe para evitar duplicação de nome.
+                const teamsList = Object.keys(teamData)
+                    .sort((a,b) => b-a)
+                    .map(year => `<li><i class="fas fa-users"></i> ${year}:<span class="value">${teamData[year].name}</span></li>`)
+                    .join(''); 
+                fichaTecnicaContainer.innerHTML = `<div class="stats-card"><h3><i class="fas fa-id-card"></i> Ficha Técnica</h3><ul><li><i class="fas fa-user"></i> Nome: <span class="value">${pilotInfo.name}</span></li><li><i class="fas fa-flag"></i> Nacionalidade: <span class="value">${pilotInfo.nationality}</span></li><li><i class="fas fa-birthday-cake"></i> Nascimento: <span class="value">${pilotInfo.birthDate} (${calculateAge(pilotInfo.birthDate)} anos)</span></li><li><i class="fas fa-map-marker-alt"></i> Naturalidade: <span class="value">${pilotInfo.birthPlace}</span></li></ul><h3 style="margin-top: 20px;"><i class="fas fa-history"></i> Histórico de Equipes</h3><ul>${teamsList}</ul></div>`; 
             }
-
-            temporadaSelect.addEventListener("change", preencherGrandesPremios);
-            preencherGrandesPremios();
-
-            const adicionarResultadoBtn = document.getElementById("adicionarResultadoBtn");
-            adicionarResultadoBtn.addEventListener("click", adicionarResultado);
-
-            async function adicionarResultado() {
-                const temporada = temporadaSelect.value;
-                const grandePremio = grandePremioSelect.value;
-                const posicaoInput = document.getElementById("posicao").value;
-                const posicao = posicaoInput ? parseInt(posicaoInput) : "N/C";
-                let pole = document.getElementById("pole").checked;
-                let voltaMaisRapida = document.getElementById("voltaMaisRapida").checked;
-                let grandSlam = document.getElementById("grandSlam").checked;
-                const titulos = parseInt(document.getElementById("titulos").value) || 0;
-
-                if (!temporada || !grandePremio) {
-                    alert("Selecione uma temporada e um Grande Prêmio.");
-                    limparFormulario();
-                    return;
-                }
-
-                if (posicao !== "N/C" && (!Number.isInteger(posicao) || posicao < 1 || posicao > 20)) {
-                    alert("Insira uma posição válida (1 a 20) ou deixe vazio para 'Não Completou'.");
-                    limparFormulario();
-                    return;
-                }
-
-                if (grandSlam && (posicao !== 1 || !pole || !voltaMaisRapida)) {
-                    alert("Grand Slam requer 1º lugar, pole position e volta mais rápida.");
-                    limparFormulario();
-                    return;
-                }
-
-                const dadosCorrida = {
-                    temporada,
-                    grandePremio,
-                    data: corridas[temporada].find(c => c.nome === grandePremio).data,
-                    posicao,
-                    pole,
-                    voltaMaisRapida,
-                    grandSlam
-                };
-
-                if (!db) {
-                    alert("Erro: Banco de dados não inicializado.");
-                    limparFormulario();
-                    return;
-                }
-
+            
+            // --- FUNÇÃO CORRIGIDA E COM TÍTULOS ---
+            async function displayTeamStats() {
+                if (!db) return;
+                teamStatsContainer.innerHTML = `<p style="text-align: center;">Calculando estatísticas...</p>`;
                 try {
-                    await db.collection("corridas").doc(`${temporada}_${grandePremio}`).set(dadosCorrida);
-                    await atualizarEstatisticas(temporada, titulos);
-                    alert("Resultado adicionado com sucesso!");
-                    carregarResultados();
-                    limparFormulario();
-                } catch (error) {
-                    console.error("Erro ao adicionar resultado:", error);
-                    alert("Erro ao adicionar resultado: " + error.message);
-                }
-            }
+                    const allRacesSnapshot = await db.collection("corridas").get();
+                    const aggregatedStats = {};
+                    allRacesSnapshot.forEach(doc => {
+                        const race = doc.data(); const teamInfo = teamData[race.temporada];
+                        if (!teamInfo) return;
+                        if (!aggregatedStats[teamInfo.name]) { aggregatedStats[teamInfo.name] = { corridas: 0, vitorias: 0, podios: 0, poles: 0, voltasMaisRapidas: 0, grandSlams: 0, titulos: 0, logo: teamInfo.logo, latestYear: 0 }; }
+                        const stats = aggregatedStats[teamInfo.name];
+                        stats.latestYear = Math.max(stats.latestYear, parseInt(race.temporada));
+                        stats.corridas++; if (race.posicao === 1) stats.vitorias++; if (race.posicao >= 1 && race.posicao <= 3) stats.podios++; if (race.pole) stats.poles++; if (race.voltaMaisRapida) stats.voltasMaisRapidas++; if (race.grandSlam) stats.grandSlams++;
+                    });
 
-            function limparFormulario() {
-                document.getElementById("posicao").value = "";
-                document.getElementById("pole").checked = false;
-                document.getElementById("voltaMaisRapida").checked = false;
-                document.getElementById("grandSlam").checked = false;
-                document.getElementById("titulos").value = "";
-            }
-
-            async function excluirResultado(temporada, grandePremio) {
-                if (!db) {
-                    alert("Erro: Banco de dados não inicializado.");
-                    return;
-                }
-                if (confirm(`Deseja excluir o resultado de ${grandePremio} (${temporada})?`)) {
-                    try {
-                        await db.collection("corridas").doc(`${temporada}_${grandePremio}`).delete();
-                        await atualizarEstatisticas(temporada, 0);
-                        alert("Resultado excluído com sucesso!");
-                        carregarResultados();
-                    } catch (error) {
-                        console.error("Erro ao excluir resultado:", error);
-                        alert("Erro ao excluir resultado: " + error.message);
+                    // Lógica para buscar e somar os títulos de cada equipe
+                    const teamYears = {};
+                    for (const year in teamData) {
+                        const teamName = teamData[year].name;
+                        if (!teamYears[teamName]) teamYears[teamName] = [];
+                        teamYears[teamName].push(year);
                     }
-                }
-            }
 
-            async function atualizarEstatisticas(temporada, titulos) {
-                if (!db) {
-                    alert("Erro: Banco de dados não inicializado.");
-                    return;
-                }
-
-                try {
-                    // Estatísticas da temporada
-                    const corridasSnapshot = await db.collection("corridas").where("temporada", "==", temporada).get();
-                    let estatisticas = {
-                        corridas: 0,
-                        vitorias: 0,
-                        podios: 0,
-                        poles: 0,
-                        voltasMaisRapidas: 0,
-                        hatTricks: 0,
-                        grandSlams: 0,
-                        titulos
-                    };
-
-                    corridasSnapshot.forEach(doc => {
-                        const dados = doc.data();
-                        estatisticas.corridas++;
-                        if (dados.posicao === 1) estatisticas.vitorias++;
-                        if (dados.posicao <= 3 && dados.posicao >= 1) estatisticas.podios++;
-                        if (dados.pole) estatisticas.poles++;
-                        if (dados.voltaMaisRapida) estatisticas.voltasMaisRapidas++;
-                        if (dados.posicao === 1 && dados.pole && dados.voltaMaisRapida) estatisticas.hatTricks++;
-                        if (dados.grandSlam) estatisticas.grandSlams++;
-                    });
-
-                    // Cálculo das porcentagens com verificação de divisão por zero
-                    estatisticas.vitoriasPct = estatisticas.corridas > 0 ? ((estatisticas.vitorias / estatisticas.corridas) * 100).toFixed(1) : "0.0";
-                    estatisticas.podiosPct = estatisticas.corridas > 0 ? ((estatisticas.podios / estatisticas.corridas) * 100).toFixed(1) : "0.0";
-                    estatisticas.polesPct = estatisticas.corridas > 0 ? ((estatisticas.poles / estatisticas.corridas) * 100).toFixed(1) : "0.0";
-                    estatisticas.voltasMaisRapidasPct = estatisticas.corridas > 0 ? ((estatisticas.voltasMaisRapidas / estatisticas.corridas) * 100).toFixed(1) : "0.0";
-                    estatisticas.hatTricksPct = estatisticas.corridas > 0 ? ((estatisticas.hatTricks / estatisticas.corridas) * 100).toFixed(1) : "0.0";
-                    estatisticas.grandSlamsPct = estatisticas.corridas > 0 ? ((estatisticas.grandSlams / estatisticas.corridas) * 100).toFixed(1) : "0.0";
-                    estatisticas.titulosPct = estatisticas.titulos > 0 ? ((estatisticas.titulos / 2) * 100).toFixed(1) : "0.0"; // Baseado em 2 temporadas
-
-                    await db.collection("estatisticas").doc(`temporada_${temporada}`).set(estatisticas, { merge: true });
-
-                    // Estatísticas da carreira
-                    const todasCorridas = await db.collection("corridas").get();
-                    let estatisticasCarreira = {
-                        corridas: 0,
-                        vitorias: 0,
-                        podios: 0,
-                        poles: 0,
-                        voltasMaisRapidas: 0,
-                        hatTricks: 0,
-                        grandSlams: 0,
-                        titulos: 0
-                    };
-
-                    todasCorridas.forEach(doc => {
-                        const dados = doc.data();
-                        estatisticasCarreira.corridas++;
-                        if (dados.posicao === 1) estatisticasCarreira.vitorias++;
-                        if (dados.posicao <= 3 && dados.posicao >= 1) estatisticasCarreira.podios++;
-                        if (dados.pole) estatisticasCarreira.poles++;
-                        if (dados.voltaMaisRapida) estatisticasCarreira.voltasMaisRapidas++;
-                        if (dados.posicao === 1 && dados.pole && dados.voltaMaisRapida) estatisticasCarreira.hatTricks++;
-                        if (dados.grandSlam) estatisticasCarreira.grandSlams++;
-                    });
-
-                    const temporadas = ["2023", "2024"];
-                    for (const temp of temporadas) {
-                        const temporadaDoc = await db.collection("estatisticas").doc(`temporada_${temp}`).get();
-                        if (temporadaDoc.exists) {
-                            estatisticasCarreira.titulos += temporadaDoc.data().titulos || 0;
+                    for (const teamName in aggregatedStats) {
+                        if (teamYears[teamName]) {
+                            for (const year of teamYears[teamName]) {
+                                const statsDoc = await db.doc(`estatisticas/temporada_${year}`).get();
+                                if (statsDoc.exists && statsDoc.data().titulos) {
+                                    aggregatedStats[teamName].titulos += statsDoc.data().titulos;
+                                }
+                            }
                         }
                     }
+                    
+                    let html = '';
+                    const calcPct = (val, total) => total > 0 ? `(${(val / total * 100).toFixed(1)}%)` : '';
+                    
+                    const sortedTeamNames = Object.keys(aggregatedStats).sort((a, b) => aggregatedStats[b].latestYear - aggregatedStats[a].latestYear);
 
-                    // Cálculo das porcentagens da carreira
-                    estatisticasCarreira.vitoriasPct = estatisticasCarreira.corridas > 0 ? ((estatisticasCarreira.vitorias / estatisticasCarreira.corridas) * 100).toFixed(1) : "0.0";
-                    estatisticasCarreira.podiosPct = estatisticasCarreira.corridas > 0 ? ((estatisticasCarreira.podios / estatisticasCarreira.corridas) * 100).toFixed(1) : "0.0";
-                    estatisticasCarreira.polesPct = estatisticasCarreira.corridas > 0 ? ((estatisticasCarreira.poles / estatisticasCarreira.corridas) * 100).toFixed(1) : "0.0";
-                    estatisticasCarreira.voltasMaisRapidasPct = estatisticasCarreira.corridas > 0 ? ((estatisticasCarreira.voltasMaisRapidas / estatisticasCarreira.corridas) * 100).toFixed(1) : "0.0";
-                    estatisticasCarreira.hatTricksPct = estatisticasCarreira.corridas > 0 ? ((estatisticasCarreira.hatTricks / estatisticasCarreira.corridas) * 100).toFixed(1) : "0.0";
-                    estatisticasCarreira.grandSlamsPct = estatisticasCarreira.corridas > 0 ? ((estatisticasCarreira.grandSlams / estatisticasCarreira.corridas) * 100).toFixed(1) : "0.0";
-                    estatisticasCarreira.titulosPct = estatisticasCarreira.titulos > 0 ? ((estatisticasCarreira.titulos / 2) * 100).toFixed(1) : "0.0";
+                    for (const teamName of sortedTeamNames) {
+                        const stats = aggregatedStats[teamName];
+                        // CORREÇÃO: Removido o logo do H3 para evitar duplicação de nome.
+                        html += `<div class="card stats-card"><h3>${teamName}</h3>
+                            <p><i class="fas fa-flag-checkered"></i> Corridas: <span class="value">${stats.corridas}</span></p>
+                            <p><i class="fas fa-trophy"></i> Vitórias: <span class="value">${stats.vitorias} ${calcPct(stats.vitorias, stats.corridas)}</span></p>
+                            <p><i class="fas fa-star"></i> Pódios: <span class="value">${stats.podios} ${calcPct(stats.podios, stats.corridas)}</span></p>
+                            <p><i class="fas fa-award"></i> Títulos: <span class="value">${stats.titulos || 0}</span></p>
+                            <p><i class="fas fa-tachometer-alt"></i> Poles: <span class="value">${stats.poles} ${calcPct(stats.poles, stats.corridas)}</span></p>
+                            <p><i class="fas fa-stopwatch"></i> V. Rápidas: <span class="value">${stats.voltasMaisRapidas} ${calcPct(stats.voltasMaisRapidas, stats.corridas)}</span></p>
+                            <p><i class="fas fa-crown"></i> Grand Slams: <span class="value">${stats.grandSlams} ${calcPct(stats.grandSlams, stats.corridas)}</span></p></div>`;
+                    }
+                    teamStatsContainer.innerHTML = html || '<p style="text-align: center;">Sem dados de equipe para exibir.</p>';
+                } catch (error) { console.error("Erro ao exibir estatísticas da equipe:", error); teamStatsContainer.innerHTML = `<p style="text-align: center;">Erro ao carregar os dados das equipes.</p>`; }
+            }
 
-                    await db.collection("estatisticas").doc("carreira").set(estatisticasCarreira, { merge: true });
-                } catch (error) {
-                    console.error("Erro ao atualizar estatísticas:", error);
-                    alert("Erro ao atualizar estatísticas: " + error.message);
-                }
+            function populateSelectors() {
+                temporadaSelect.innerHTML = '';
+                Object.keys(corridas).sort((a,b) => b-a).forEach(ano => { const option = document.createElement("option"); option.value = ano; option.textContent = ano; temporadaSelect.appendChild(option); });
+                statsSelector.innerHTML = '<option value="carreira">Carreira</option>';
+                Object.keys(corridas).sort((a,b) => b-a).forEach(ano => { const option = document.createElement("option"); option.value = ano; option.textContent = `Temporada ${ano}`; statsSelector.appendChild(option); });
+            }
+
+            async function displaySelectedStats() {
+                if (!db) return;
+                const selection = statsSelector.value;
+                let docPath, title;
+                if (selection === 'carreira') { docPath = 'estatisticas/carreira'; title = 'Carreira'; } else { docPath = `estatisticas/temporada_${selection}`; title = `Temporada ${selection}`; }
+                infoDisplayCard.innerHTML = `<p>Carregando...</p>`;
+                try {
+                    const doc = await db.doc(docPath).get();
+                    if (doc.exists) {
+                        const stats = doc.data();
+                        let totalSeasons = Object.keys(corridas).length;
+                        let titulosPct = "0.0";
+                        if (stats.titulos > 0) { titulosPct = (selection === 'carreira') ? (stats.titulos / totalSeasons * 100).toFixed(1) : (stats.titulos / 1 * 100).toFixed(1); }
+                        infoDisplayCard.innerHTML = `<h3>${title}</h3>
+                            <p><i class="fas fa-flag-checkered"></i> Corridas: <span class="value">${stats.corridas || 0}</span></p>
+                            <p><i class="fas fa-trophy"></i> Vitórias: <span class="value">${stats.vitorias || 0} (${stats.vitoriasPct || '0.0'}%)</span></p>
+                            <p><i class="fas fa-star"></i> Pódios: <span class="value">${stats.podios || 0} (${stats.podiosPct || '0.0'}%)</span></p>
+                            <p><i class="fas fa-tachometer-alt"></i> Poles: <span class="value">${stats.poles || 0} (${stats.polesPct || '0.0'}%)</span></p>
+                            <p><i class="fas fa-stopwatch"></i> V. Rápidas: <span class="value">${stats.voltasMaisRapidas || 0} (${stats.voltasMaisRapidasPct || '0.0'}%)</span></p>
+                            <p><i class="fas fa-crown"></i> Grand Slams: <span class="value">${stats.grandSlams || 0} (${stats.grandSlamsPct || '0.0'}%)</span></p>
+                            <p><i class="fas fa-award"></i> Títulos: <span class="value">${stats.titulos || 0} (${titulosPct}%)</span></p>`;
+                    } else { infoDisplayCard.innerHTML = `<h3>${title}</h3><p>Sem dados disponíveis.</p>`; }
+                } catch (error) { console.error("Erro ao buscar estatísticas:", error); infoDisplayCard.innerHTML = `<h3>${title}</h3><p>Erro ao carregar estatísticas.</p>`; }
+            }
+            
+            function preencherGrandesPremios() {
+                const temporada = temporadaSelect.value;
+                grandePremioSelect.innerHTML = '<option value="">Selecione um GP</option>';
+                if (corridas[temporada]) corridas[temporada].forEach(corrida => { const option = document.createElement("option"); option.value = corrida.nome; option.textContent = corrida.nome; grandePremioSelect.appendChild(option); });
+                carregarResultadosDaTemporada();
+            }
+            
+            async function carregarResultadosDaTemporada() {
+                if (!db) return;
+                const temporada = temporadaSelect.value;
+                resultadosBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Carregando resultados...</td></tr>';
+                try {
+                    const corridasSnapshot = await db.collection("corridas").where("temporada", "==", temporada).get();
+                    const resultados = {};
+                    corridasSnapshot.forEach(doc => { resultados[doc.id] = doc.data(); });
+                    
+                    resultadosBody.innerHTML = "";
+                    const calendarioTemporada = corridas[temporada];
+                    if (!calendarioTemporada) { resultadosBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Calendário não disponível.</td></tr>'; return; }
+
+                    calendarioTemporada.forEach(corrida => {
+                        const docId = `${temporada}_${corrida.nome}`;
+                        const dados = resultados[docId];
+                        const nomeCurto = corrida.nome.replace(/^(Grande Prêmio|GP) d(o|a|e|os|as)\s/, '');
+                        const flagCode = countryFlags[nomeCurto] || 'xx';
+                        const row = document.createElement("tr");
+                        row.classList.add('clickable');
+                        row.dataset.gp = corrida.nome;
+                        
+                        let acaoHtml, posicaoHtml, poleHtml, voltaRapidaHtml;
+                        if (dados) {
+                            let posicaoClass = '';
+                            if (dados.posicao === 1) posicaoClass = 'podium-gold'; else if (dados.posicao === 2) posicaoClass = 'podium-silver'; else if (dados.posicao === 3) posicaoClass = 'podium-bronze'; else if (dados.posicao === "N/C") posicaoClass = 'not-completed';
+                            posicaoHtml = `<td class="posicao-col ${posicaoClass}">${dados.posicao}</td>`;
+                            poleHtml = `<td style="text-align: center;">${dados.pole ? '<i class="fas fa-check" style="color: var(--secondary-color);"></i>' : ''}</td>`;
+                            voltaRapidaHtml = `<td style="text-align: center;">${dados.voltaMaisRapida ? '<i class="fas fa-check" style="color: var(--secondary-color);"></i>' : ''}</td>`;
+                            acaoHtml = `<td style="text-align: center;"><button class="delete-btn" data-temporada="${dados.temporada}" data-gp="${dados.grandePremio}"><i class="fas fa-trash"></i></button></td>`;
+                        } else {
+                            posicaoHtml = `<td class="posicao-col">-</td>`; poleHtml = `<td style="text-align: center;">-</td>`; voltaRapidaHtml = `<td style="text-align: center;">-</td>`; acaoHtml = `<td style="text-align: center;">-</td>`;
+                        }
+                        
+                        row.innerHTML = `<td><img src="https://flagcdn.com/w40/${flagCode}.png" class="flag"> ${corrida.nome}</td>${posicaoHtml}${poleHtml}${voltaRapidaHtml}${acaoHtml}`;
+                        resultadosBody.appendChild(row);
+                    });
+                    
+                    document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); const { temporada, gp } = e.currentTarget.dataset; excluirResultado(temporada, gp); }));
+                    document.querySelectorAll('#resultadosBody tr.clickable').forEach(row => row.addEventListener('click', (e) => { if (!e.target.closest('.delete-btn')) { mostrarEstatisticasGP(e.currentTarget.dataset.gp); }}));
+                } catch (error) { console.error("Erro ao carregar resultados:", error); resultadosBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Erro ao carregar resultados.</td></tr>'; }
             }
 
             async function mostrarEstatisticasGP(grandePremio) {
-                if (!db) {
-                    alert("Erro: Banco de dados não inicializado.");
-                    return;
-                }
-
+                if (!db) return;
+                const nomeCurto = grandePremio.replace(/^(Grande Prêmio|GP) d(o|a|e|os|as)\s/, '');
+                const flagCode = countryFlags[nomeCurto] || 'xx';
+                gpTitle.innerHTML = `<img src="https://flagcdn.com/w40/${flagCode}.png" class="flag"> ${grandePremio}`;
+                gpStats.innerHTML = `<p>Buscando dados...</p>`;
+                gpModal.style.display = "flex";
                 try {
-                    const corridasSnapshot = await db.collection("corridas").where("grandePremio", "==", grandePremio).get();
-                    let stats = {
-                        corridas: 0,
-                        vitorias: 0,
-                        podios: 0,
-                        poles: 0,
-                        voltasMaisRapidas: 0,
-                        hatTricks: 0,
-                        grandSlams: 0
-                    };
-
-                    corridasSnapshot.forEach(doc => {
-                        const dados = doc.data();
-                        stats.corridas++;
-                        if (dados.posicao === 1) stats.vitorias++;
-                        if (dados.posicao <= 3 && dados.posicao >= 1) stats.podios++;
-                        if (dados.pole) stats.poles++;
-                        if (dados.voltaMaisRapida) stats.voltasMaisRapidas++;
-                        if (dados.posicao === 1 && dados.pole && dados.voltaMaisRapida) stats.hatTricks++;
-                        if (dados.grandSlam) stats.grandSlams++;
+                    const gpSnapshot = await db.collection('corridas').where('grandePremio', '==', grandePremio).get();
+                    let stats = { corridas: 0, vitorias: 0, podios: 0, poles: 0, voltasMaisRapidas: 0, grandSlams: 0 };
+                    gpSnapshot.forEach(doc => {
+                        const d = doc.data(); stats.corridas++;
+                        if(d.posicao === 1) stats.vitorias++; if(d.posicao >= 1 && d.posicao <= 3) stats.podios++; if(d.pole) stats.poles++; if(d.voltaMaisRapida) stats.voltasMaisRapidas++; if(d.grandSlam) stats.grandSlams++;
                     });
-
-                    // Cálculo das porcentagens para o modal
-                    stats.vitoriasPct = stats.corridas > 0 ? ((stats.vitorias / stats.corridas) * 100).toFixed(1) : "0.0";
-                    stats.podiosPct = stats.corridas > 0 ? ((stats.podios / stats.corridas) * 100).toFixed(1) : "0.0";
-                    stats.polesPct = stats.corridas > 0 ? ((stats.poles / stats.corridas) * 100).toFixed(1) : "0.0";
-                    stats.voltasMaisRapidasPct = stats.corridas > 0 ? ((stats.voltasMaisRapidas / stats.corridas) * 100).toFixed(1) : "0.0";
-                    stats.hatTricksPct = stats.corridas > 0 ? ((stats.hatTricks / stats.corridas) * 100).toFixed(1) : "0.0";
-                    stats.grandSlamsPct = stats.corridas > 0 ? ((stats.grandSlams / stats.corridas) * 100).toFixed(1) : "0.0";
-
-                    modalTitle.innerHTML = countryFlags[grandePremio]
-                        ? `<img src="${countryFlags[grandePremio]}" class="gp-flag" alt="Bandeira do GP"> ${grandePremio}`
-                        : grandePremio;
-                    modalStats.innerHTML = `
-                        <p><i class="fas fa-flag-checkered"></i> Corridas: ${stats.corridas}</p>
-                        <p><i class="fas fa-trophy"></i> Vitórias: ${stats.vitorias} <span class="percentage">(${stats.vitoriasPct}%)</span></p>
-                        <p><i class="fas fa-star"></i> Pódios: ${stats.podios} <span class="percentage">(${stats.podiosPct}%)</span></p>
-                        <p><i class="fas fa-tachometer-alt"></i> Pole Positions: ${stats.poles} <span class="percentage">(${stats.polesPct}%)</span></p>
-                        <p><i class="fas fa-stopwatch"></i> Voltas Mais Rápidas: ${stats.voltasMaisRapidas} <span class="percentage">(${stats.voltasMaisRapidasPct}%)</span></p>
-                        <p><i class="fas fa-medal"></i> Hat-tricks: ${stats.hatTricks} <span class="percentage">(${stats.hatTricksPct}%)</span></p>
-                        <p><i class="fas fa-crown"></i> Grand Slams: ${stats.grandSlams} <span class="percentage">(${stats.grandSlamsPct}%)</span></p>
-                    `;
-                    modal.style.display = "flex";
-                } catch (error) {
-                    console.error("Erro ao carregar estatísticas do GP:", error);
-                    alert("Erro ao carregar estatísticas do GP: " + error.message);
-                }
+                    gpStats.innerHTML = `<p><i class="fas fa-flag-checkered"></i> Corridas: <span class="value">${stats.corridas}</span></p>
+                                        <p><i class="fas fa-trophy"></i> Vitórias: <span class="value">${stats.vitorias}</span></p>
+                                        <p><i class="fas fa-star"></i> Pódios: <span class="value">${stats.podios}</span></p>
+                                        <p><i class="fas fa-tachometer-alt"></i> Poles: <span class="value">${stats.poles}</span></p>
+                                        <p><i class="fas fa-stopwatch"></i> V. Rápidas: <span class="value">${stats.voltasMaisRapidas}</span></p>
+                                        <p><i class="fas fa-crown"></i> Grand Slams: <span class="value">${stats.grandSlams}</span></p>`;
+                } catch(error) { gpStats.innerHTML = `<p>Erro ao carregar estatísticas do GP.</p>`; }
             }
 
-            closeBtn.addEventListener("click", () => {
-                modal.style.display = "none";
-            });
-
-            window.addEventListener("click", (event) => {
-                if (event.target === modal) {
-                    modal.style.display = "none";
-                }
-            });
-
-            async function carregarResultados() {
-                if (!db) {
-                    alert("Erro: Banco de dados não inicializado.");
-                    return;
-                }
-
-                const temporada = temporadaSelect.value;
-                const resultadosBody = document.getElementById("resultadosBody");
-                resultadosBody.innerHTML = '<tr><td colspan="8">Carregando...</td></tr>';
-
-                try {
-                    const corridasSnapshot = await db.collection("corridas").where("temporada", "==", temporada).orderBy("data").get();
-
-                    resultadosBody.innerHTML = "";
-                    corridasSnapshot.forEach(doc => {
-                        const dados = doc.data();
-                        let posicaoClass = '';
-                        if (dados.posicao === 1) {
-                            posicaoClass = 'podium-gold';
-                        } else if (dados.posicao === 2) {
-                            posicaoClass = 'podium-silver';
-                        } else if (dados.posicao === 3) {
-                            posicaoClass = 'podium-bronze';
-                        } else if (dados.posicao === "N/C") {
-                            posicaoClass = 'not-completed';
-                        }
-                        const row = document.createElement("tr");
-                        row.innerHTML = `
-                            <td>${dados.temporada}</td>
-                            <td><img src="${countryFlags[dados.grandePremio] || ''}" class="flag" alt="Bandeira"> ${dados.grandePremio}</td>
-                            <td>${dados.data}</td>
-                            <td class="${posicaoClass}">${dados.posicao}</td>
-                            <td>${dados.pole ? "Sim" : "Não"}</td>
-                            <td>${dados.voltaMaisRapida ? "Sim" : "Não"}</td>
-                            <td>${dados.grandSlam ? "Sim" : "Não"}</td>
-                            <td><button class="delete-btn"><i class="fas fa-trash"></i> Excluir</button></td>
-                        `;
-                        resultadosBody.appendChild(row);
-
-                        row.addEventListener("click", (e) => {
-                            if (!e.target.closest(".delete-btn")) {
-                                mostrarEstatisticasGP(dados.grandePremio);
-                            }
-                        });
-
-                        const deleteBtn = row.querySelector(".delete-btn");
-                        deleteBtn.addEventListener("click", () => excluirResultado(dados.temporada, dados.grandePremio));
-                    });
-
-                    const statsDoc = await db.collection("estatisticas").doc(`temporada_${temporada}`).get();
-                    const statsDiv = document.getElementById("statsTemporada");
-                    if (statsDoc.exists) {
-                        const stats = statsDoc.data();
-                        statsDiv.innerHTML = `
-                            <h3>Temporada ${temporada}</h3>
-                            <p><i class="fas fa-flag-checkered"></i> Corridas: ${stats.corridas}</p>
-                            <p><i class="fas fa-trophy"></i> Vitórias: ${stats.vitorias} <span class="percentage">(${stats.vitoriasPct}%)</span></p>
-                            <p><i class="fas fa-star"></i> Pódios: ${stats.podios} <span class="percentage">(${stats.podiosPct}%)</span></p>
-                            <p><i class="fas fa-tachometer-alt"></i> Pole Positions: ${stats.poles} <span class="percentage">(${stats.polesPct}%)</span></p>
-                            <p><i class="fas fa-stopwatch"></i> Voltas Mais Rápidas: ${stats.voltasMaisRapidas} <span class="percentage">(${stats.voltasMaisRapidasPct}%)</span></p>
-                            <p><i class="fas fa-medal"></i> Hat-tricks: ${stats.hatTricks} <span class="percentage">(${stats.hatTricksPct}%)</span></p>
-                            <p><i class="fas fa-crown"></i> Grand Slams: ${stats.grandSlams} <span class="percentage">(${stats.grandSlamsPct}%)</span></p>
-                            <p><i class="fas fa-award"></i> Título Máximo: ${stats.titulos} <span class="percentage">(${stats.titulosPct}%)</span></p>
-                        `;
-                    } else {
-                        statsDiv.innerHTML = `<h3>Temporada ${temporada}</h3><p>Sem dados disponíveis.</p>`;
-                    }
-
-                    const carreiraDoc = await db.collection("estatisticas").doc("carreira").get();
-                    const carreiraStatsCarreiraDiv = document.getElementById("carreiraStats");
-                    if (carreiraDoc.exists) {
-                        const stats = carreiraDoc.data();
-                        carreiraStatsCarreiraDiv.innerHTML = `
-                            <h3>Carreira</h3>
-                            <p><i class="fas fa-flag-checkered"></i> Corridas: ${stats.corridas}</p>
-                            <p><i class="fas fa-trophy"></i> Vitórias: ${stats.vitorias} <span class="percentage">(${stats.vitoriasPct}%)</span></p>
-                            <p><i class="fas fa-star"></i> Pódios: ${stats.podios} <span class="percentage">(${stats.podiosPct}%)</span></p>
-                            <p><i class="fas fa-tachometer-alt"></i> Pole Positions: ${stats.poles} <span class="percentage">(${stats.polesPct}%)</span></p>
-                            <p><i class="fas fa-stopwatch"></i> Voltas Mais Rápidas: ${stats.voltasMaisRapidas} <span class="percentage">(${stats.voltasMaisRapidasPct}%)</span></p>
-                            <p><i class="fas fa-medal"></i> Hat-tricks: ${stats.hatTricks} <span class="percentage">(${stats.hatTricksPct}%)</span></p>
-                            <p><i class="fas fa-crown"></i> Grand Slams: ${stats.grandSlams} <span class="percentage">(${stats.grandSlamsPct}%)</span></p>
-                            <p><i class="fas fa-award"></i> Títulos Máximos: ${stats.titulos} <span class="percentage">(${stats.titulosPct}%)</span></p>
-                        `;
-                    } else {
-                        carreiraStatsCarreiraDiv.innerHTML = "<h3>Carreira</h3><p>Sem dados disponíveis.</p>";
-                    }
-                } catch (error) {
-                    console.error("Erro ao carregar resultados:", error);
-                    alert("Erro ao carregar resultados: " + error.message);
-                    resultadosBody.innerHTML = '<tr><td colspan="8">Erro ao carregar resultados.</td></tr>';
+            function limparFormulario() { document.getElementById("posicao").value = ""; document.getElementById("pole").checked = false; document.getElementById("voltaMaisRapida").checked = false; document.getElementById("grandSlam").checked = false; document.getElementById("titulos").value = ""; }
+            async function adicionarResultado() {
+                const temporada = temporadaSelect.value, grandePremio = grandePremioSelect.value, posicaoInput = document.getElementById("posicao").value, posicao = posicaoInput ? parseInt(posicaoInput) : "N/C", pole = document.getElementById("pole").checked, voltaMaisRapida = document.getElementById("voltaMaisRapida").checked, grandSlam = document.getElementById("grandSlam").checked, titulos = document.getElementById("titulos").value !== "" ? parseInt(document.getElementById("titulos").value) : null;
+                if (!temporada || !grandePremio) { alert("Selecione uma temporada e um GP."); return; }
+                const dadosCorrida = { temporada, grandePremio, posicao, pole, voltaMaisRapida, grandSlam };
+                if (!db) return;
+                try { await db.collection("corridas").doc(`${temporada}_${grandePremio}`).set(dadosCorrida); await atualizarEstatisticas(temporada, titulos); limparFormulario(); carregarResultadosDaTemporada(); displaySelectedStats(); displayTeamStats(); } catch (error) { console.error("Erro ao adicionar resultado:", error); alert("Falha ao adicionar resultado."); }
+            }
+            async function excluirResultado(temporada, grandePremio) {
+                if (!db) return;
+                if (confirm(`Deseja excluir o resultado de ${grandePremio} (${temporada})?`)) { 
+                    try { await db.collection("corridas").doc(`${temporada}_${grandePremio}`).delete(); await atualizarEstatisticas(temporada, null); carregarResultadosDaTemporada(); displaySelectedStats(); displayTeamStats(); } catch (error) { console.error("Erro ao excluir resultado:", error); alert("Falha ao excluir resultado."); } 
                 }
             }
+            async function atualizarEstatisticas(temporada, titulos) {
+                if (!db) return;
+                try {
+                    const corridasSnapshot = await db.collection("corridas").where("temporada", "==", temporada).get();
+                    let estac = { corridas: 0, vitorias: 0, podios: 0, poles: 0, voltasMaisRapidas: 0, grandSlams: 0, titulos: 0 };
+                    corridasSnapshot.forEach(doc => { const d = doc.data(); estac.corridas++; if (d.posicao === 1) estac.vitorias++; if (d.posicao >= 1 && d.posicao <= 3) estac.podios++; if (d.pole) estac.poles++; if (d.voltaMaisRapida) estac.voltasMaisRapidas++; if(d.grandSlam) estac.grandSlams++; });
+                    if (titulos !== null) { estac.titulos = titulos; } else { const statsDoc = await db.collection("estatisticas").doc(`temporada_${temporada}`).get(); if (statsDoc.exists) estac.titulos = statsDoc.data().titulos || 0; }
+                    const calcPct = (val, total) => total > 0 ? ((val / total) * 100).toFixed(1) : "0.0";
+                    estac.vitoriasPct = calcPct(estac.vitorias, estac.corridas); estac.podiosPct = calcPct(estac.podios, estac.corridas); estac.polesPct = calcPct(estac.poles, estac.corridas); estac.voltasMaisRapidasPct = calcPct(estac.voltasMaisRapidas, estac.corridas); estac.grandSlamsPct = calcPct(estac.grandSlams, estac.corridas);
+                    await db.collection("estatisticas").doc(`temporada_${temporada}`).set(estac, { merge: true });
+                    const todasCorridas = await db.collection("corridas").get();
+                    let estacCarreira = { corridas: 0, vitorias: 0, podios: 0, poles: 0, voltasMaisRapidas: 0, grandSlams: 0, titulos: 0 };
+                    let titulosCarreira = 0;
+                    todasCorridas.forEach(doc => { const d = doc.data(); estacCarreira.corridas++; if (d.posicao === 1) estacCarreira.vitorias++; if (d.posicao >= 1 && d.posicao <= 3) estacCarreira.podios++; if (d.pole) estacCarreira.poles++; if (d.voltaMaisRapida) estacCarreira.voltasMaisRapidas++; if(d.grandSlam) estacCarreira.grandSlams++; });
+                    for (const temp of Object.keys(corridas)) { const temporadaDoc = await db.collection("estatisticas").doc(`temporada_${temp}`).get(); if (temporadaDoc.exists) titulosCarreira += temporadaDoc.data().titulos || 0; }
+                    estacCarreira.titulos = titulosCarreira;
+                    estacCarreira.vitoriasPct = calcPct(estacCarreira.vitorias, estacCarreira.corridas); estacCarreira.podiosPct = calcPct(estacCarreira.podios, estacCarreira.corridas); estacCarreira.polesPct = calcPct(estacCarreira.poles, estacCarreira.corridas); estacCarreira.voltasMaisRapidasPct = calcPct(estacCarreira.voltasMaisRapidas, estacCarreira.corridas); estacCarreira.grandSlamsPct = calcPct(estacCarreira.grandSlams, estacCarreira.corridas);
+                    await db.collection("estatisticas").doc("carreira").set(estacCarreira, { merge: true });
+                } catch (error) { console.error("Erro ao atualizar estatísticas:", error); }
+            }
+            
+            closeBtn.addEventListener('click', () => { gpModal.style.display = 'none'; });
+            window.addEventListener('click', (e) => { if (e.target === gpModal) { gpModal.style.display = 'none'; } });
 
-            carregarResultados();
+            document.querySelectorAll('.card').forEach(card => { card.onmousemove = e => { const rect = card.getBoundingClientRect(), x = e.clientX - rect.left, y = e.clientY - rect.top; card.style.setProperty('--mouse-x', `${x}px`); card.style.setProperty('--mouse-y', `${y}px`); }; });
+
+            // INICIALIZAÇÃO DA PÁGINA
+            displayFichaTecnica(); populateSelectors(); preencherGrandesPremios(); displaySelectedStats(); displayTeamStats();
+            
+            // LISTENERS DE EVENTOS
+            temporadaSelect.addEventListener("change", preencherGrandesPremios);
+            adicionarResultadoBtn.addEventListener("click", adicionarResultado);
+            statsSelector.addEventListener('change', displaySelectedStats);
         });
     </script>
 </body>
