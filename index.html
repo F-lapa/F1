@@ -37,7 +37,8 @@
         h1 { text-align: center; font-family: 'Orbitron', sans-serif; font-weight: 900; color: var(--text-color); text-shadow: 0 0 15px rgba(225, 6, 0, 0.5); font-size: 2.2rem; margin-bottom: 30px; letter-spacing: 2.5px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 15px; }
         .f1-logo { width: 80px; filter: drop-shadow(0 0 5px #fff); }
         h2 { font-family: 'Orbitron', sans-serif; color: var(--text-color); font-size: 1.5rem; margin: 40px 0 20px 0; text-transform: uppercase; letter-spacing: 1.2px; text-align: left; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid var(--primary-color); padding-bottom: 8px; }
-        
+        h3.subsection-title { font-family: 'Orbitron', sans-serif; color: var(--text-muted); font-size: 1.2rem; text-align: center; margin: 30px 0 15px 0; letter-spacing: 1px; }
+
         .card {
             background: var(--surface-color);
             border: 1px solid var(--border-color);
@@ -56,24 +57,59 @@
         button { background: var(--primary-color); color: #fff; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 700; text-transform: uppercase; width: 100%; margin-top: 15px; transition: all 0.3s ease; box-shadow: 0 0 15px rgba(225, 6, 0, 0.3); }
         button:hover { background: #fff; color: var(--primary-color); box-shadow: 0 0 25px rgba(225, 6, 0, 0.6); transform: scale(1.02) translateY(-2px); }
         
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; color: var(--text-color); min-width: 600px; }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; vertical-align: middle; }
-        th { background: none; border-bottom-width: 2px; color: var(--text-muted); font-family: 'Orbitron', sans-serif; text-transform: uppercase; }
-        tr { transition: background-color 0.3s ease; }
-        tr.clickable:hover { background-color: rgba(255, 255, 255, 0.05); cursor: pointer; }
-        .posicao-col { font-size: 1.2rem; font-weight: 700; text-align: center; width: 100px; }
+        /* --- ESTILOS PARA A NOVA LISTA DE CORRIDAS --- */
+        .race-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        .race-card.clickable:hover {
+            background-color: rgba(225, 6, 0, 0.1);
+            cursor: pointer;
+        }
+        .race-header {
+            display: flex;
+            align-items: center;
+            font-size: 1.2rem;
+            font-family: 'Orbitron', sans-serif;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .race-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            align-items: center;
+        }
+        .detail-item {
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .detail-item strong {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        .detail-item .value {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
         .posicao-col.podium-gold { color: #ffd700; } .posicao-col.podium-silver { color: #c0c0c0; } .posicao-col.podium-bronze { color: #cd7f32; }
         .posicao-col.not-completed { font-style: italic; color: #666; }
         .flag { width: 25px; margin-right: 10px; border-radius: 3px; }
-        .delete-btn { background: none; border: 1px solid #444; color: #888; padding: 5px 10px; font-size: 0.9rem; width: auto; margin: 0; border-radius: 5px; transition: all 0.3s ease; }
+        .delete-btn { background: none; border: 1px solid #444; color: #888; padding: 8px 12px; font-size: 0.9rem; width: auto; margin: 0; border-radius: 5px; transition: all 0.3s ease; }
         .delete-btn:hover { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
         
         .stats-card p, .stats-card li { margin: 12px 0; font-size: 1rem; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; }
         .stats-card p:last-child, .stats-card li:last-child { border-bottom: none; }
         .stats-card p .value, .stats-card li .value { margin-left: auto; font-weight: 700; text-align: right; }
         .stats-card ul { list-style: none; padding: 0;}
-        .team-logo { height: 25px; max-width: 100px; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));}
         .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px; }
         
         .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
@@ -125,7 +161,12 @@
         .close-btn:hover { color: var(--primary-color); transform: rotate(90deg) scale(1.1); }
         
         @media (max-width: 900px) { .info-grid { grid-template-columns: 1fr; } }
-        @media (max-width: 768px) { h1 {font-size: 1.8rem;} .tab-button { font-size: 0.9rem; padding: 8px 15px; } body { padding: 10px; } }
+        @media (max-width: 768px) { 
+            h1 {font-size: 1.8rem;} 
+            .tab-button { font-size: 0.9rem; padding: 8px 15px; } 
+            body { padding: 10px; }
+            .race-details { grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px; }
+        }
     </style>
 </head>
 <body>
@@ -162,21 +203,15 @@
                 <input type="number" id="titulos" placeholder="Títulos Mundiais (Opcional)" min="0">
                 <button id="adicionarResultadoBtn">Adicionar Resultado</button>
             </div>
-            <h2><i class="fas fa-list-ol"></i> Resultados da Temporada</h2>
-            <div class="table-container card">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Grande Prêmio</th>
-                            <th class="posicao-col">Pos.</th>
-                            <th>Pole</th>
-                            <th>V. Rápida</th>
-                            <th>Ação</th>
-                        </tr>
-                    </thead>
-                    <tbody id="resultadosBody"></tbody>
-                </table>
+
+            <h2><i class="fas fa-list-ol"></i> Corridas da Temporada</h2>
+            <div id="resultadosContainer">
+                <h3 class="subsection-title">Resultados Salvos</h3>
+                <div id="resultadosSalvosContainer"></div>
+                <h3 class="subsection-title">Corridas Futuras</h3>
+                <div id="proximasCorridasContainer"></div>
             </div>
+
         </div>
 
         <div id="equipes" class="tab-content">
@@ -249,14 +284,12 @@
                 "2024": { name: "Mercedes", logo: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Mercedes-AMG_Petronas_F1_Team_logo.png" }
             };
 
-            const temporadaSelect = document.getElementById("temporada"), grandePremioSelect = document.getElementById("grandePremio"), adicionarResultadoBtn = document.getElementById("adicionarResultadoBtn"), statsSelector = document.getElementById('stats-selector'), infoDisplayCard = document.getElementById('info-display-card'), fichaTecnicaContainer = document.getElementById('ficha-tecnica-container'), teamStatsContainer = document.getElementById('team-stats-container'), resultadosBody = document.getElementById("resultadosBody"), gpModal = document.getElementById('gpModal'), gpTitle = document.getElementById('gpTitle'), gpStats = document.getElementById('gpStats'), closeBtn = document.querySelector('.close-btn');
+            const temporadaSelect = document.getElementById("temporada"), grandePremioSelect = document.getElementById("grandePremio"), adicionarResultadoBtn = document.getElementById("adicionarResultadoBtn"), statsSelector = document.getElementById('stats-selector'), infoDisplayCard = document.getElementById('info-display-card'), fichaTecnicaContainer = document.getElementById('ficha-tecnica-container'), teamStatsContainer = document.getElementById('team-stats-container'), gpModal = document.getElementById('gpModal'), gpTitle = document.getElementById('gpTitle'), gpStats = document.getElementById('gpStats'), closeBtn = document.querySelector('.close-btn');
 
             function calculateAge(birthDateString) { const [day, month, year] = birthDateString.split('/'); const birthDate = new Date(+year, +month - 1, +day); const today = new Date(); let age = today.getFullYear() - birthDate.getFullYear(); const m = today.getMonth() - birthDate.getMonth(); if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--; return age; }
             
-            // --- FUNÇÃO CORRIGIDA ---
             function displayFichaTecnica() { 
                 const pilotInfo = { name: "Fernando Lapa", nationality: "Brasileiro", birthDate: "18/02/2005", birthPlace: "Florianópolis, SC" }; 
-                // CORREÇÃO: Removido o logo da equipe para evitar duplicação de nome.
                 const teamsList = Object.keys(teamData)
                     .sort((a,b) => b-a)
                     .map(year => `<li><i class="fas fa-users"></i> ${year}:<span class="value">${teamData[year].name}</span></li>`)
@@ -264,7 +297,6 @@
                 fichaTecnicaContainer.innerHTML = `<div class="stats-card"><h3><i class="fas fa-id-card"></i> Ficha Técnica</h3><ul><li><i class="fas fa-user"></i> Nome: <span class="value">${pilotInfo.name}</span></li><li><i class="fas fa-flag"></i> Nacionalidade: <span class="value">${pilotInfo.nationality}</span></li><li><i class="fas fa-birthday-cake"></i> Nascimento: <span class="value">${pilotInfo.birthDate} (${calculateAge(pilotInfo.birthDate)} anos)</span></li><li><i class="fas fa-map-marker-alt"></i> Naturalidade: <span class="value">${pilotInfo.birthPlace}</span></li></ul><h3 style="margin-top: 20px;"><i class="fas fa-history"></i> Histórico de Equipes</h3><ul>${teamsList}</ul></div>`; 
             }
             
-            // --- FUNÇÃO CORRIGIDA E COM TÍTULOS ---
             async function displayTeamStats() {
                 if (!db) return;
                 teamStatsContainer.innerHTML = `<p style="text-align: center;">Calculando estatísticas...</p>`;
@@ -274,29 +306,39 @@
                     allRacesSnapshot.forEach(doc => {
                         const race = doc.data(); const teamInfo = teamData[race.temporada];
                         if (!teamInfo) return;
-                        if (!aggregatedStats[teamInfo.name]) { aggregatedStats[teamInfo.name] = { corridas: 0, vitorias: 0, podios: 0, poles: 0, voltasMaisRapidas: 0, grandSlams: 0, titulos: 0, logo: teamInfo.logo, latestYear: 0 }; }
+                        if (!aggregatedStats[teamInfo.name]) { aggregatedStats[teamInfo.name] = { corridas: 0, vitorias: 0, podios: 0, poles: 0, voltasMaisRapidas: 0, grandSlams: 0, titulos: 0, temporadas: 0, latestYear: 0 }; }
                         const stats = aggregatedStats[teamInfo.name];
                         stats.latestYear = Math.max(stats.latestYear, parseInt(race.temporada));
                         stats.corridas++; if (race.posicao === 1) stats.vitorias++; if (race.posicao >= 1 && race.posicao <= 3) stats.podios++; if (race.pole) stats.poles++; if (race.voltaMaisRapida) stats.voltasMaisRapidas++; if (race.grandSlam) stats.grandSlams++;
                     });
 
-                    // Lógica para buscar e somar os títulos de cada equipe
                     const teamYears = {};
                     for (const year in teamData) {
                         const teamName = teamData[year].name;
                         if (!teamYears[teamName]) teamYears[teamName] = [];
                         teamYears[teamName].push(year);
                     }
+                    
+                    const statsPromises = Object.keys(corridas).map(year => db.doc(`estatisticas/temporada_${year}`).get());
+                    const statsDocs = await Promise.all(statsPromises);
+                    const seasonTitles = {};
+                    statsDocs.forEach(doc => {
+                        if (doc.exists) {
+                            const year = doc.id.split('_')[1];
+                            seasonTitles[year] = doc.data().titulos || 0;
+                        }
+                    });
 
                     for (const teamName in aggregatedStats) {
-                        if (teamYears[teamName]) {
-                            for (const year of teamYears[teamName]) {
-                                const statsDoc = await db.doc(`estatisticas/temporada_${year}`).get();
-                                if (statsDoc.exists && statsDoc.data().titulos) {
-                                    aggregatedStats[teamName].titulos += statsDoc.data().titulos;
-                                }
+                        const seasonsWithTeam = teamYears[teamName] || [];
+                        aggregatedStats[teamName].temporadas = seasonsWithTeam.length;
+                        let totalTitles = 0;
+                        for (const year of seasonsWithTeam) {
+                            if (seasonTitles[year]) {
+                                totalTitles += seasonTitles[year];
                             }
                         }
+                        aggregatedStats[teamName].titulos = totalTitles;
                     }
                     
                     let html = '';
@@ -306,12 +348,17 @@
 
                     for (const teamName of sortedTeamNames) {
                         const stats = aggregatedStats[teamName];
-                        // CORREÇÃO: Removido o logo do H3 para evitar duplicação de nome.
+                        let titulosPctTeam = "0.0";
+                        if (stats.titulos > 0 && stats.temporadas > 0) {
+                            titulosPctTeam = ((stats.titulos / stats.temporadas) * 100).toFixed(1);
+                        }
+
                         html += `<div class="card stats-card"><h3>${teamName}</h3>
+                            <p><i class="fas fa-calendar-alt"></i> Temporadas: <span class="value">${stats.temporadas}</span></p>
                             <p><i class="fas fa-flag-checkered"></i> Corridas: <span class="value">${stats.corridas}</span></p>
                             <p><i class="fas fa-trophy"></i> Vitórias: <span class="value">${stats.vitorias} ${calcPct(stats.vitorias, stats.corridas)}</span></p>
                             <p><i class="fas fa-star"></i> Pódios: <span class="value">${stats.podios} ${calcPct(stats.podios, stats.corridas)}</span></p>
-                            <p><i class="fas fa-award"></i> Títulos: <span class="value">${stats.titulos || 0}</span></p>
+                            <p><i class="fas fa-award"></i> Títulos: <span class="value">${stats.titulos} (${titulosPctTeam}%)</span></p>
                             <p><i class="fas fa-tachometer-alt"></i> Poles: <span class="value">${stats.poles} ${calcPct(stats.poles, stats.corridas)}</span></p>
                             <p><i class="fas fa-stopwatch"></i> V. Rápidas: <span class="value">${stats.voltasMaisRapidas} ${calcPct(stats.voltasMaisRapidas, stats.corridas)}</span></p>
                             <p><i class="fas fa-crown"></i> Grand Slams: <span class="value">${stats.grandSlams} ${calcPct(stats.grandSlams, stats.corridas)}</span></p></div>`;
@@ -362,44 +409,83 @@
             async function carregarResultadosDaTemporada() {
                 if (!db) return;
                 const temporada = temporadaSelect.value;
-                resultadosBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Carregando resultados...</td></tr>';
+                const resultadosSalvosContainer = document.getElementById('resultadosSalvosContainer');
+                const proximasCorridasContainer = document.getElementById('proximasCorridasContainer');
+                resultadosSalvosContainer.innerHTML = `<p style="padding: 20px 0; text-align: center;">Buscando resultados salvos...</p>`;
+                proximasCorridasContainer.innerHTML = "";
+
                 try {
                     const corridasSnapshot = await db.collection("corridas").where("temporada", "==", temporada).get();
-                    const resultados = {};
-                    corridasSnapshot.forEach(doc => { resultados[doc.id] = doc.data(); });
-                    
-                    resultadosBody.innerHTML = "";
-                    const calendarioTemporada = corridas[temporada];
-                    if (!calendarioTemporada) { resultadosBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Calendário não disponível.</td></tr>'; return; }
+                    const resultadosFirestore = [];
+                    const nomesCorridasFirestore = new Set();
+                    corridasSnapshot.forEach(doc => {
+                        const data = doc.data();
+                        resultadosFirestore.push(data);
+                        nomesCorridasFirestore.add(data.grandePremio);
+                    });
 
-                    calendarioTemporada.forEach(corrida => {
-                        const docId = `${temporada}_${corrida.nome}`;
-                        const dados = resultados[docId];
-                        const nomeCurto = corrida.nome.replace(/^(Grande Prêmio|GP) d(o|a|e|os|as)\s/, '');
-                        const flagCode = countryFlags[nomeCurto] || 'xx';
-                        const row = document.createElement("tr");
-                        row.classList.add('clickable');
-                        row.dataset.gp = corrida.nome;
-                        
-                        let acaoHtml, posicaoHtml, poleHtml, voltaRapidaHtml;
-                        if (dados) {
+                    resultadosSalvosContainer.innerHTML = ""; 
+
+                    if (resultadosFirestore.length === 0) {
+                        resultadosSalvosContainer.innerHTML = "<p style='padding: 20px 0; text-align: center;'>Nenhum resultado adicionado para esta temporada.</p>";
+                    } else {
+                        resultadosFirestore.sort((a, b) => {
+                            const raceDateA = corridas[temporada].find(r => r.nome === a.grandePremio)?.data || 0;
+                            const raceDateB = corridas[temporada].find(r => r.nome === b.grandePremio)?.data || 0;
+                            return new Date(raceDateA) - new Date(raceDateB);
+                        });
+
+                        resultadosFirestore.forEach(dados => {
+                            const nomeCurto = dados.grandePremio.replace(/^(Grande Prêmio|GP) d(o|a|e|os|as)\s/, '');
+                            const flagCode = countryFlags[nomeCurto] || 'xx';
+                            const card = document.createElement("div");
+                            card.className = "race-card clickable";
+                            card.dataset.gp = dados.grandePremio;
+
                             let posicaoClass = '';
-                            if (dados.posicao === 1) posicaoClass = 'podium-gold'; else if (dados.posicao === 2) posicaoClass = 'podium-silver'; else if (dados.posicao === 3) posicaoClass = 'podium-bronze'; else if (dados.posicao === "N/C") posicaoClass = 'not-completed';
-                            posicaoHtml = `<td class="posicao-col ${posicaoClass}">${dados.posicao}</td>`;
-                            poleHtml = `<td style="text-align: center;">${dados.pole ? '<i class="fas fa-check" style="color: var(--secondary-color);"></i>' : ''}</td>`;
-                            voltaRapidaHtml = `<td style="text-align: center;">${dados.voltaMaisRapida ? '<i class="fas fa-check" style="color: var(--secondary-color);"></i>' : ''}</td>`;
-                            acaoHtml = `<td style="text-align: center;"><button class="delete-btn" data-temporada="${dados.temporada}" data-gp="${dados.grandePremio}"><i class="fas fa-trash"></i></button></td>`;
-                        } else {
-                            posicaoHtml = `<td class="posicao-col">-</td>`; poleHtml = `<td style="text-align: center;">-</td>`; voltaRapidaHtml = `<td style="text-align: center;">-</td>`; acaoHtml = `<td style="text-align: center;">-</td>`;
+                            if (dados.posicao === 1) posicaoClass = 'podium-gold';
+                            else if (dados.posicao === 2) posicaoClass = 'podium-silver';
+                            else if (dados.posicao === 3) posicaoClass = 'podium-bronze';
+                            else if (dados.posicao === "N/C") posicaoClass = 'not-completed';
+
+                            card.innerHTML = `
+                                <div class="race-header">
+                                    <img src="https://flagcdn.com/w40/${flagCode}.png" class="flag"> ${dados.grandePremio}
+                                </div>
+                                <div class="race-details">
+                                    <div class="detail-item"><strong >Pos.</strong><span class="value posicao-col ${posicaoClass}">${dados.posicao}</span></div>
+                                    <div class="detail-item"><strong >Pole</strong><span class="value">${dados.pole ? '<i class="fas fa-check" style="color: var(--secondary-color);"></i>' : '-'}</span></div>
+                                    <div class="detail-item"><strong >V. Rápida</strong><span class="value">${dados.voltaMaisRapida ? '<i class="fas fa-check" style="color: var(--secondary-color);"></i>' : '-'}</span></div>
+                                    <div class="detail-item"><button class="delete-btn" data-temporada="${dados.temporada}" data-gp="${dados.grandePremio}"><i class="fas fa-trash"></i> Remover</button></div>
+                                </div>
+                            `;
+                            resultadosSalvosContainer.appendChild(card);
+                        });
+                    }
+                    
+                    const calendarioTemporada = corridas[temporada] || [];
+                    calendarioTemporada.forEach(corrida => {
+                        if (!nomesCorridasFirestore.has(corrida.nome)) {
+                            const nomeCurto = corrida.nome.replace(/^(Grande Prêmio|GP) d(o|a|e|os|as)\s/, '');
+                            const flagCode = countryFlags[nomeCurto] || 'xx';
+                            const card = document.createElement("div");
+                            card.className = "race-card";
+
+                            card.innerHTML = `
+                                <div class="race-header">
+                                    <img src="https://flagcdn.com/w40/${flagCode}.png" class="flag"> ${corrida.nome}
+                                </div>
+                                <div class="race-details">
+                                    <div class="detail-item" style="grid-column: 1 / -1; text-align:center; color: var(--text-muted);">Aguardando resultado...</div>
+                                </div>
+                            `;
+                            proximasCorridasContainer.appendChild(card);
                         }
-                        
-                        row.innerHTML = `<td><img src="https://flagcdn.com/w40/${flagCode}.png" class="flag"> ${corrida.nome}</td>${posicaoHtml}${poleHtml}${voltaRapidaHtml}${acaoHtml}`;
-                        resultadosBody.appendChild(row);
                     });
                     
                     document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); const { temporada, gp } = e.currentTarget.dataset; excluirResultado(temporada, gp); }));
-                    document.querySelectorAll('#resultadosBody tr.clickable').forEach(row => row.addEventListener('click', (e) => { if (!e.target.closest('.delete-btn')) { mostrarEstatisticasGP(e.currentTarget.dataset.gp); }}));
-                } catch (error) { console.error("Erro ao carregar resultados:", error); resultadosBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Erro ao carregar resultados.</td></tr>'; }
+                    document.querySelectorAll('.race-card.clickable').forEach(card => card.addEventListener('click', (e) => { if (!e.target.closest('.delete-btn')) { mostrarEstatisticasGP(e.currentTarget.dataset.gp); }}));
+                } catch (error) { console.error("Erro Crítico ao carregar resultados:", error); resultadosSalvosContainer.innerHTML = `<p>Erro ao carregar dados.</p>`; }
             }
 
             async function mostrarEstatisticasGP(grandePremio) {
