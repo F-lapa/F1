@@ -133,9 +133,42 @@
         .records-list li { background: rgba(0, 0, 0, 0.2); padding: 12px; margin-bottom: 8px; border-radius: 5px; border-left: 4px solid var(--primary-color); font-size: 1rem; }
         .records-list li strong { color: var(--secondary-color); }
         
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 10, 16, 0.7); z-index: 1000; justify-content: center; align-items: center; padding: 10px; backdrop-filter: blur(8px); }
-        .modal-content { max-width: 800px; width: 100%; animation: modalEnter 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; max-height: 90vh; overflow-y: auto;}
-        @keyframes modalEnter { from { opacity: 0; transform: scale(0.8) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .modal {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 16, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            backdrop-filter: blur(8px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0s 0.4s;
+        }
+        .modal.open {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.4s ease;
+        }
+        .modal-content {
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.95);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .modal.open .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
         #gpStats p { animation: itemFadeInUp 0.5s both; }
         #gpStats p:nth-child(1) { animation-delay: 0.2s; } #gpStats p:nth-child(2) { animation-delay: 0.25s; } #gpStats p:nth-child(3) { animation-delay: 0.3s; }
         @keyframes itemFadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
@@ -167,6 +200,10 @@
             line-height: 1;
         }
         .close-btn:hover { color: var(--primary-color); transform: rotate(90deg) scale(1.1); }
+        
+        #classificacaoModalContainer, #raceGridModalContainer {
+            overflow-x: auto;
+        }
         
         @media (max-width: 900px) { .info-grid { grid-template-columns: 1fr; } }
         @media (max-width: 768px) { 
@@ -534,7 +571,7 @@
                 const flagCode = countryFlags[nomeCurto] || 'xx';
                 gpTitle.innerHTML = `<img src="https://flagcdn.com/w40/${flagCode}.png" class="flag"> Estatísticas em ${grandePremio}`;
                 gpStats.innerHTML = `<p>Buscando histórico...</p>`;
-                gpStatsModal.style.display = "flex";
+                gpStatsModal.classList.add("open");
                 try {
                     const gpSnapshot = await db.collection('corridas').where('grandePremio', '==', grandePremio).get();
                     if (gpSnapshot.empty) {
@@ -572,7 +609,7 @@
                     botaoContainer.innerHTML = `<button id="verClassificacaoBtn"><i class="fas fa-trophy"></i> Ver Classificação Final 2023</button>`;
                     document.getElementById('verClassificacaoBtn').addEventListener('click', async () => {
                         classificacaoModalContainer.innerHTML = `<p style="text-align:center; padding: 20px;">Calculando...</p>`;
-                        classificacaoModal.style.display = 'flex';
+                        classificacaoModal.classList.add('open');
                         const classificacaoFinal = await gerarClassificacaoFinal2023();
                         displayClassificacaoInModal(classificacaoFinal);
                     });
@@ -636,7 +673,7 @@
             }
 
             async function displayRaceGrid(grandePremio) {
-                raceGridModal.style.display = 'flex';
+                raceGridModal.classList.add('open');
                 const nomeCurto = grandePremio.replace(/^(Grande Prêmio|GP) d(o|a|e|os|as)\s/, '');
                 const flagCode = countryFlags[nomeCurto] || 'xx';
                 raceGridTitle.innerHTML = `<img src="https://flagcdn.com/w40/${flagCode}.png" class="flag">Resultado - ${grandePremio}`;
@@ -754,11 +791,11 @@
             }
             
             document.querySelectorAll('.modal .close-btn').forEach(btn => btn.addEventListener('click', () => {
-                btn.closest('.modal').style.display = 'none';
+                btn.closest('.modal').classList.remove('open');
             }));
             window.addEventListener('click', (e) => { 
                 if (e.target.classList.contains('modal')) {
-                    e.target.style.display = 'none';
+                    e.target.classList.remove('open');
                 }
             });
 
